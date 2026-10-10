@@ -42,6 +42,7 @@ class Bus:
         self.speak = lambda text: print(f"SAY: {text}")
         self.is_speaking = lambda: False  # UI swaps in the real TTS state
         self.on_confirm = lambda payload: None  # structured payment-confirmation card for the UI
+        self.on_tx = lambda payload: None       # a payment confirmed on-chain (hash, block, ...)
 
 
 bus = Bus()
@@ -234,6 +235,12 @@ def t_send_mon(recipient, amount):
         return f"Transfer failed: {e}"
     gate.last_send = time.time()
     url = wl.explorer_url(h)
+    try:
+        block = int(wl.with_retry(lambda: wl.w3.eth.get_transaction_receipt(h)).blockNumber)
+    except Exception:
+        block = None
+    bus.on_tx({"hash": h, "url": url, "block": block, "amount": format(prep["amount"].normalize(), "f"),
+               "to": prep["label"], "approvedBy": method})
     bus.on_event("Wallet", "tx", url)
     return f"Sent. Transaction confirmed on Monad. Hash {h}. Explorer: {url}"
 

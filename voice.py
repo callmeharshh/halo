@@ -10,6 +10,7 @@ import wave
 
 import numpy as np
 import onnx_asr
+import tts
 import sounddevice as sd
 import webrtcvad
 
@@ -18,9 +19,11 @@ FRAME = 480  # 30 ms @ 16 kHz, a size webrtcvad accepts
 
 
 class Voice:
-    def __init__(self, on_utterance, on_state=None, voice_name="Rishi", rate=175):
+    def __init__(self, on_utterance, on_state=None, voice_name="Rishi", rate=175, on_level=None):
         self.on_utterance = on_utterance  # callback(text)
         self.on_state = on_state or (lambda s: None)
+        self.on_level = on_level or (lambda v: None)
+        self.primary_tts, self.system_tts = tts.build_engines(on_level=self.on_level)
         self.voice_name = voice_name
         self.rate = rate
         self.vad = webrtcvad.Vad(2)
@@ -35,7 +38,7 @@ class Voice:
             self._oa = OpenAI(timeout=20.0, max_retries=2)
         self._stop = threading.Event()
         self._thread = None
-        self._say_proc = None
+        self._tts_token = None
         self._speaking_until = 0.0
 
     # ── TTS ──────────────────────────────────────────────────────────────
@@ -43,19 +46,38 @@ class Voice:
         if not text or not text.strip():
             return
         self.stop_speaking()
-        self._speaking_until = time.time() + 600  # blocks mic until say exits
-        voice = "Lekha" if re.search(r"[\u0900-\u097F]", text) else self.voice_name  # Hindi voice for Devanagari
-        self._say_proc = subprocess.Popen(["say", "-v", voice, "-r", str(self.rate), text])
-        threading.Thread(target=self._wait_say, args=(self._say_proc,), daemon=True).start()
+        self._speaking_until = time.time() + 600  # blocks mic until playback ends
+        self._tts_token = object()
+        token = self._tts_token
 
-    def _wait_say(self, proc):
-        proc.wait()
-        if proc is self._say_proc:
-            self._speaking_until = time.time() + 0.4  # tail so we don't hear our own echo
+        def done(_=None):
+            if token is self._tts_token:
+                self._speaking_until = time.time() + 0.4  # tail so we never hear our own echo
+
+        def via_system():
+            if token is self._tts_token:
+                self.system_tts.speak(text, done)
+
+        p = self.primary_tts
+        if p.name == "elevenlabs" and p.available:
+            p.speak(text, done, via_system)
+        else:
+            via_system()
+
+    def tts_name(self) -> str:
+        p = self.primary_tts
+        return p.name if (p.name != "elevenlabs" or p.available) else "system"
+
+    def tts_note(self) -> str | None:
+        return getattr(self.primary_tts, "disabled_reason", None)
 
     def stop_speaking(self):
-        if self._say_proc and self._say_proc.poll() is None:
-            self._say_proc.terminate()
+        self._tts_token = None
+        for e in (self.primary_tts, self.system_tts):
+            try:
+                e.stop()
+            except Exception:
+                pass
 
     def is_speaking(self) -> bool:
         return time.time() < self._speaking_until
@@ -96,6 +118,7 @@ class Voice:
 
     def _loop(self):
         buf, speaking, silent, voiced = [], False, 0, 0
+        last_level = 0.0
         PRE = []  # small pre-roll so we don't clip the first syllable
         self.on_state("listening")
         with sd.InputStream(samplerate=SAMPLE_RATE, channels=1, dtype="int16", blocksize=FRAME) as stream:
@@ -105,6 +128,10 @@ class Voice:
                 if self.is_speaking():  # ignore mic while the assistant talks
                     buf, speaking, silent, voiced, PRE = [], False, 0, 0, []
                     continue
+                now = time.time()
+                if now - last_level > 0.08:  # ~12 Hz loudness for the UI orb
+                    last_level = now
+                    self.on_level(min(1.0, float(np.sqrt(np.mean(chunk.astype(np.float32) ** 2))) / 5000))
                 is_speech = self.vad.is_speech(chunk.tobytes(), SAMPLE_RATE)
                 if not speaking:
                     PRE.append(chunk)

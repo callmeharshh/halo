@@ -67,6 +67,7 @@ def build_status() -> dict:
         "explorer": wl.EXPLORER,
         "llm": f"{agents.MODEL} ({'local' if agents.BACKEND == 'local' else 'cloud'})",
         "listening": state["listening"],
+        "tts": {"engine": voice.tts_name() if voice else "system", "note": voice.tts_note() if voice else None},
         "assistant_mode": agents.mode,
         "gaze": {"calibrated": bool(gaze and gaze.calibrated), "on": bool(gaze and gaze.running.is_set()),
                  "calibrating": state["calibrating"]},
@@ -93,6 +94,11 @@ def push_status():
 # ── wiring the pipeline to the UI ────────────────────────────────────────────
 def on_event(agent, kind, text):
     push({"type": "event", "agent": agent, "kind": kind, "text": text})
+
+
+def on_level(v: float):
+    if clients and (state["voice"] in ("listening", "hearing", "speaking")):
+        push({"type": "level", "value": round(float(v), 2)})
 
 
 def on_voice_state(v):
@@ -288,7 +294,7 @@ def main():
     ap.add_argument("--no-browser", action="store_true")
     a = ap.parse_args()
 
-    voice = Voice(handle_utterance, on_state=on_voice_state)
+    voice = Voice(handle_utterance, on_state=on_voice_state, on_level=on_level)
     gaze = GazeController(on_event=lambda m: on_event("System", "tool", m))
     try:
         gaze.load_saved()
@@ -298,6 +304,7 @@ def main():
     agents.bus.speak = speak
     agents.bus.is_speaking = voice.is_speaking
     agents.bus.on_confirm = lambda payload: push({"type": "confirm", **payload})
+    agents.bus.on_tx = lambda payload: push({"type": "tx", **payload})
     agents.on_mode_change = lambda m: push_status()
 
     if agents.BACKEND == "local":
