@@ -12,7 +12,7 @@ def check(name, ok, extra=""):
     if not ok: fails.append(name)
 
 addr = json.load(open(os.path.join(ROOT, "contracts/deployment.json")))["address"]
-for page in ("", "console.html", "contract.js", "app.js", "style.css"):
+for page in ("", "journeys.html", "journeys.js", "sample-plan.json", "registry.js", "atts.js", "atts.json", "console.html", "contract.js", "app.js", "style.css"):
     try: code = urllib.request.urlopen(SITE + page, timeout=15).status
     except Exception as e: code = str(e)
     check(f"{page or 'index'} is served (200)", code == 200, str(code))
@@ -33,6 +33,13 @@ else:
         check("feed status is Live", bool(live), b.eval("document.querySelector('#feed-status').innerText"))
         check("feed shows the right contract", addr.lower() in (b.eval("document.querySelector('#live').innerText") or "").lower())
         check("site has zero console errors", not b.errors, str(b.errors[:2]))
+        check("attestations feed renders on the home page", bool(b.wait("document.querySelectorAll('#att-body tr').length>0", 40)))
+        reg = json.load(open(os.path.join(ROOT, "contracts/deployment.AccessRegistry.json")))["address"]
+        check("home page shows the AccessRegistry address", reg.lower() in (b.eval("document.body.innerText") or "").lower())
+        b.errors.clear()
+        b.open(SITE + "journeys.html")
+        check("journeys page shows a sample plan", bool(b.wait("document.body.innerText.length>1500 && /Goa/.test(document.body.innerText)", 40)))
+        check("journeys page has zero console errors", not b.errors, str(b.errors[:2]))
         b.errors.clear()
         b.open(SITE + f"console.html?owner={OWNER}")
         ok = b.wait("document.querySelector('#vStatus') && document.querySelector('#vStatus').innerText.length > 1 && document.querySelector('#vStatus').innerText !== '-'", 30)

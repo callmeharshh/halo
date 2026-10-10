@@ -1,0 +1,403 @@
+{
+ "title": "Three accessible days in Goa from Pune",
+ "summary": "A relaxed three-day trip from Pune to Goa for a wheelchair user, within about 30,000 rupees. You fly both ways, stay in one accessible hotel in Candolim and keep each day short. Step-free places are confirmed first. Fort Aguada and Fontainhas are only partly accessible, so the plan keeps them optional. Please confirm the details with each venue before you go.",
+ "traveler": {
+  "needs": [
+   "wheelchair"
+  ],
+  "notes": "Budget about 30,000 rupees. Prefers short days and step-free routes."
+ },
+ "days": [
+  {
+   "day": 1,
+   "title": "Fly to Goa and settle in",
+   "items": [
+    {
+     "time": "07:30",
+     "kind": "transport",
+     "name": "Pune International Airport",
+     "city": "Pune",
+     "note": "Request wheelchair assistance when booking. Arrive 2 hours early.",
+     "place": "Pune International Airport"
+    },
+    {
+     "time": "11:20",
+     "kind": "transport",
+     "name": "Dabolim Airport (Goa)",
+     "city": "Goa",
+     "note": "Pre-book an accessible cab to Candolim (about 55 minutes).",
+     "place": "Dabolim Airport (Goa)"
+    },
+    {
+     "time": "14:00",
+     "kind": "stay",
+     "name": "Taj Fort Aguada Resort",
+     "city": "Candolim",
+     "note": "Check in to an accessible room. Rest this afternoon.",
+     "place": "Taj Fort Aguada Resort"
+    },
+    {
+     "time": "19:30",
+     "kind": "food",
+     "name": "Dinner at the hotel",
+     "city": "Candolim",
+     "note": "Step-free dining room; ask for a quiet table.",
+     "place": null
+    }
+   ]
+  },
+  {
+   "day": 2,
+   "title": "Panaji, promenade and food",
+   "items": [
+    {
+     "time": "09:00",
+     "kind": "place",
+     "name": "Miramar Beach Promenade",
+     "city": "Panaji",
+     "note": "Gentle, paved morning walk or roll along the sea.",
+     "place": "Miramar Beach Promenade"
+    },
+    {
+     "time": "11:30",
+     "kind": "place",
+     "name": "Fontainhas Latin Quarter Walk",
+     "city": "Panaji",
+     "note": "Optional: short loop with a companion on the flatter streets.",
+     "place": "Fontainhas Latin Quarter Walk"
+    },
+    {
+     "time": "13:30",
+     "kind": "food",
+     "name": "Gunpowder Restaurant",
+     "city": "Panaji",
+     "note": "Lunch, booked ahead for a wheelchair-friendly table.",
+     "place": "Gunpowder Restaurant"
+    }
+   ]
+  },
+  {
+   "day": 3,
+   "title": "Fort viewpoint and return",
+   "items": [
+    {
+     "time": "09:30",
+     "kind": "place",
+     "name": "Fort Aguada",
+     "city": "Candolim",
+     "note": "Drive to the viewpoint only. Skip the lighthouse steps.",
+     "place": "Fort Aguada"
+    },
+    {
+     "time": "13:00",
+     "kind": "stay",
+     "name": "Check out",
+     "city": "Candolim",
+     "note": "Keep an hour spare for the taxi.",
+     "place": null
+    },
+    {
+     "time": "17:30",
+     "kind": "transport",
+     "name": "Dabolim Airport (Goa)",
+     "city": "Goa",
+     "note": "Return flight; request assistance again at check-in.",
+     "place": "Dabolim Airport (Goa)"
+    }
+   ]
+  }
+ ],
+ "places": [
+  {
+   "name": "Pune International Airport",
+   "city": "Pune",
+   "kind": "airport",
+   "access": {
+    "features": {
+     "step_free": "yes",
+     "ramp": "yes",
+     "elevator": "yes",
+     "accessible_restroom": "yes",
+     "accessible_room": "unknown",
+     "tactile_braille": "yes",
+     "hearing_loop_sign": "unknown",
+     "quiet_space": "no",
+     "assistance_service": "yes",
+     "accessible_parking": "yes"
+    },
+    "summary": "Step-free from kerb to gate, lifts to all levels and accessible toilets. Wheelchair assistance is available on request through the airline; book it at least 48 hours ahead.",
+    "confidence": "high",
+    "sources": [
+     {
+      "title": "Airports Authority of India: Pune airport facilities",
+      "url": "https://www.aai.aero/en/airports/pune"
+     },
+     {
+      "title": "DGCA guidance on assistance for persons with disability",
+      "url": "https://www.dgca.gov.in/digigov-portal/"
+     },
+     {
+      "title": "Pune Airport accessibility review",
+      "url": "https://www.punairport.example/accessibility"
+     }
+    ]
+   },
+   "draft": {
+    "channel": "email",
+    "subject": "Wheelchair assistance request: Pune to Goa, 14 March",
+    "body": "Hello,\n\nI will travel from Pune to Goa on 14 March and use a wheelchair. Could you please confirm that:\n1. Wheelchair assistance is arranged from the terminal entrance to the aircraft door.\n2. An aisle wheelchair is available for boarding.\n3. A step-free drop-off point is near the departures entrance.\n\nThank you,\nA traveller"
+   }
+  },
+  {
+   "name": "Dabolim Airport (Goa)",
+   "city": "Goa",
+   "kind": "airport",
+   "access": {
+    "features": {
+     "step_free": "yes",
+     "ramp": "yes",
+     "elevator": "yes",
+     "accessible_restroom": "yes",
+     "accessible_room": "unknown",
+     "tactile_braille": "unknown",
+     "hearing_loop_sign": "unknown",
+     "quiet_space": "unknown",
+     "assistance_service": "yes",
+     "accessible_parking": "unknown"
+    },
+    "summary": "Ground-level terminal with ramps and lifts. Accessible toilets are reported near arrivals. Pre-paid taxis can take a folded wheelchair; wheelchair-accessible cabs need to be booked ahead.",
+    "confidence": "medium",
+    "sources": [
+     {
+      "title": "Goa Airport (AAI) passenger facilities",
+      "url": "https://www.aai.aero/en/airports/goa"
+     },
+     {
+      "title": "Travel forum: wheelchair at Goa airport",
+      "url": "https://www.tripadvisor.in/ShowTopic-g297604-i2447-Goa_airport_wheelchair.html"
+     }
+    ]
+   },
+   "draft": {
+    "channel": "whatsapp",
+    "subject": "Arrival assistance at Dabolim",
+    "body": "Hello, I land at Dabolim on 14 March at 11:20 and use a wheelchair. Can you confirm assistance at arrivals and an accessible cab to Candolim?"
+   }
+  },
+  {
+   "name": "Taj Fort Aguada Resort",
+   "city": "Candolim",
+   "kind": "hotel",
+   "access": {
+    "features": {
+     "step_free": "yes",
+     "ramp": "yes",
+     "elevator": "yes",
+     "accessible_restroom": "yes",
+     "accessible_room": "yes",
+     "tactile_braille": "unknown",
+     "hearing_loop_sign": "unknown",
+     "quiet_space": "no",
+     "assistance_service": "unknown",
+     "accessible_parking": "yes"
+    },
+    "summary": "Hotel lists accessible rooms with roll-in showers and ramps to the lobby and pool deck. Beach access is by a sloping path that may be hard in a manual chair.",
+    "confidence": "medium",
+    "sources": [
+     {
+      "title": "Hotel accessibility statement",
+      "url": "https://www.tajhotels.com/en-in/accessibility/"
+     },
+     {
+      "title": "Booking.com: facilities for guests with disabilities",
+      "url": "https://www.booking.com/hotel/in/taj-fort-aguada-resort-spa-goa.html"
+     },
+     {
+      "title": "Wheelchair travel blog: Goa hotels",
+      "url": "https://www.wheelchairtravel.example/goa-hotels"
+     }
+    ]
+   },
+   "draft": {
+    "channel": "email",
+    "subject": "Accessible room booking and step-free routes",
+    "body": "Dear Reservations Team,\n\nI would like to book an accessible room for 14 to 17 March. Please confirm in writing:\n- The room has a roll-in shower and a clear turning space of 1.5 m.\n- The route from reception to the room has no steps.\n- A ramp or lift serves the restaurant and pool.\n\nKind regards"
+   }
+  },
+  {
+   "name": "Fort Aguada",
+   "city": "Candolim",
+   "kind": "attraction",
+   "access": {
+    "features": {
+     "step_free": "no",
+     "ramp": "no",
+     "elevator": "no",
+     "accessible_restroom": "unknown",
+     "accessible_room": "unknown",
+     "tactile_braille": "unknown",
+     "hearing_loop_sign": "unknown",
+     "quiet_space": "unknown",
+     "assistance_service": "no",
+     "accessible_parking": "yes"
+    },
+    "summary": "A 17th-century fort on a laterite hill. Parking is close to the lower fort, but paths are steep and uneven. The lighthouse has steep steps. Best enjoyed from the viewpoint by car.",
+    "confidence": "low",
+    "sources": [
+     {
+      "title": "Archaeological Survey of India: Fort Aguada",
+      "url": "https://asi.nic.in/"
+     }
+    ]
+   },
+   "draft": {
+    "channel": "whatsapp",
+    "subject": "Fort Aguada access",
+    "body": "Hello, I use a wheelchair. Is there a drive-up point near the upper fort viewpoint, and any step-free path?"
+   }
+  },
+  {
+   "name": "Miramar Beach Promenade",
+   "city": "Panaji",
+   "kind": "attraction",
+   "access": {
+    "features": {
+     "step_free": "yes",
+     "ramp": "yes",
+     "elevator": "unknown",
+     "accessible_restroom": "unknown",
+     "accessible_room": "unknown",
+     "tactile_braille": "unknown",
+     "hearing_loop_sign": "unknown",
+     "quiet_space": "yes",
+     "assistance_service": "unknown",
+     "accessible_parking": "yes"
+    },
+    "summary": "A paved seafront walk with kerb ramps and public parking. Quiet in the mornings. Sand beyond the promenade is not wheelchair friendly.",
+    "confidence": "medium",
+    "sources": [
+     {
+      "title": "Goa Tourism: Miramar",
+      "url": "https://www.goa-tourism.com/"
+     },
+     {
+      "title": "Local walking guide: Panaji",
+      "url": "https://www.panajiguide.example/miramar"
+     }
+    ]
+   },
+   "draft": {
+    "channel": "email",
+    "subject": "Accessible parking at Miramar",
+    "body": "Hello, could you confirm the location of accessible parking and the nearest accessible toilet along the promenade?"
+   }
+  },
+  {
+   "name": "Fontainhas Latin Quarter Walk",
+   "city": "Panaji",
+   "kind": "attraction",
+   "access": {
+    "features": {
+     "step_free": "no",
+     "ramp": "unknown",
+     "elevator": "unknown",
+     "accessible_restroom": "unknown",
+     "accessible_room": "unknown",
+     "tactile_braille": "unknown",
+     "hearing_loop_sign": "unknown",
+     "quiet_space": "yes",
+     "assistance_service": "unknown",
+     "accessible_parking": "unknown"
+    },
+    "summary": "Narrow lanes, some cobbled and with high kerbs. A short guided loop on the flatter streets is possible with a companion.",
+    "confidence": "low",
+    "sources": []
+   },
+   "draft": {
+    "channel": "whatsapp",
+    "subject": "Fontainhas guided walk",
+    "body": "Hello, do you offer a step-free route for a wheelchair user in Fontainhas?"
+   }
+  },
+  {
+   "name": "Gunpowder Restaurant",
+   "city": "Panaji",
+   "kind": "restaurant",
+   "access": {
+    "features": {
+     "step_free": "yes",
+     "ramp": "yes",
+     "elevator": "unknown",
+     "accessible_restroom": "yes",
+     "accessible_room": "unknown",
+     "tactile_braille": "unknown",
+     "hearing_loop_sign": "unknown",
+     "quiet_space": "no",
+     "assistance_service": "unknown",
+     "accessible_parking": "unknown"
+    },
+    "summary": "Ground-floor dining with a ramped entrance. Tables are close together at peak hours, so ask for a corner table when booking.",
+    "confidence": "medium",
+    "sources": [
+     {
+      "title": "Restaurant page",
+      "url": "https://www.gunpowder.example/visit"
+     },
+     {
+      "title": "Review: wheelchair friendly dining in Goa",
+      "url": "https://www.zomato.com/goa"
+     }
+    ]
+   },
+   "draft": {
+    "channel": "whatsapp",
+    "subject": "Table for a wheelchair user",
+    "body": "Hello, I would like to book a table for 2 at 20:00 with space for a wheelchair. Is the entrance step-free and is there an accessible toilet?"
+   }
+  },
+  {
+   "name": "Madgaon Junction Railway Station",
+   "city": "Madgaon",
+   "kind": "station",
+   "access": {
+    "features": {
+     "step_free": "yes",
+     "ramp": "yes",
+     "elevator": "yes",
+     "accessible_restroom": "yes",
+     "accessible_room": "unknown",
+     "tactile_braille": "unknown",
+     "hearing_loop_sign": "unknown",
+     "quiet_space": "unknown",
+     "assistance_service": "yes",
+     "accessible_parking": "unknown"
+    },
+    "summary": "Lifts connect the platforms, and porters or battery cars assist on request. Allow 30 extra minutes.",
+    "confidence": "high",
+    "sources": [
+     {
+      "title": "Indian Railways: facilities for Divyangjan",
+      "url": "https://indianrailways.gov.in/"
+     },
+     {
+      "title": "Konkan Railway: Madgaon station",
+      "url": "https://konkanrailway.com/"
+     }
+    ]
+   },
+   "draft": {
+    "channel": "email",
+    "subject": "Wheelchair assistance at Madgaon",
+    "body": "Hello Station Master, I will depart on 17 March and need wheelchair assistance from the entrance to the coach. Please confirm."
+   }
+  }
+ ],
+ "tips": [
+  "Book wheelchair assistance with the airline at least 48 hours ahead.",
+  "Ask the hotel to confirm the room's shower type and door width in writing.",
+  "Carry a printed copy of each confirmation message you receive.",
+  "Avoid the beach sand sections unless you have a beach wheelchair; some shacks lend them.",
+  "Keep a little buffer money; accessible cabs usually cost more than regular taxis."
+ ],
+ "generated_at": "2026-10-10T09:30:00Z"
+}

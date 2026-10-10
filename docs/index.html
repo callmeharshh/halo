@@ -3,67 +3,95 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Halo - an AI helper for everyone the AI age forgot</title>
-<meta name="description" content="Halo is an AI helper you just talk to. It warns you about scam messages, and your family sets money limits on Monad that no scammer can get around.">
+<title>Halo Journeys - travel without guessing</title>
+<meta name="description" content="Halo Journeys plans accessible trips for travellers with disabilities, with every claim sourced and checked against what real travellers have verified on Monad.">
 <meta name="color-scheme" content="dark light">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23836EF9' stroke-width='5'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 <script defer src="vendor/ethers.umd.min.js"></script>
 <script src="contract.js"></script>
 <script defer src="app.js"></script>
+<script src="registry.js"></script>
+<script defer src="atts.js"></script>
 <script defer src="play.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap">
   <div class="brand"><i aria-hidden="true"></i><span data-name>Halo</span></div>
-  <nav aria-label="Primary"><a href="#ideas">The idea</a><a href="#try">Try it</a><a href="#live">Live on Monad</a><a href="#roadmap">Roadmap</a><a href="console.html">Family console</a></nav>
+  <nav aria-label="Primary"><a href="journeys.html">Plan a trip</a><a href="#ideas">The idea</a><a href="#atts">Live on Monad</a><a href="#guard">Also: Halo Guard</a><a href="#roadmap">Roadmap</a></nav>
 </div></header>
 
 <main id="main">
 <section class="hero"><div class="wrap">
-  <p class="eyebrow">For the elderly · the disabled · Ramesh the watchman</p>
-  <h1>An AI helper for everyone the AI age forgot.</h1>
-  <p class="lead">Just talk to your computer, and <span data-name>Halo</span> does it. When money is involved, no scammer can drain it: your family sets the limits on Monad, and a smart contract, not the AI, enforces them.</p>
+  <p class="eyebrow">An AI travel agent for travellers with disabilities</p>
+  <h1>Travel without guessing.</h1>
+  <p class="lead"><span data-name>Halo</span> Journeys plans your whole trip around your needs, then shows what is <i>actually</i> accessible: facts from the web with their sources, and what real travellers have verified on Monad. No invented claims.</p>
   <div class="btns">
-    <a class="btn primary" data-demo href="#" rel="noopener">Watch the demo</a>
-    <a class="btn" href="console.html">Open the Family console</a>
+    <a class="btn primary" href="journeys.html">Plan a trip</a>
+    <a class="btn" href="journeys.html#sample">See a real sample plan</a>
     <a class="btn" data-repo href="#" rel="noopener">GitHub</a>
-    <a class="btn" data-scan href="#" target="_blank" rel="noopener noreferrer">Contract</a>
+    <a class="btn" href="#atts">Live on Monad</a>
   </div>
-  <span class="pill">Live on Monad testnet · chain ID 10143</span>
+  <span class="pill">About 1.3 billion people live with a significant disability (WHO) · Monad testnet</span>
 </div></section>
 
 <section id="ideas"><div class="wrap">
   <p class="eyebrow">Two ideas that make it different</p>
-  <h2>Help that can’t be tricked.</h2>
+  <h2>Accessibility information you can trust.</h2>
   <div class="grid g2">
     <div class="card idea">
-      <div class="ico" aria-hidden="true">🛡️</div>
-      <h3>1 · Scam Shield</h3>
-      <p>Just ask <b>“Is this message safe?”</b> Halo reads what is on the screen and tells you in plain words, in English or Hindi: fake KYC, OTP requests, “pay now” pressure.</p>
-      <div class="mock" role="img" aria-label="Illustration: a suspicious message flagged as a scam by Halo">
-        <div class="bub">URGENT! Your bank account will be BLOCKED. Share your OTP now.</div>
-        <div class="flag">⚠️ This looks like a scam. Don’t share your OTP. Ask your family first.</div>
-        <small class="muted">Illustration</small>
+      <div class="ico" aria-hidden="true">🔎</div>
+      <h3>1 · Honest research</h3>
+      <p>Tell it your trip and your needs, by typing or speaking. The agent researches every airport, station, hotel and sight, and shows each fact <b>with its source link</b>. If nothing reliable is found, it says <b>“unknown”</b> instead of guessing.</p>
+      <div class="mock" role="img" aria-label="Illustration of a place card with sources">
+        <div class="rule"><span>Step-free entrance</span><b>yes · 2 sources</b></div>
+        <div class="rule"><span>Accessible room</span><b>unknown</b></div>
+        <div class="flag">⚠️ Web-sourced only. Not yet verified by travellers.</div><small class="muted">Illustration</small>
       </div>
     </div>
     <div class="card idea">
-      <div class="ico" aria-hidden="true">🔒</div>
-      <h3>2 · A wallet no scammer can drain</h3>
-      <p>A family member sets the rules <b>on-chain</b>: how much per payment, per day, and to whom. Halo and the person can only spend <i>inside</i> those rules. If anyone is tricked, the contract simply says no.</p>
-      <div class="mock" role="img" aria-label="Illustration: the contract rejecting a payment above the family limit">
-        <div class="rule"><span>Per payment</span><b>0.1 MON</b></div>
-        <div class="rule"><span>Per day</span><b>0.3 MON</b></div>
-        <div class="flag bad">✕ “Send 5 MON” → rejected by the contract</div>
-        <small class="muted">Illustration of the on-chain rule</small>
+      <div class="ico" aria-hidden="true">⛓️</div>
+      <h3>2 · Proof from real travellers, on-chain</h3>
+      <p>Travellers who have been there attest what they really found, and can mark “the venue confirmed this in writing”. It lives on <b>Monad</b>, so nobody can quietly edit it. Each place gets an honest badge.</p>
+      <div class="mock" role="img" aria-label="Illustration of verification badges">
+        <div class="rule"><span>Venue-confirmed</span><b>strongest</b></div>
+        <div class="rule"><span>Community-verified</span><b>2+ travellers</b></div>
+        <div class="rule"><span>Web-sourced only</span><b>check first</b></div><small class="muted">Illustration of the badge levels</small>
       </div>
     </div>
   </div>
 </div></section>
 
-<section id="try"><div class="wrap">
-  <p class="eyebrow">Try it · no wallet, no install</p>
+<section id="how"><div class="wrap">
+  <p class="eyebrow">How it works</p>
+  <h2>Tell it. Check it. Confirm it.</h2>
+  <div class="grid g3 steps3">
+    <div class="card"><span class="step-n">1</span><h3>Tell it</h3><p>“3 days Pune to Goa, I use a wheelchair.” Type it or say it, in English or Hindi.</p></div>
+    <div class="card"><span class="step-n">2</span><h3>It checks</h3><p>In about 20 seconds: a day-by-day plan, every place researched with sources, cross-checked against Monad.</p></div>
+    <div class="card"><span class="step-n">3</span><h3>You confirm</h3><p>Send the ready-made message to the venue. Been there? Attest what you found, and help the next traveller.</p></div>
+  </div>
+</div></section>
+
+<section id="atts"><div class="wrap">
+  <p class="eyebrow">Live on Monad · AccessRegistry</p>
+  <h2>What real travellers have verified.</h2>
+  <div class="stats">
+    <div class="card stat"><div class="k">Attestations</div><div class="v" id="att-count" aria-live="polite">-</div></div>
+    <div class="card stat"><div class="k">Places covered</div><div class="v" id="att-places" aria-live="polite">-</div></div>
+    <div class="card stat"><div class="k">AccessRegistry contract</div><code class="addr" id="reg-addr"></code>
+      <div class="row-links"><a class="btn sm" id="reg-scan" href="#" target="_blank" rel="noopener noreferrer">Monadscan</a><a class="btn sm" id="reg-vis" href="#" target="_blank" rel="noopener noreferrer">MonadVision</a></div></div>
+  </div>
+  <div id="att-status" role="status" class="muted" style="margin:10px 0">Loading from Monad…</div>
+  <div class="tablewrap"><table id="att-table" hidden>
+    <caption class="muted" style="position:absolute;left:-9999px">Recent accessibility attestations</caption>
+    <thead><tr><th scope="col">Time</th><th scope="col">Place</th><th scope="col">Confirmed</th><th scope="col">By</th><th scope="col">Wallet</th><th scope="col">Tx</th></tr></thead>
+    <tbody id="att-body"></tbody></table></div>
+  <p class="muted" style="font-size:.85rem;margin-top:10px">Each wallet has one current attestation per place, so repeating cannot inflate the numbers. Testnet data.</p>
+</div></section>
+
+<section id="guard"><div class="wrap">
+  <p class="eyebrow">Also built · Halo Guard · try it, no wallet needed</p>
   <h2>Can a scammer move this family’s money?</h2>
   <p class="muted">Pretend you are the scammer. Pick who gets paid and how much, and ask the <b>real contract on Monad</b>. It checks the family’s live rules and answers. This is a safe dry run: it moves no money.</p>
   <div class="grid g2 tryg">
@@ -94,20 +122,9 @@
     <code id="tryRaw" class="trraw"></code>
   </div>
 </div></section>
-
-<section id="how"><div class="wrap">
-  <p class="eyebrow">How it feels</p>
-  <h2>Say it. Confirm it. The contract decides.</h2>
-  <div class="grid g3 steps3">
-    <div class="card"><span class="step-n">1</span><h3>Say it</h3><p>“Open Safari.” “Send 0.05 to Alice.” No keyboard, no mouse.</p></div>
-    <div class="card"><span class="step-n">2</span><h3>Halo asks first</h3><p>It reads the payment back and waits for “confirm”, a button, or a double-blink. Silence cancels.</p></div>
-    <div class="card"><span class="step-n">3</span><h3>The contract decides</h3><p>GuardVault on Monad checks your family’s limits and records how it was approved.</p></div>
-  </div>
-</div></section>
-
 <section id="live"><div class="wrap">
-  <p class="eyebrow">Live on-chain activity</p>
-  <h2>Real payments, straight from Monad testnet.</h2>
+  <p class="eyebrow">Halo Guard · live payments on Monad</p>
+  <h2>Real guarded payments, straight from Monad testnet.</h2>
   <div class="stats">
     <div class="card stat"><div class="k">Total transfers</div><div class="v" id="stat-transfers" aria-live="polite">-</div></div>
     <div class="card stat"><div class="k">Total volume</div><div class="v"><span id="stat-volume" aria-live="polite">-</span> <small>MON</small></div></div>
@@ -129,27 +146,27 @@
 <section id="roadmap"><div class="wrap">
   <p class="eyebrow">What’s next</p>
   <h2>Roadmap</h2>
-  <p class="muted">Today’s demo is the core: talk, Scam Shield, and family-guarded payments. Here is where it goes.</p>
+  <p class="muted">Today’s demo is the core: plan, verify with sources, attest on-chain. Here is where it goes.</p>
   <div class="chips">
-    <span class="chip2">Eye-gaze cursor control (from GemGuide)</span><span class="chip2">Hindi &amp; Marathi voice</span><span class="chip2">Dictation for emails &amp; WhatsApp</span>
-    <span class="chip2">Pair a device by WhatsApp link</span><span class="chip2">Caregiver dashboard &amp; alerts</span><span class="chip2">Mainnet launch</span><span class="chip2">Works on phones</span>
+    <span class="chip2">Live routes and transport options</span><span class="chip2">WhatsApp &amp; Telegram bot</span><span class="chip2">Venue-signed confirmations</span><span class="chip2">Reputation for attesters</span>
+    <span class="chip2">More languages</span><span class="chip2">In-trip help (broken lift? find the next option)</span><span class="chip2">Family-guarded trip allowance (Halo Guard)</span><span class="chip2">Mainnet</span>
   </div>
 </div></section>
 
 <section id="run"><div class="wrap">
   <p class="eyebrow">Run it yourself</p>
-  <h2>Five commands on a Mac.</h2>
+  <h2>Plan any trip live on your Mac.</h2>
 <pre><code>git clone <span data-repo-text>https://github.com/callmeharshh/halo</span>
 cd halo &amp;&amp; ./setup.sh
-# add your OpenAI key and a throwaway testnet wallet key to .env
+# add your OpenAI key to .env
 source .venv/bin/activate
-python halo.py</code></pre>
+python travel/server.py</code></pre>
 </div></section>
 </main>
 
 <footer><div class="wrap">
-  <p><span data-name>Halo</span> was built at Monad Blitz Pune V3. It builds on the open-source <a href="https://github.com/Sourajit1234/GemGuide" target="_blank" rel="noopener noreferrer">GemGuide</a> by Sourajit, whose voice, gaze and screen-vision foundation we ported to macOS. We added the Scam Shield, the Guardian, and the family-owned GuardVault contract on Monad.</p>
-  <p>Testnet demo. Not financial advice and not a production wallet.</p>
+  <p><span data-name>Halo</span> Journeys was built at Monad Blitz Pune V3. The idea of an AI agent for disabled travellers was inspired by <a href="https://github.com/codersbeyondborders/inclusive-travel-agent" target="_blank" rel="noopener noreferrer">Inclusive Travel Agent</a> by Coders Beyond Borders; this is our own implementation, and our addition is the traveller-verified on-chain registry and source-linked research. We started from <a href="https://github.com/Sourajit1234/GemGuide" target="_blank" rel="noopener noreferrer">GemGuide</a> by Sourajit (voice, gaze and screen vision).</p>
+  <p>Accessibility information comes from public web sources and traveller attestations. It can be wrong or out of date: always confirm with the venue. Testnet demo.</p>
 </div></footer>
 </body>
 </html>

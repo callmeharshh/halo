@@ -11,6 +11,7 @@ steps = [("safety unit tests", ["tests/test_safety.py"]), ("contract + repo cons
          ("public website + console (read-only)", ["tests/check_site.py"])]
 if not quick:
     steps += [("agents + Scam Shield", ["tests/check_agents.py"]),
+              ("travel agent (plan, sources, honesty rules, TTS)", ["tests/check_travel.py"]),
               ("server protocol", ["tests/check_server.py"] + (["--live-tx"] if live else [])),
               ("web UI end to end", ["tests/check_ui.py"] + (["--live-tx"] if live else [])),
               ("Family Console with wallet", ["tests/check_console.py"])]

@@ -6,14 +6,15 @@ import sys
 import requests
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-d = json.load(open(os.path.join(HERE, "deployment.json")))
+CONTRACT_NAME = sys.argv[1] if len(sys.argv) > 1 else "GuardVault"
+d = json.load(open(os.path.join(HERE, "deployment.json" if CONTRACT_NAME == "GuardVault" else f"deployment.{CONTRACT_NAME}.json")))
 BASE = "https://sourcify-api-monad.blockvision.org"
 addr, chain = d["address"], str(d["chainId"])
 
 body = {
     "stdJsonInput": d["standardInput"],
     "compilerVersion": d["solc"] + "+commit.730da8bd" if False else d["solc"],
-    "contractIdentifier": "contracts/GuardVault.sol:GuardVault",
+    "contractIdentifier": f"contracts/{CONTRACT_NAME}.sol:{CONTRACT_NAME}",
 }
 # Sourcify v2 wants the full compiler version string (e.g. 0.8.26+commit.8a97fa7a)
 import solcx

@@ -15,12 +15,13 @@ ROOT = os.path.dirname(HERE)
 load_dotenv(os.path.join(ROOT, ".env"))
 
 SOLC = "0.8.26"
-SRC_NAME = "contracts/GuardVault.sol"
+CONTRACT_NAME = sys.argv[1] if len(sys.argv) > 1 else "GuardVault"
+SRC_NAME = f"contracts/{CONTRACT_NAME}.sol"
 
 
 def compile_contract():
     solcx.install_solc(SOLC)
-    source = open(os.path.join(HERE, "GuardVault.sol")).read()
+    source = open(os.path.join(HERE, f"{CONTRACT_NAME}.sol")).read()
     std_input = {
         "language": "Solidity",
         "sources": {SRC_NAME: {"content": source}},
@@ -32,7 +33,7 @@ def compile_contract():
         },
     }
     out = solcx.compile_standard(std_input, solc_version=SOLC)
-    c = out["contracts"][SRC_NAME]["GuardVault"]
+    c = out["contracts"][SRC_NAME][CONTRACT_NAME]
     return std_input, c["abi"], "0x" + c["evm"]["bytecode"]["object"]
 
 
@@ -52,12 +53,12 @@ def main():
     print("deploy tx:", h.hex())
     r = w3.eth.wait_for_transaction_receipt(h, timeout=90)
     assert r.status == 1, "deployment failed"
-    print("GuardVault deployed at:", r.contractAddress, "block", r.blockNumber)
+    print(f"{CONTRACT_NAME} deployed at:", r.contractAddress, "block", r.blockNumber)
     json.dump({
-        "contract": "GuardVault", "address": r.contractAddress, "chainId": 10143, "network": "Monad Testnet",
+        "contract": CONTRACT_NAME, "address": r.contractAddress, "chainId": 10143, "network": "Monad Testnet",
         "deployTx": "0x" + h.hex().removeprefix("0x"), "deployer": acct.address, "block": r.blockNumber,
         "solc": SOLC, "abi": abi, "standardInput": std_input,
-    }, open(os.path.join(HERE, "deployment.json"), "w"), indent=2)
+    }, open(os.path.join(HERE, "deployment.json" if CONTRACT_NAME == "GuardVault" else f"deployment.{CONTRACT_NAME}.json"), "w"), indent=2)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Halo Journeys - accessible trip planning you can verify</title>
+<meta name="description" content="Describe your trip by typing or speaking. Halo Journeys plans it around your access needs and shows what is verified by real travellers on Monad versus only claimed on the web.">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23836EF9' stroke-width='5'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="journeys.css">
+<script>
+/* apply saved accessibility preferences before first paint */
+(function(){try{var d=document.documentElement,s=localStorage.getItem("halo.j.size"),c=localStorage.getItem("halo.j.contrast");if(s==="1"||s==="2")d.dataset.size=s;if(c==="1")d.dataset.contrast="high";}catch(e){}})();
+</script>
+<script src="registry.js"></script>
+<script src="vendor/ethers.umd.min.js"></script>
+<script src="journeys.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="top j-top"><div class="wrap j-top-row">
+  <div class="brand"><i aria-hidden="true"></i><span>Halo Journeys</span></div>
+  <nav class="j-nav" aria-label="Site">
+    <a href="./">Halo home</a>
+  </nav>
+  <div class="j-tools" role="group" aria-label="Display settings">
+    <div class="j-seg" role="group" aria-label="Text size">
+      <button type="button" class="j-btn j-seg-b" data-size="0" aria-pressed="true" aria-label="Normal text size">A</button>
+      <button type="button" class="j-btn j-seg-b" data-size="1" aria-pressed="false" aria-label="Large text size">A+</button>
+      <button type="button" class="j-btn j-seg-b" data-size="2" aria-pressed="false" aria-label="Largest text size">A++</button>
+    </div>
+    <button type="button" class="j-btn" id="contrast" aria-pressed="false">High contrast</button>
+  </div>
+</div></header>
+
+<main id="main">
+  <section class="j-hero" aria-labelledby="plan-h"><div class="wrap">
+    <p class="eyebrow">Halo Journeys · AI travel agent</p>
+    <h1 id="plan-h">Plan a trip that works for your body.</h1>
+    <p class="lead">Tell us where you want to go and what you need. We plan it, show what the web says about access, and show what real travellers have confirmed on the blockchain.</p>
+
+    <div id="mode-note" class="j-note" hidden></div>
+
+    <form id="plan-form" class="j-form" novalidate>
+      <div class="j-field">
+        <label for="req" class="j-label">Describe your trip</label>
+        <p id="req-hint" class="j-hint">For example: where from, where to, how many days, your budget. You can type, or press the microphone and speak.</p>
+        <textarea id="req" name="request" rows="4" maxlength="1200" aria-describedby="req-hint req-err" placeholder="3 days Pune to Goa, I use a wheelchair, budget 30000 rupees"></textarea>
+        <p id="req-err" class="j-err" role="alert" hidden></p>
+      </div>
+
+      <div class="j-row">
+        <button type="button" id="mic" class="j-btn j-btn-lg" aria-pressed="false" hidden>
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          <span id="mic-label">Speak your trip</span>
+        </button>
+        <p id="mic-status" class="j-hint" role="status"></p>
+      </div>
+
+      <fieldset class="j-fs">
+        <legend>Your access needs <span class="j-opt">(choose any)</span></legend>
+        <div class="j-chips" id="needs">
+          <label class="j-chip"><input type="checkbox" name="need" value="wheelchair"><span>Wheelchair</span></label>
+          <label class="j-chip"><input type="checkbox" name="need" value="blind"><span>Blind or low vision</span></label>
+          <label class="j-chip"><input type="checkbox" name="need" value="deaf"><span>Deaf or hard of hearing</span></label>
+          <label class="j-chip"><input type="checkbox" name="need" value="cognitive"><span>Cognitive</span></label>
+          <label class="j-chip"><input type="checkbox" name="need" value="elderly"><span>Elderly</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="j-fs">
+        <legend>Language of the plan</legend>
+        <div class="j-chips">
+          <label class="j-chip"><input type="radio" name="lang" value="en" checked><span>English</span></label>
+          <label class="j-chip"><input type="radio" name="lang" value="hi"><span lang="hi">हिन्दी (Hindi)</span></label>
+        </div>
+      </fieldset>
+
+      <div class="j-row">
+        <button type="submit" id="go" class="btn primary j-btn-lg">Plan my trip</button>
+        <button type="button" id="sample-btn" class="j-btn j-btn-lg" hidden>Show the sample plan</button>
+      </div>
+
+      <div class="j-ex">
+        <p class="j-hint" id="ex-h">Or start from an example:</p>
+        <div class="j-chips" role="group" aria-labelledby="ex-h" id="examples"></div>
+      </div>
+    </form>
+  </div></section>
+
+  <section id="progress" class="j-section" aria-labelledby="prog-h" hidden><div class="wrap">
+    <h2 id="prog-h">Planning your trip</h2>
+    <ol id="stages" class="j-stages" aria-live="polite" aria-relevant="additions"></ol>
+    <button type="button" id="cancel" class="j-btn">Cancel</button>
+  </div></section>
+
+  <div id="error" class="wrap" hidden><div class="j-alert" role="alert"><strong>Something went wrong.</strong> <span id="error-text"></span></div></div>
+
+  <section id="result" class="j-section" aria-labelledby="res-h" hidden><div class="wrap">
+    <div id="banner" class="j-note" hidden></div>
+    <h2 id="res-h" tabindex="-1"></h2>
+    <p id="res-needs" class="j-meta"></p>
+    <p id="res-sum" class="j-sum"></p>
+    <div class="j-row">
+      <button type="button" id="read" class="j-btn" aria-pressed="false"><span id="read-label">Read it aloud</span></button>
+      <p id="read-status" class="j-hint" role="status"></p>
+    </div>
+
+    <h3 class="j-h3" id="days-h">Day by day</h3>
+    <div id="days" class="j-days" aria-labelledby="days-h"></div>
+
+    <h2 id="places-h" class="j-h2">Places and accessibility</h2>
+    <div class="j-legend" aria-label="How to read the badges">
+      <p class="j-hint"><strong>Verified</strong> means real travellers recorded it on Monad. <strong>Web-sourced</strong> means we found it online but no traveller has confirmed it yet. <span id="chain-status"></span></p>
+    </div>
+    <div id="places" class="j-places"></div>
+
+    <h2 id="tips-h" class="j-h2">Tips for this trip</h2>
+    <ul id="tips" class="j-tips"></ul>
+    <p id="res-gen" class="j-hint"></p>
+  </div></section>
+</main>
+
+<footer><div class="wrap">
+  <p><strong>Accessibility information comes from public web sources and traveller attestations on Monad. Always confirm with the venue.</strong></p>
+  <p class="j-hint">AccessRegistry contract: <code class="addr j-addr" id="addr"></code> <a id="addr-link" href="#" target="_blank" rel="noopener noreferrer">View on the explorer<span class="j-sr"> (opens in a new tab)</span></a></p>
+</div></footer>
+
+<div id="toasts" class="j-toasts" role="status" aria-live="polite" aria-atomic="false"></div>
+
+<div id="dlg-back" class="j-back" hidden>
+  <div id="dlg" class="j-dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-h" aria-describedby="dlg-d" tabindex="-1">
+    <h2 id="dlg-h">I have been here</h2>
+    <p id="dlg-d" class="j-hint"></p>
+    <form id="att-form" novalidate>
+      <fieldset class="j-fs">
+        <legend>What was accessible when you were there?</legend>
+        <div id="att-feats" class="j-checks"></div>
+      </fieldset>
+      <label class="j-check j-venue"><input type="checkbox" id="att-venue"><span>The venue confirmed this to me in writing</span></label>
+      <div class="j-field">
+        <label for="att-note" class="j-label">Note (optional, up to 280 characters)</label>
+        <textarea id="att-note" rows="3" maxlength="280"></textarea>
+        <p class="j-hint" id="att-count" aria-hidden="true">0 / 280</p>
+      </div>
+      <p id="att-err" class="j-err" role="alert" hidden></p>
+      <div id="att-status" class="j-attstatus" role="status" aria-live="polite"></div>
+      <div class="j-row">
+        <button type="submit" id="att-go" class="btn primary j-btn-lg">Submit with my wallet</button>
+        <button type="button" id="att-close" class="j-btn j-btn-lg">Close</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

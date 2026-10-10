@@ -1,0 +1,54 @@
+{
+ "address": "0x3aaE87a424aA7F9fcD7FB98D27a621FcD6f14A7f",
+ "lastBlock": 69800897,
+ "rows": [
+  {
+   "key": "0xea18ca6221d739bae235b7d9e7c13473ff806f92a59e8785a9994e26cb0f6df8:1",
+   "tx": "0xea18ca6221d739bae235b7d9e7c13473ff806f92a59e8785a9994e26cb0f6df8",
+   "block": 69794951,
+   "place": "halo registry self test",
+   "city": "pune",
+   "by": "0xF54224dcD8eCD1D38c59a9e38Da333f3939402Ed",
+   "features": 9,
+   "venueConfirmed": false,
+   "note": "first attestation: step-free + restroom",
+   "ts": 1791626151
+  },
+  {
+   "key": "0xd2145d26c216f4793465b2ef3cb72d782db4dd63be89b4d8b2f82ce6320c5677:4",
+   "tx": "0xd2145d26c216f4793465b2ef3cb72d782db4dd63be89b4d8b2f82ce6320c5677",
+   "block": 69794965,
+   "place": "halo registry self test",
+   "city": "pune",
+   "by": "0xF54224dcD8eCD1D38c59a9e38Da333f3939402Ed",
+   "features": 3,
+   "venueConfirmed": true,
+   "note": "updated: step-free + ramp, venue confirmed",
+   "ts": 1791626155
+  },
+  {
+   "key": "0xac6cdd579b382eb48ed473d8f91be2554cd126424255ad26d7a56d2e70ad8de2:1",
+   "tx": "0xac6cdd579b382eb48ed473d8f91be2554cd126424255ad26d7a56d2e70ad8de2",
+   "block": 69799538,
+   "place": "goa international airport",
+   "city": "goa",
+   "by": "0xF54224dcD8eCD1D38c59a9e38Da333f3939402Ed",
+   "features": 7,
+   "venueConfirmed": false,
+   "note": "Step-free entrance and a ramp at the main door, confirmed on site.",
+   "ts": 1791627537
+  },
+  {
+   "key": "0xc5652f5156aa984835d9d534244d240cc917b5f1efacfc68afe1bfa0a6196a25:39",
+   "tx": "0xc5652f5156aa984835d9d534244d240cc917b5f1efacfc68afe1bfa0a6196a25",
+   "block": 69800749,
+   "place": "pune international airport",
+   "city": "pune",
+   "by": "0xF54224dcD8eCD1D38c59a9e38Da333f3939402Ed",
+   "features": 7,
+   "venueConfirmed": false,
+   "note": "Step-free entrance and a ramp at the main door, confirmed on site.",
+   "ts": 1791627903
+  }
+ ]
+}

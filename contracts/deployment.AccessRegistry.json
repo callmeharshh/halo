@@ -1,0 +1,279 @@
+{
+  "contract": "AccessRegistry",
+  "address": "0x3aaE87a424aA7F9fcD7FB98D27a621FcD6f14A7f",
+  "chainId": 10143,
+  "network": "Monad Testnet",
+  "deployTx": "0x6d5df3f327aa5f142425e3743d3b3468fdaf13c0df9d3920c39898cfeedd7e5b",
+  "deployer": "0xF54224dcD8eCD1D38c59a9e38Da333f3939402Ed",
+  "block": 69794854,
+  "solc": "0.8.26",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "place",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "placeName",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "city",
+          "type": "string"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "by",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint16",
+          "name": "features",
+          "type": "uint16"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "venueConfirmed",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "note",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "Attested",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "FEATURES",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "placeName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "city",
+          "type": "string"
+        },
+        {
+          "internalType": "uint16",
+          "name": "features",
+          "type": "uint16"
+        },
+        {
+          "internalType": "bool",
+          "name": "venueConfirmed",
+          "type": "bool"
+        },
+        {
+          "internalType": "string",
+          "name": "note",
+          "type": "string"
+        }
+      ],
+      "name": "attest",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "entryOf",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "exists",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "venueConfirmed",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint16",
+          "name": "features",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "placeName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "city",
+          "type": "string"
+        }
+      ],
+      "name": "placeId",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "summary",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "attesters",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "confirmed",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32[10]",
+          "name": "counts",
+          "type": "uint32[10]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "total",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalAttestations",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "venueConfirmedCount",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "standardInput": {
+    "language": "Solidity",
+    "sources": {
+      "contracts/AccessRegistry.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.26;\n\n/// @title AccessRegistry\n/// @notice A community registry of REAL accessibility facts about places (airports, stations, hotels, sights),\n///         attested by travellers on Monad. AI travel agents read it to validate what websites claim.\n///         A place id is keccak256(normalise(name) + \"|\" + normalise(city)), where normalise = lowercase,\n///         letters/digits/spaces only, single spaces. Each wallet has ONE current attestation per place (updating\n///         replaces it), so counts cannot be inflated by repeating.\ncontract AccessRegistry {\n    uint8 public constant FEATURES = 10;\n    // feature bits: 0 step-free entrance, 1 ramp, 2 elevator, 3 accessible restroom, 4 accessible room/seating,\n    // 5 tactile paving / braille, 6 hearing loop / sign language, 7 quiet low-sensory space, 8 assistance service, 9 accessible parking/drop-off\n\n    struct Entry {\n        bool exists;\n        bool venueConfirmed;   // the attester says the venue itself confirmed this in writing\n        uint16 features;\n    }\n\n    mapping(bytes32 => mapping(address => Entry)) public entryOf;\n    mapping(bytes32 => uint32) public total;             // wallets that have attested this place\n    mapping(bytes32 => uint32) public venueConfirmedCount;\n    mapping(bytes32 => uint32[10]) private _featureCount;\n    uint256 public totalAttestations;\n\n    event Attested(\n        bytes32 indexed place,\n        string placeName,\n        string city,\n        address indexed by,\n        uint16 features,\n        bool venueConfirmed,\n        string note,\n        uint256 timestamp\n    );\n\n    function placeId(string memory placeName, string memory city) public pure returns (bytes32) {\n        return keccak256(abi.encodePacked(placeName, \"|\", city));\n    }\n\n    /// @param placeName/city already normalised by the client (see contract notes)\n    function attest(string calldata placeName, string calldata city, uint16 features, bool venueConfirmed, string calldata note)\n        external\n    {\n        require(bytes(placeName).length > 0 && bytes(placeName).length <= 80, \"bad place\");\n        require(bytes(city).length <= 60, \"bad city\");\n        require(bytes(note).length <= 280, \"note too long\");\n        require(features < (1 << FEATURES), \"bad features\");\n        bytes32 id = placeId(placeName, city);\n        Entry storage e = entryOf[id][msg.sender];\n        if (e.exists) {  // replace this wallet's previous attestation\n            for (uint8 i = 0; i < FEATURES; i++) if (e.features & (1 << i) != 0) _featureCount[id][i] -= 1;\n            if (e.venueConfirmed) venueConfirmedCount[id] -= 1;\n        } else {\n            total[id] += 1;\n        }\n        e.exists = true; e.features = features; e.venueConfirmed = venueConfirmed;\n        for (uint8 i = 0; i < FEATURES; i++) if (features & (1 << i) != 0) _featureCount[id][i] += 1;\n        if (venueConfirmed) venueConfirmedCount[id] += 1;\n        totalAttestations += 1;\n        emit Attested(id, placeName, city, msg.sender, features, venueConfirmed, note, block.timestamp);\n    }\n\n    /// @return attesters how many wallets attested; confirmed how many say the venue confirmed; counts per feature bit\n    function summary(bytes32 id) external view returns (uint32 attesters, uint32 confirmed, uint32[10] memory counts) {\n        return (total[id], venueConfirmedCount[id], _featureCount[id]);\n    }\n}\n"
+      }
+    },
+    "settings": {
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "evmVersion": "cancun",
+      "metadata": {
+        "bytecodeHash": "none",
+        "useLiteralContent": true
+      },
+      "outputSelection": {
+        "*": {
+          "*": [
+            "abi",
+            "evm.bytecode.object",
+            "metadata"
+          ]
+        }
+      }
+    }
+  }
+}
