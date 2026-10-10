@@ -10,6 +10,8 @@ load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 import agents
 import wallet as wl
+from gaze import GazeController
+from server import server as llama
 from voice import Voice
 
 APP_NAME = os.getenv("APP_NAME", "Monad Voice Agents")
@@ -33,6 +35,8 @@ class App(ctk.CTk):
         self.q = queue.Queue()
         self.voice = Voice(self.on_utterance, on_state=lambda s: self.q.put(("state", s)))
         self.listening = False
+        self.gaze = GazeController(on_event=lambda m: self.q.put(("event", "System", "tool", m)))
+        agents.on_mode_change = lambda m: self.q.put(("mode", m))
 
         agents.bus.on_event = lambda a, k, t: self.q.put(("event", a, k, t))
         agents.bus.speak = self._speak
@@ -58,8 +62,18 @@ class App(ctk.CTk):
         self.state_lbl = ctk.CTkLabel(sb, text="Idle", text_color="#6b7280", font=ctk.CTkFont(size=14, weight="bold"))
         self.state_lbl.pack()
 
+        self.mode_sw = ctk.CTkSwitch(sb, text="Assistant mode", command=self.on_mode_switch)
+        self.mode_sw.select()
+        self.mode_sw.pack(pady=(14, 4))
+        self.gaze_btn = ctk.CTkButton(sb, text="👁  Calibrate eye tracking", fg_color="#374151", command=self.run_calibration)
+        self.gaze_btn.pack(padx=20, pady=4, fill="x")
+        self.gaze_sw = ctk.CTkSwitch(sb, text="Gaze cursor + blink click", command=self.on_gaze_switch, state="disabled")
+        self.gaze_sw.pack(pady=4)
+        backend = "Gemma 4 (local)" if agents.BACKEND == "local" else f"{agents.MODEL} (cloud)"
+        ctk.CTkLabel(sb, text=f"LLM: {backend}", text_color="gray", font=ctk.CTkFont(size=11)).pack(pady=(4, 0))
+
         card = ctk.CTkFrame(sb, corner_radius=12)
-        card.pack(padx=16, pady=22, fill="x")
+        card.pack(padx=16, pady=14, fill="x")
         ctk.CTkLabel(card, text="MONAD TESTNET WALLET", font=ctk.CTkFont(size=11, weight="bold"), text_color="gray").pack(pady=(12, 2))
         self.bal_lbl = ctk.CTkLabel(card, text="— MON", font=ctk.CTkFont(size=28, weight="bold"))
         self.bal_lbl.pack()
@@ -115,9 +129,31 @@ class App(ctk.CTk):
                 self.q.put(("balance", "offline"))
         threading.Thread(target=work, daemon=True).start()
 
+    def on_mode_switch(self):
+        agents.set_mode("assistant" if self.mode_sw.get() else "transcribe")
+
+    def run_calibration(self):
+        self.q.put(("event", "System", "tool", "Eye calibration starting: follow the dots, then the 9 points."))
+        self.iconify()
+        self.after(400, self._do_calibration)  # OpenCV windows must run on the main thread
+
+    def _do_calibration(self):
+        try:
+            self.gaze.calibrate()
+            self.gaze_sw.configure(state="normal")
+            self.gaze_sw.select()
+            self.gaze.start()
+        except Exception as e:
+            self._append("System", "error", f"Calibration failed: {e}")
+        finally:
+            self.deiconify()
+
+    def on_gaze_switch(self):
+        self.gaze.start() if self.gaze_sw.get() else self.gaze.stop()
+
     def toggle_listen(self):
         if not self.listening:
-            self.mic_btn.configure(text="Loading voice…", state="disabled")
+            self.mic_btn.configure(text="Loading…", state="disabled")
             threading.Thread(target=self._start_voice, daemon=True).start()
         else:
             self.voice.stop()
@@ -127,6 +163,9 @@ class App(ctk.CTk):
 
     def _start_voice(self):
         try:
+            if agents.BACKEND == "local":
+                self.q.put(("event", "System", "tool", "Starting local Gemma 4 server (first load takes a bit)…"))
+                llama.start()
             self.voice.start()
             self.listening = True
             self.q.put(("mic_on",))
@@ -196,6 +235,9 @@ class App(ctk.CTk):
                         self.ok_btn.configure(state="disabled")
                         self.no_btn.configure(state="disabled")
                         self.guard_lbl.configure(text="Nothing awaiting approval", text_color="gray")
+                elif kind == "mode":
+                    self.mode_sw.select() if m[1] == "assistant" else self.mode_sw.deselect()
+                    self.mode_sw.configure(text="Assistant mode" if m[1] == "assistant" else "Transcribe mode")
                 elif kind == "state":
                     self._set_state(m[1])
                 elif kind == "balance":
@@ -210,4 +252,16 @@ class App(ctk.CTk):
 
 
 if __name__ == "__main__":
-    App().mainloop()
+    app = App()
+    if app.gaze.load_saved():
+        app.gaze_sw.configure(state="normal")
+        app.gaze_sw.deselect()
+        app._append("System", "tool", "Saved eye calibration loaded. Toggle 'Gaze cursor' to use it.")
+
+    def _quit():
+        try:
+            llama.stop()
+        finally:
+            app.destroy()
+    app.protocol("WM_DELETE_WINDOW", _quit)
+    app.mainloop()

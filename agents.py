@@ -13,8 +13,22 @@ import wallet as wl
 load_dotenv()
 import os
 
-MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1")
-client = OpenAI(timeout=20.0, max_retries=3)  # fail fast, retry transient network errors
+BACKEND = os.getenv("LLM_BACKEND", "openai")  # "openai" (cloud) or "local" (Gemma 4 via llama.cpp)
+if BACKEND == "local":
+    MODEL = "Gemma4"
+    client = OpenAI(base_url="http://127.0.0.1:8080/v1", api_key="local", timeout=180.0, max_retries=1)
+else:
+    MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1")
+    client = OpenAI(timeout=20.0, max_retries=3)  # fail fast, retry transient network errors
+
+
+def clean(text: str) -> str:
+    """Strip Gemma thought channels / stray tags so only speakable text remains."""
+    if not text:
+        return ""
+    text = re.sub(r"<\|channel\|?>thought.*?<channel\|>", "", text, flags=re.S)
+    text = re.sub(r"<\|?[a-z_]+\|?>", "", text)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 # ── plumbing ─────────────────────────────────────────────────────────────────
@@ -48,7 +62,7 @@ class Agent:
                 model=MODEL, messages=msgs, tools=self.tools or None, temperature=0.2)
             m = r.choices[0].message
             if not m.tool_calls:
-                return (m.content or "").strip()
+                return clean(m.content)
             msgs.append(m)
             for tc in m.tool_calls:
                 try:
@@ -273,9 +287,64 @@ ORCH_TOOLS = [fn("delegate", "Hand the task to a specialist agent.",
 history: list[dict] = []
 _lock = threading.Lock()
 
+# ── transcribe (dictation) mode ──────────────────────────────────────────────
+mode = "assistant"
+_chunks: list[str] = []
+_timer = None
+on_mode_change = lambda m: None
+
+
+def set_mode(m: str):
+    global mode
+    mode = m
+    on_mode_change(m)
+    bus.on_event("Orchestrator", "route", f"mode → {m}")
+
+
+def _flush_dictation():
+    global _chunks, _timer
+    raw, _chunks, _timer = " ".join(_chunks), [], None
+    if not raw.strip():
+        return
+    try:
+        r = client.chat.completions.create(model=MODEL, messages=[{"role": "user", "content":
+            "Clean this dictated text: fix grammar and punctuation, remove filler words. If it is code, fix the "
+            "syntax for the language. If it is mathematics, convert it to LaTeX. Return ONLY the final text, "
+            "no quotes, no commentary:\n\n" + raw}], temperature=0.1)
+        text = clean(r.choices[0].message.content).strip("\"'")
+        if text:
+            bus.on_event("Writer", "tool", f"type_text({_short({'text': text})})")
+            st.type_text(text)
+    except Exception as e:
+        bus.on_event("Writer", "error", str(e))
+
+
+def _dictate(text: str):
+    global _timer
+    _chunks.append(text)
+    if _timer:
+        _timer.cancel()
+    _timer = threading.Timer(2.5, _flush_dictation)
+    _timer.start()
+
 
 def handle(user_text: str) -> str:
     """Entry point from the voice/text UI. Returns the spoken reply."""
+    low = user_text.lower()
+    if "transcribe mode" in low or "dictation mode" in low:
+        bus.on_event("User", "say", user_text)
+        set_mode("transcribe")
+        bus.speak("Transcribe mode on.")
+        return "Transcribe mode on."
+    if "assistant mode" in low:
+        bus.on_event("User", "say", user_text)
+        set_mode("assistant")
+        bus.speak("Assistant mode on.")
+        return "Assistant mode on."
+    if mode == "transcribe":
+        bus.on_event("User", "say", user_text)
+        _dictate(user_text)
+        return ""
     with _lock:  # one request at a time
         bus.on_event("User", "say", user_text)
         history.append({"role": "user", "content": user_text})
@@ -292,7 +361,7 @@ def handle(user_text: str) -> str:
                 bus.on_event("Orchestrator", "route", f"→ {name} agent: {task}")
                 reply = SPECIALISTS[name].run([{"role": "user", "content": task}])
             else:
-                reply = (m.content or "").strip()
+                reply = clean(m.content)
         except Exception as e:
             bus.on_event("Orchestrator", "error", str(e))
             reply = "Sorry, something went wrong."
