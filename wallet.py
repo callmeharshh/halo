@@ -13,7 +13,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 RPC = os.getenv("MONAD_RPC", "https://testnet-rpc.monad.xyz")
 CHAIN_ID = int(os.getenv("MONAD_CHAIN_ID", "10143"))
-EXPLORER = "https://testnet.monadexplorer.com"
+EXPLORER = "https://testnet.monadscan.com"
 CONTACTS_PATH = os.path.join(BASE_DIR, "contacts.json")
 MAX_SEND = Decimal(os.getenv("MAX_SEND_MON", "1"))  # hard safety cap per transfer
 
