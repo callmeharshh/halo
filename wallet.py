@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 from web3 import Web3
 from eth_account import Account
 
+from safety import match_contact
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
@@ -73,6 +75,10 @@ def resolve_recipient(who: str) -> tuple[str, str]:
         addr = Web3.to_checksum_address(who)
         return addr[:6] + "…" + addr[-4:], addr
     key = re.sub(r"[^a-z0-9 ]", "", who.lower()).strip()
+    matched, why = match_contact(key, list(load_contacts().keys()))  # tolerate mishearing, refuse ambiguity
+    if matched is None:
+        raise WalletError(f"I couldn't be sure who you meant: {why}. Please say the name again.")
+    key = matched
     if vault is not None and _acct is not None and key:
         try:
             onchain = vault.functions.contactOf(_acct.address, key).call()
@@ -81,9 +87,7 @@ def resolve_recipient(who: str) -> tuple[str, str]:
         except Exception:
             pass  # fall back to the local mirror below
     c = load_contacts()
-    if key in c:
-        return key.title(), Web3.to_checksum_address(c[key])
-    raise WalletError(f"I don't have a contact named '{who}'.")
+    return key.title(), Web3.to_checksum_address(c[key])
 
 
 # ── reads ───────────────────────────────────────────────────────────────────
@@ -175,7 +179,7 @@ def prepare_transfer(to: str, amount) -> dict:
     if bal < amt:
         raise WalletError(f"Your vault only has {bal:.4f} MON.")
     named = not Web3.is_address(to.strip())
-    return {"label": label, "to": addr, "amount": amt, "contact": re.sub(r"[^a-z0-9 ]", "", to.lower()).strip() if named else ""}
+    return {"label": label, "to": addr, "amount": amt, "contact": label.lower() if named else ""}
 
 
 def send_mon(prep: dict, approved_by: str = "voice") -> str:

@@ -5,6 +5,7 @@ import time
 
 import io
 import os
+import re
 import wave
 
 import numpy as np
@@ -17,7 +18,7 @@ FRAME = 480  # 30 ms @ 16 kHz, a size webrtcvad accepts
 
 
 class Voice:
-    def __init__(self, on_utterance, on_state=None, voice_name="Samantha", rate=185):
+    def __init__(self, on_utterance, on_state=None, voice_name="Rishi", rate=175):
         self.on_utterance = on_utterance  # callback(text)
         self.on_state = on_state or (lambda s: None)
         self.voice_name = voice_name
@@ -43,7 +44,8 @@ class Voice:
             return
         self.stop_speaking()
         self._speaking_until = time.time() + 600  # blocks mic until say exits
-        self._say_proc = subprocess.Popen(["say", "-v", self.voice_name, "-r", str(self.rate), text])
+        voice = "Lekha" if re.search(r"[\u0900-\u097F]", text) else self.voice_name  # Hindi voice for Devanagari
+        self._say_proc = subprocess.Popen(["say", "-v", voice, "-r", str(self.rate), text])
         threading.Thread(target=self._wait_say, args=(self._say_proc,), daemon=True).start()
 
     def _wait_say(self, proc):
@@ -68,8 +70,9 @@ class Voice:
                     w.writeframes(pcm.astype(np.int16).tobytes())
                 bio.name = "speech.wav"; bio.seek(0)
                 r = self._oa.audio.transcriptions.create(
-                    model="gpt-4o-mini-transcribe", file=bio, language="en",
-                    prompt="Voice commands for a computer assistant: open apps, send MON to Alice, confirm, cancel.")
+                    model="gpt-4o-mini-transcribe", file=bio,  # language auto-detected: English, Hindi, Hinglish, Marathi
+                    prompt="Voice commands for a computer assistant in India: open Safari, send zero point one MON to Alice, "
+                           "confirm, cancel, haan, nahi, bhej do, kya hai screen par.")
                 return r.text.strip()
             except Exception as e:
                 print(f"STT error: {e}")

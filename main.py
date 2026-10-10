@@ -40,6 +40,7 @@ class App(ctk.CTk):
 
         agents.bus.on_event = lambda a, k, t: self.q.put(("event", a, k, t))
         agents.bus.speak = self._speak
+        agents.bus.is_speaking = self.voice.is_speaking
 
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)

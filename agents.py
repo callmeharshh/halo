@@ -2,11 +2,13 @@
 import json
 import re
 import threading
+import time
 from decimal import Decimal
 
 from dotenv import load_dotenv
 from openai import OpenAI
 
+import safety
 import system_tools as st
 import wallet as wl
 
@@ -38,6 +40,7 @@ class Bus:
     def __init__(self):
         self.on_event = lambda agent, kind, text: print(f"[{agent}] {kind}: {text}")
         self.speak = lambda text: print(f"SAY: {text}")
+        self.is_speaking = lambda: False  # UI swaps in the real TTS state
 
 
 bus = Bus()
@@ -56,7 +59,8 @@ class Agent:
         self.name, self.system, self.tools, self.handlers, self.max_turns = name, system, tools, handlers, max_turns
 
     def run(self, messages: list, extra_context: str = "") -> str:
-        msgs = [{"role": "system", "content": self.system + extra_context}] + messages
+        lang = " Reply in English unless the user's request is actually in Hindi or Hinglish; then reply in Devanagari Hindi."
+        msgs = [{"role": "system", "content": self.system + lang + extra_context}] + messages
         for _ in range(self.max_turns):
             r = client.chat.completions.create(
                 model=MODEL, messages=msgs, tools=self.tools or None, temperature=0.2)
@@ -88,28 +92,36 @@ def _short(args):
 class ConfirmationGate:
     """Blocks a worker thread until the user confirms/cancels by voice, button, or blink."""
 
-    CONFIRM = re.compile(r"\b(confirm|confirmed|yes|yeah|approve|approved|go ahead|do it|send it|proceed)\b", re.I)
-    CANCEL = re.compile(r"\b(cancel|no|nope|stop|abort|reject|don't|do not|never mind)\b", re.I)
-
     def __init__(self):
         self._event = threading.Event()
         self._decision = None
         self.last_source = "voice"  # how the most recent approval happened, recorded on-chain
         self.pending = None  # description of what is awaiting approval
+        self.armed = False   # only listen for "confirm" AFTER our read-back has finished speaking
+        self.last_send = 0.0
 
     @property
     def active(self):
         return self.pending is not None
 
-    def ask(self, description: str, timeout: float = 25.0) -> bool:
+    def ask(self, description: str, spoken: str, timeout: float = 25.0) -> bool:
         self._event.clear()
         self._decision = None
+        self.armed = False
         self.pending = description
         bus.on_event("Guardian", "ask", description)
-        bus.speak(description + " Say confirm, or cancel.")
-        ok = self._event.wait(timeout) and self._decision is True
-        if not self._event.is_set():
+        bus.speak(spoken + " Say confirm, or cancel.")
+        t0 = time.time()
+        time.sleep(0.3)
+        while bus.is_speaking() and time.time() - t0 < 15:  # don't arm until the read-back is over
+            time.sleep(0.1)
+        time.sleep(0.4)  # let the room echo die so we never "hear" our own prompt
+        self.armed = True
+        answered = self._event.wait(timeout)
+        if not answered:
             bus.on_event("Guardian", "timeout", "No response, cancelled.")
+        ok = answered and self._decision is True
+        self.armed = False
         self.pending = None
         return ok
 
@@ -125,10 +137,13 @@ class ConfirmationGate:
         """Return True if the utterance was consumed as a confirmation answer."""
         if not self.active:
             return False
-        if self.CANCEL.search(text):
+        if not self.armed:
+            return True  # speech that finished while we were still talking: ignore, never treat as consent
+        verdict = safety.classify_reply(text)
+        if verdict == "cancel":
             self.resolve(False, "voice")
             return True
-        if self.CONFIRM.search(text):
+        if verdict == "confirm":
             self.resolve(True, "voice")
             return True
         return False  # unrelated speech: keep waiting
@@ -180,16 +195,31 @@ def t_tx_status(tx_hash):
     return wl.tx_status(tx_hash)
 
 
+current_request = ""  # what the user literally said this turn (set by handle()); used to cross-check money amounts
+SEND_COOLDOWN = 6.0
+
+
 def t_send_mon(recipient, amount):
-    """The ONLY path to moving money. Always passes through the Guardian."""
+    """The ONLY path to moving money. Cross-checks the request, reads it back, waits for human approval,
+    then goes through the on-chain GuardVault. Every doubt resolves to NOT sending."""
+    if time.time() - gate.last_send < SEND_COOLDOWN:
+        return "A payment just went out. Please wait a few seconds before sending another."
+    if gate.active:
+        return "Another payment is already waiting for approval."
+    # 1) the amount must be something the user actually said, not something the model inferred
+    if not safety.amount_matches_speech(amount, current_request):
+        bus.on_event("Guardian", "review", f"amount {amount} not found in what was said: '{current_request}'")
+        return ("Not sent. I am not certain about the amount. Ask the user to repeat the full request clearly, "
+                "for example: 'send zero point one MON to Alice'.")
     try:
         prep = wl.prepare_transfer(recipient, amount)
     except wl.WalletError as e:
         return f"Rejected: {e}"
     level, note = guardian_review(prep)
-    desc = (f"{note}Send {prep['amount'].normalize():f} MON to {prep['label']}, "
-            f"address ending {prep['to'][-4:]}.")
-    if not gate.ask(desc):
+    short = prep["to"][:6] + "…" + prep["to"][-4:]
+    shown = f"{note}Send {prep['amount'].normalize():f} MON to {prep['label']} ({short})."
+    spoken = f"{note}Send {safety.say_amount(prep['amount'])} MON to {prep['label']}."
+    if not gate.ask(shown, spoken):
         return "Transfer cancelled by the user. Nothing was sent."
     method = gate.last_source
     bus.on_event("Wallet", "send", f"GuardVault.guardedSend({prep['amount']} MON → {prep['label']}, approvedBy={method})")
@@ -198,6 +228,7 @@ def t_send_mon(recipient, amount):
     except Exception as e:
         bus.on_event("Guardian", "denied", str(e))
         return f"Transfer failed: {e}"
+    gate.last_send = time.time()
     url = wl.explorer_url(h)
     bus.on_event("Wallet", "tx", url)
     return f"Sent. Transaction confirmed on Monad. Hash {h}. Explorer: {url}"
@@ -208,7 +239,10 @@ WALLET = Agent(
     "You are the Wallet agent for a hands-free accessibility assistant on the Monad testnet (currency: MON). "
     "Use your tools for balances, contacts, and transfers. To send money ALWAYS call send_mon; it asks the user "
     "to confirm by voice itself, so never ask for confirmation yourself and never claim a transfer happened unless "
-    "send_mon says Sent. Reply in one or two short spoken-style sentences. Do not read out long hashes or addresses.",
+    "send_mon says Sent. NEVER guess: if the amount or the recipient is missing or unclear, ask the user instead of "
+    "calling send_mon. Never change an amount the user said. If send_mon says Not sent or Rejected, relay that "
+    "plainly and ask the user to repeat. Reply in one or two short spoken-style sentences. Do not read out long "
+    "hashes or addresses.",
     [
         fn("get_balance", "Get the user's MON balances (vault and wallet)."),
         fn("get_policy", "Explain the on-chain safety limits that protect the user's funds."),
@@ -289,8 +323,11 @@ ORCH_SYSTEM = (
     "The user speaks; you route the request to ONE specialist agent via delegate(), or answer simple chit-chat yourself. "
     "Agents: system (apps, files, web, keys, volume, timers, clipboard, time), vision (look at or read the screen), "
     "writer (dictate/type text into the active app), wallet (Monad MON balance, contacts, sending money). "
-    "Pass the user's request faithfully in 'task'. Speech is transcribed, so expect small mishearings "
-    "(e.g. 'Alis' = Alice). Keep your own replies to one short sentence."
+    "Pass the user's request faithfully in 'task' (keep any amounts and names exactly as spoken). Speech is "
+    "transcribed, so expect small mishearings (e.g. 'Alis' = Alice). The user may speak English, Hindi or Hinglish: "
+    "understand all of them. Reply in ENGLISH whenever the user's words are English. ONLY if the user's words are actually "
+    "Hindi or Hinglish (e.g. 'bhej do', 'kya hai', Devanagari) reply in Hindi written in Devanagari so it is spoken correctly. Be warm, simple and patient: many users are elderly "
+    "or not tech-savvy. Keep your own replies to one short sentence."
 )
 ORCH_TOOLS = [fn("delegate", "Hand the task to a specialist agent.",
                  {"agent": {"type": "string", "enum": list(SPECIALISTS)}, "task": {"type": "string"}},
@@ -357,7 +394,9 @@ def handle(user_text: str) -> str:
         bus.on_event("User", "say", user_text)
         _dictate(user_text)
         return ""
+    global current_request
     with _lock:  # one request at a time
+        current_request = user_text
         bus.on_event("User", "say", user_text)
         history.append({"role": "user", "content": user_text})
         msgs = [{"role": "system", "content": ORCH_SYSTEM}] + history[-12:]
