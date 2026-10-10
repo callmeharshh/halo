@@ -99,9 +99,9 @@ svg.ic{width:22px;height:22px;flex:none;stroke:currentColor;fill:none;stroke-wid
 
 /* ---------- header ---------- */
 .hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--surface) 72%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand{display:flex;align-items:center;gap:12px;min-width:0;flex:1 1 auto}.hdr-actions{flex:none}
 .brand-text{display:grid;line-height:1.15;min-width:0}
-.brand-name{font-family:var(--font-serif);font-size:1.3rem;letter-spacing:.005em;white-space:nowrap}
+.brand-name{font-family:var(--font-serif);font-size:1.3rem;letter-spacing:.005em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .session{font-size:.78rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-variant-numeric:tabular-nums;white-space:nowrap}
 .mono{display:inline-grid;place-items:center;flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent-ink);
   font-family:var(--font-serif);font-size:.95rem;letter-spacing:.02em;line-height:1}
@@ -450,6 +450,7 @@ details.more-f summary{cursor:pointer;min-height:48px;display:flex;align-items:c
   .banner{padding:8px 14px;gap:10px;justify-content:space-between}.banner p{font-size:.8rem}
   .toasts{bottom:96px}
 }
+@media (max-width:700px){html[data-size="2"] .session{display:none}}
 @media (max-width:420px){
   .brand-name{font-size:1.05rem}
   .mono-lg{width:38px;height:38px}

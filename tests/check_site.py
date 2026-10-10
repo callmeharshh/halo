@@ -12,7 +12,7 @@ def check(name, ok, extra=""):
     if not ok: fails.append(name)
 
 addr = json.load(open(os.path.join(ROOT, "contracts/deployment.json")))["address"]
-for page in ("", "journeys.html", "journeys.js", "sample-plan.json", "registry.js", "atts.js", "atts.json", "console.html", "contract.js", "app.js", "style.css"):
+for page in ("", "journeys.html", "concierge.html", "concierge.js", "concierge.css", "sample-session.json", "journeys.js", "sample-plan.json", "registry.js", "atts.js", "atts.json", "console.html", "contract.js", "app.js", "style.css"):
     try: code = urllib.request.urlopen(SITE + page, timeout=15).status
     except Exception as e: code = str(e)
     check(f"{page or 'index'} is served (200)", code == 200, str(code))
