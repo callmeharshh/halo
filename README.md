@@ -1,8 +1,8 @@
 # Halo
 
-**Hands-free computing. Hands-free money. Guarded on-chain.**
+**A team of personal AI agents for the people the AI age is leaving behind, with money rules enforced on-chain by a family-owned smart contract.**
 
-Halo is a voice and eye-gaze controlled desktop assistant for people who cannot use a keyboard or mouse. A team of AI agents runs the computer, and a **smart contract on Monad, not the AI, has the final say on every payment.**
+Halo is a voice and eye-gaze controlled assistant for people who are not tech-savvy or cannot use a keyboard and mouse: the elderly, people with physical disabilities, a society watchman who lives on WhatsApp and UPI. A team of AI agents runs the computer in English, Hindi or Hinglish, and a **smart contract on Monad, not the AI, has the final say on every payment.** A family member owns the vault and sets the rules; the person's device can only spend inside them.
 
 Built at **Monad Blitz Pune V3**.
 
@@ -29,6 +29,26 @@ Say *"Open Safari"*, *"What's on my screen?"*, *"Dictate an email"*, or look at 
 3. You approve by **voice ("confirm")**, **double-blink**, or a **button**. Closing your eyes for 1.6s, or saying "cancel", stops it. Silence also cancels.
 4. The Wallet agent calls **`GuardVault.guardedSend`**. The contract enforces your limits and **permanently records how the payment was approved** (`voice`, `double-blink`, `button`).
 
+### Safety: speech recognition will mishear, so we make mistakes small
+
+We do **not** claim voice payments are flawless. Instead every step is bounded, visible and defaults to *not sending*:
+
+- The amount the AI wants to send must **appear in what the user literally said** (tested: "1" is never accepted for "zero point one"; "bhej do" is not read as the number two).
+- Names are matched phonetically ("Alis" → Alice) but an ambiguous match is refused and the user is asked again.
+- The Guardian reads the payment back digit by digit, and only starts listening for "confirm" **after the read-back finishes**, so it never hears itself or stray chatter. Silence cancels. Cancel always beats confirm. Confirmation works in English and Hindi ("haan", "nahi").
+- One pending payment at a time, plus a cooldown after each send.
+- Finally the contract enforces limits no matter what the AI or the speech recogniser did.
+
+Unit tests: `python tests/test_safety.py`.
+
+### Family-owned vault (the elderly / disabled user's safety net)
+
+In **family mode** a family member's wallet owns the vault (`VAULT_OWNER` in `.env`). They use the **[Family Console](https://callmeharshh.github.io/halo/console.html)** (connect a wallet) to deposit funds, set per-payment and daily limits, switch on *trusted contacts only*, manage the contact book, approve the assistant's device, and **pause or revoke** it. The person's device holds only an *agent key*: it spends inside those rules and cannot change them. Tested on-chain: a device that tries to raise its own limits only edits its own empty policy and still cannot touch the family's vault.
+
+### Scam Shield
+
+Ask *"Is this message safe?"* (or in Hinglish) and the Vision agent reads the screen and flags OTP/PIN requests, fake KYC deadlines and "pay now" pressure, with a plain-language instruction. Try it with [`demo/scam_message.html`](demo/scam_message.html) (a fictional "Sunrise Bank" message).
+
 ### Agents
 
 ```
@@ -43,12 +63,12 @@ Voice / Gaze ─► Orchestrator ─┬─► System agent   open apps/files/web
 [`contracts/GuardVault.sol`](contracts/GuardVault.sol) gives every user a vault and an on-chain spending policy:
 
 - **Per-transaction limit** and **daily limit**: anything above reverts.
-- **Trusted-contacts-only mode**: only pay names saved in your on-chain contact book.
-- **On-chain contact book**: *"Alice"* resolves on-chain.
-- **Approved agent key**: only the owner or one designated agent key can spend.
-- **Approval log**: every `GuardedTransfer` event records `approvedBy`.
+- **Trusted-contacts-only mode** and an **enumerable on-chain contact book**: *"Alice"* resolves on-chain; the device can read it but not edit it.
+- **Owner vs agent**: the owner (family) sets policy, contacts and the approved agent key; the agent can only call `guardedSend`.
+- **Pause / revoke**: the owner can stop the agent instantly.
+- **Approval log**: every `GuardedTransfer` event records `approvedBy` (voice, double-blink, button).
 
-Even if the AI is tricked into asking for too much, the contract refuses. Tested live on testnet: a 0.6 MON send against a 0.5 MON cap, an unknown contact, and a raw address in trusted-only mode all **revert on-chain**.
+Even if the AI is tricked into asking for too much, the contract refuses. Tested live on testnet: over-limit sends, unknown contacts, a raw address in trusted-only mode, a paused agent, a revoked agent, and a removed contact all **revert on-chain**.
 
 ## Run it yourself (macOS, about 5 minutes)
 
@@ -60,9 +80,11 @@ cd halo
 ./setup.sh                # creates .venv, installs everything, creates .env
 # edit .env: set OPENAI_API_KEY and WALLET_PRIVATE_KEY (a throwaway testnet key, never a real one)
 source .venv/bin/activate
-python setup_vault.py     # deposits MON into YOUR vault on the deployed contract, sets limits, adds a demo contact "alice"
+python setup_vault.py     # solo mode: deposits MON into YOUR vault on the deployed contract, sets limits, adds a demo contact "alice"
 python main.py
 ```
+
+**Family mode (recommended story):** instead of `setup_vault.py`, put the family member's wallet address in `.env` as `VAULT_OWNER=0x…`, click *Copy device address* in the app, then open the [Family Console](https://callmeharshh.github.io/halo/console.html), connect the family wallet, deposit, set limits, add contacts and paste the device address under *Approve the assistant's device*.
 
 Click **START LISTENING** and try: *"What's my balance?"*, *"Open Calculator"*, *"What's on my screen?"*, *"Send 0.1 MON to Alice"* → *"confirm"*. You can also type commands in the box at the bottom.
 
@@ -90,17 +112,20 @@ We measured this on a 16 GB M-series Mac: the model loads in about 13s and handl
 | `agents.py` | Orchestrator, System/Vision/Writer/Wallet agents, Guardian confirmation gate, transcribe mode |
 | `wallet.py` | Monad layer: reads vault/policy, resolves on-chain contacts, sends via `guardedSend` |
 | `voice.py` | Mic capture, WebRTC VAD, speech-to-text (OpenAI or local Parakeet), macOS TTS |
+| `safety.py` | Payment safety: speech-vs-amount cross-check, phonetic contact matching, English/Hindi confirm classifier (unit-tested) |
 | `gaze.py` | EyeTrax gaze cursor, Kalman smoothing, blink click, double-blink confirm |
 | `system_tools.py` | macOS tools used by the agents |
 | `server.py` | Launches the optional local llama.cpp server |
 | `contracts/` | `GuardVault.sol`, `deploy.py`, `verify.py`, `deployment.json` (address + ABI) |
-| `docs/` | The public website (GitHub Pages) with a live on-chain feed |
+| `docs/` | The public website (GitHub Pages): live on-chain feed + the Family Console (`console.html`) |
+| `demo/` | Fictional scam message for the Scam Shield demo |
+| `tests/` | `python tests/test_safety.py` |
 
 ## Credits
 
 Halo builds on **[GemGuide](https://github.com/Sourajit1234/GemGuide)** by Sourajit (Gemma 4, EyeTrax gaze tracking, Parakeet speech-to-text, llama.cpp), whose voice, gaze and screen-vision foundation we ported to macOS. All credit for that foundation goes to the original author.
 
-**What we added at Monad Blitz Pune V3:** the multi-agent architecture (Orchestrator + specialists), the Guardian human-confirmation gate (voice / double-blink / button), the `GuardVault` smart contract with on-chain policy and approval log, the Monad wallet integration, the macOS port, the OpenAI/local backend switch, and the public website.
+**What we added at Monad Blitz Pune V3:** the multi-agent architecture (Orchestrator + specialists), the Guardian human-confirmation gate (voice / double-blink / button) with speech-error safeguards, the `GuardVault` smart contract (family-owned vault, on-chain policy, pause/revoke, approval log), the Family Console, the Scam Shield, Hindi/Hinglish support, the Monad wallet integration, the macOS port, the OpenAI/local backend switch, and the public website.
 
 ## Safety notes
 
