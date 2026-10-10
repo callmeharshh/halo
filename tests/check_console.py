@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import cdp
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 from dotenv import load_dotenv; load_dotenv(os.path.join(ROOT, ".env"))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 KEY = os.getenv("HALO_TEST_FAMILY_KEY")
 fails = []
 def check(name, ok, extra=""):
@@ -12,6 +13,13 @@ def check(name, ok, extra=""):
     if not ok: fails.append(name)
 if not KEY or not cdp.available():
     print("  SKIP (needs HALO_TEST_FAMILY_KEY and Chrome)"); sys.exit(0)
+
+from eth_account import Account
+import wallet as wl
+_fam = Account.from_key(KEY).address
+if float(wl.balance(_fam)) < 0.02:
+    print(f"  SKIP: the test family wallet {_fam} has {float(wl.balance(_fam)):.4f} MON, needs >= 0.02 for gas. Fund it, then rerun.")
+    sys.exit(0)
 
 class Q(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a): pass
@@ -42,6 +50,8 @@ try:
     b.eval(fill("polMax", "5") + ";" + fill("polDay", "1") + ";document.getElementById('fPolicy').requestSubmit()")
     check("client rejects per-payment limit above the daily limit", "cannot be higher" in (status()))
     check("no JavaScript errors", not b.errors, str(b.errors[:2]))
+    errs = b.eval("window.__mockErrors || []")
+    if errs: print("  (mock wallet saw RPC errors:", errs[:4], ")")
 finally:
     b.close(); srv.shutdown()
 print("\nCONSOLE CHECK:", "ALL PASSED" if not fails else f"{len(fails)} FAILED: {fails}")

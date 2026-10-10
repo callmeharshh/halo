@@ -29,7 +29,7 @@ async def collect(ws, until, timeout=60):
     return None, seen
 
 async def main():
-    env = dict(os.environ)
+    env = dict(os.environ, VAULT_OWNER=os.getenv("HALO_TEST_OWNER", "0xb5848eF465b06Ade36461e0f49aE2809Bae08b98"))
     proc = subprocess.Popen([sys.executable, os.path.join(ROOT, "halo.py"), "--no-browser", "--port", str(PORT)], cwd=ROOT, env=env,
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
     try:

@@ -87,8 +87,8 @@ class Chrome:
 MOCK_WALLET = """
 (() => {
   const KEY = '%s';
-  let wallet, rpc;
-  const boot = () => { if (!wallet) { rpc = new ethers.JsonRpcProvider('https://testnet-rpc.monad.xyz'); wallet = new ethers.Wallet(KEY, rpc); } };
+  let wallet, rpc, nextNonce = 0;
+  const boot = () => { if (!wallet) { rpc = new ethers.JsonRpcProvider('https://rpc.ankr.com/monad_testnet'); wallet = new ethers.Wallet(KEY, rpc); } };
   window.ethereum = { isMock: true, on() {},
     async request({method, params}) {
       boot();
@@ -96,8 +96,19 @@ MOCK_WALLET = """
       if (method === 'eth_chainId') return '0x279f';
       if (method === 'net_version') return '10143';
       if (method === 'wallet_switchEthereumChain' || method === 'wallet_addEthereumChain') return null;
-      if (method === 'eth_sendTransaction') { const t = params[0]; const tx = await wallet.sendTransaction({to: t.to, data: t.data, value: t.value ? BigInt(t.value) : 0n}); return tx.hash; }
-      return rpc.send(method, params || []);
+      if (method === 'eth_sendTransaction') {
+        // like a real wallet: track the nonce locally so a lagging RPC node cannot hand us a stale one
+        const t = params[0];
+        const chain = await rpc.getTransactionCount(wallet.address, 'pending');
+        const nonce = Math.max(chain, nextNonce);
+        try {
+          const tx = await wallet.sendTransaction({to: t.to, data: t.data, value: t.value ? BigInt(t.value) : 0n, nonce});
+          nextNonce = nonce + 1;
+          return tx.hash;
+        } catch (e) { throw {code: -32000, message: 'MOCK WALLET: ' + (e.shortMessage || e.message || String(e))}; }
+      }
+      try { return await rpc.send(method, params || []); }
+      catch (e) { (window.__mockErrors = window.__mockErrors || []).push(method + ' -> ' + (e.shortMessage || e.message || String(e)).slice(0, 160)); throw e; }
     } };
 })();
 """
