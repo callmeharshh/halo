@@ -16,7 +16,7 @@ const ABI = [
 ];
 const ZERO = "0x0000000000000000000000000000000000000000";
 const $ = (id) => document.getElementById(id);
-const st = { owner: null, writable: false, signer: null, write: null, read: null, paused: false };
+const st = { rpcIdx: 0, owner: null, writable: false, signer: null, write: null, read: null, paused: false };
 
 function msg(kind, html) { const m = $("msg"); m.dataset.kind = kind; m.innerHTML = html; }
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -66,10 +66,20 @@ async function lookup() {
 
 async function refresh() {
   if (!st.owner) return;
-  st.read = st.read || new ethers.Contract(G.address, ABI, new ethers.JsonRpcProvider(G.rpc));
   const o = st.owner;
-  const [bal, pol, book, spent, day] = await Promise.all([
-    st.read.balanceOf(o), st.read.policyOf(o), st.read.contactsOf(o), st.read.spentInDay(o), st.read.currentDay(o)]);
+  // Public RPCs occasionally return empty eth_call results under load: rotate endpoints and retry, no batching.
+  const urls = G.rpcs || [G.rpc];
+  let res, lastErr;
+  for (let i = 0; i < urls.length * 2 && !res; i++) {
+    try {
+      const prov = new ethers.JsonRpcProvider(urls[(st.rpcIdx + i) % urls.length], G.chainId, { staticNetwork: true, batchMaxCount: 1 });
+      const c = new ethers.Contract(G.address, ABI, prov);
+      res = await Promise.all([c.balanceOf(o), c.policyOf(o), c.contactsOf(o), c.spentInDay(o), c.currentDay(o)]);
+      st.rpcIdx = (st.rpcIdx + i) % urls.length; st.read = c;
+    } catch (e) { lastErr = e; await new Promise((r) => setTimeout(r, 200 * (i + 1))); }
+  }
+  if (!res) { msg("err", "Could not read the vault from the network. " + esc(lastErr && (lastErr.shortMessage || lastErr.message) || "")); return; }
+  const [bal, pol, book, spent, day] = res;
   const today = BigInt(Math.floor(Date.now() / 1000 / 86400));
   const spentToday = day === today ? spent : 0n;
   st.paused = pol.paused;
@@ -137,7 +147,7 @@ function wire() {
   $("lookupBtn").addEventListener("click", lookup);
   $("lookup").addEventListener("keydown", (e) => { if (e.key === "Enter") lookup(); });
   $("fDeposit").addEventListener("submit", (e) => { e.preventDefault(); const v = amount("depAmt", "amount"); if (v) act("Depositing", () => st.write.deposit({ value: v })); });
-  $("withdrawAll").addEventListener("click", async () => { const b = await st.read.balanceOf(st.owner); if (b === 0n) { msg("err", "The vault is empty."); return; } act("Withdrawing everything", () => st.write.withdraw(b)); });
+  $("withdrawAll").addEventListener("click", async () => { const b = await st.write.balanceOf(st.owner); if (b === 0n) { msg("err", "The vault is empty."); return; } act("Withdrawing everything", () => st.write.withdraw(b)); });
   $("fPolicy").addEventListener("submit", (e) => {
     e.preventDefault();
     const m = amount("polMax", "per-payment limit"), d = amount("polDay", "daily limit");
@@ -163,6 +173,11 @@ function wire() {
   if (window.ethereum && window.ethereum.on) {
     window.ethereum.on("accountsChanged", () => location.reload());
     window.ethereum.on("chainChanged", () => location.reload());
+  }
+  const dev = new URLSearchParams(location.search).get("device");
+  if (dev && ethers.isAddress(dev)) {  // pairing link from the Halo app: prefill the device to approve
+    $("agAddr").value = dev;
+    msg("idle", "Pairing link opened. Connect the owner's wallet, then press <strong>Approve this device</strong>.");
   }
   const q = new URLSearchParams(location.search).get("owner");
   if (q && ethers.isAddress(q)) { $("lookup").value = q; lookup(); }

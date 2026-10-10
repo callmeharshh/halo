@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Halo - your friendly companion</title>
+<meta name="description" content="Halo: a companion you can talk to. Money is protected by on-chain rules your family sets.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23836EF9' stroke-width='5'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<script src="contract.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script defer src="app.js"></script>
+<script defer src="family.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-7-7-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-vault" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="9" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2.5 20c.5-3.5 3-5 6.5-5s6 1.5 6.5 5M16 6a3.5 3.5 0 0 1 0 7M18 15c2 .6 3.2 2 3.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="bar">
+    <a class="brand" href="./" aria-label="Halo home"><span class="logo" aria-hidden="true"></span>Halo</a>
+    <div class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" id="tab-companion" aria-controls="view-companion" aria-selected="true" type="button">Companion</button>
+      <button role="tab" id="tab-family" aria-controls="view-family" aria-selected="false" tabindex="-1" type="button">Family</button>
+    </div>
+    <span class="conn" id="conn" data-state="down" role="status" aria-live="polite"><i aria-hidden="true"></i><span id="connText">Connecting…</span></span>
+  </div>
+  <div class="chips wrap" id="chips" aria-label="Safety status">
+    <span class="chip" id="chipVault"><svg class="ic" aria-hidden="true"><use href="#i-vault"/></svg><span class="k">Vault</span><b id="vaultVal">-</b></span>
+    <span class="chip" id="chipLimits"><svg class="ic" aria-hidden="true"><use href="#i-sliders"/></svg><span class="k">Limits</span><b id="limitsVal">-</b></span>
+    <a class="chip link" id="chipGuard" target="_blank" rel="noopener noreferrer"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><b id="guardVal">Protected by GuardVault</b></a>
+    <span class="chip" id="chipLlm"><svg class="ic" aria-hidden="true"><use href="#i-brain"/></svg><span class="k">AI</span><b id="llmVal">-</b></span>
+    <span class="chip" id="chipMode"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg><b id="modeVal">-</b></span>
+  </div>
+</header>
+
+<div class="banner" id="setupBanner" hidden>
+  <div class="wrap row">
+    <p><strong>Not set up yet.</strong> Ask your family to finish setup in the Family tab.</p>
+    <span class="grow"></span>
+    <button class="btn sm" id="bannerGo" type="button">Open Family tab</button>
+    <button class="btn sm ghost" id="bannerX" type="button" aria-label="Dismiss setup message">Dismiss</button>
+  </div>
+</div>
+
+<main id="main" class="wrap">
+<!-- ================= COMPANION ================= -->
+<section id="view-companion" role="tabpanel" aria-labelledby="tab-companion">
+  <div class="stage-grid">
+    <div class="stage card">
+      <div class="orbwrap">
+        <button class="orb" id="orb" data-state="idle" type="button" tabindex="-1" aria-label="Start or stop listening">
+          <span class="ring r1"></span><span class="ring r2"></span><span class="core"></span>
+          <span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        </button>
+        <p class="state" id="stateLabel" role="status" aria-live="polite">Tap to start</p>
+      </div>
+      <div class="captions" aria-live="polite" aria-atomic="false">
+        <p class="said" id="userCap"><span class="lbl">You said</span><span id="userText" class="placeholder">Your words will appear here.</span></p>
+        <p class="reply" id="haloCap"><span class="lbl">Halo</span><span id="haloText">Hello. I am here when you need me.</span></p>
+      </div>
+      <details class="hist" id="hist">
+        <summary><svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg>Conversation</summary>
+        <ol id="histList" role="log" aria-label="Recent conversation"></ol>
+      </details>
+    </div>
+
+    <aside class="agents card" id="agents" aria-labelledby="agentsH">
+      <h2 id="agentsH"><button class="collapse" id="agentsBtn" type="button" aria-expanded="true" aria-controls="timeline"><svg class="ic" aria-hidden="true"><use href="#i-chev"/></svg>What my agents are doing</button></h2>
+      <ol class="timeline" id="timeline" aria-live="off"><li class="empty">Nothing yet. When you speak, you will see each helper at work here.</li></ol>
+    </aside>
+  </div>
+
+  <div class="controls card" role="group" aria-label="Controls">
+    <div class="crow">
+      <button class="bigbtn mic needs-ws" id="micBtn" type="button" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg><span>Microphone <b id="micState">OFF</b></span></button>
+      <button class="bigbtn needs-ws" id="scamBtn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><span>Check this message</span></button>
+      <div class="seg" role="radiogroup" aria-label="Mode">
+        <button type="button" role="radio" class="needs-ws" id="modeA" data-v="assistant" aria-checked="true">Assistant</button>
+        <button type="button" role="radio" class="needs-ws" id="modeD" data-v="transcribe" aria-checked="false">Dictation</button>
+      </div>
+      <div class="gaze">
+        <button class="switch needs-ws" id="gazeBtn" type="button" role="switch" aria-checked="false"><svg class="ic" aria-hidden="true"><use href="#i-eye"/></svg><span>Eye gaze <b id="gazeState">off</b></span></button>
+        <button class="btn needs-ws" id="calBtn" type="button">Calibrate eyes</button>
+      </div>
+    </div>
+    <form class="typebar" id="typeForm" autocomplete="off">
+      <label class="sr" for="typeIn">Type a command</label>
+      <input id="typeIn" type="text" placeholder="Type a command, for example: send 0.05 to Alice" enterkeyhint="send">
+      <button class="btn primary needs-ws" type="submit"><svg class="ic" aria-hidden="true"><use href="#i-send"/></svg>Send</button>
+    </form>
+    <p class="hint">Keyboard: <kbd>Space</kbd> or <kbd>M</kbd> turns the microphone on or off. <kbd>Enter</kbd> sends typed text. <kbd>Esc</kbd> closes messages.</p>
+  </div>
+</section>
+
+<!-- ================= FAMILY ================= -->
+<section id="view-family" role="tabpanel" aria-labelledby="tab-family" hidden>
+  <p class="eyebrow">For the person who looks after this device</p>
+  <h1>You set the rules. The contract enforces them.</h1>
+  <p class="muted lead">The family member owns the vault and sets the rules. This device can only spend inside them, and it can never change them.</p>
+
+  <div class="fgrid">
+    <div class="card" id="deviceCard">
+      <h2>This device</h2>
+      <p class="k">Device address</p>
+      <div class="copyrow"><code class="mono" id="devAddr">waiting for the device…</code><button class="btn sm needs-copy" type="button" data-copy="devAddr"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div>
+      <p class="k">Pairing link</p>
+      <div class="copyrow"><code class="mono" id="pairLink">-</code><button class="btn sm needs-copy" type="button" data-copy="pairLink"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg>Copy</button></div>
+      <div class="row gap"><a class="btn" id="waBtn" target="_blank" rel="noopener noreferrer">Share on WhatsApp</a></div>
+      <div class="qrblock" id="qrBlock" hidden><div id="qr" role="img" aria-label="QR code of the pairing link"></div><p class="muted small">Scan to open the family console on a phone.</p></div>
+      <p class="k">Current owner of this device</p>
+      <p class="mono" id="devOwner">not set</p>
+    </div>
+
+    <div class="card" id="walletCard">
+      <h2>Owner wallet</h2>
+      <p class="muted">Use MetaMask on Monad Testnet. Testnet only: use a throwaway wallet.</p>
+      <div class="row gap"><button class="btn primary" id="connect" type="button">Connect MetaMask</button><span id="who" class="muted"></span></div>
+      <div class="oneclick" id="oneclick" hidden>
+        <button class="bigbtn go needs-ws" id="oneBtn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Make this wallet the owner of this device and approve it</span></button>
+        <p class="muted small">Two steps: approve the device in your wallet, then tell this device who its owner is.</p>
+      </div>
+      <details class="lookup"><summary>No wallet? View a vault read-only</summary>
+        <label for="lookup">Owner address</label>
+        <div class="row"><input id="lookup" type="text" placeholder="0x… owner address" autocomplete="off"><button class="btn" id="lookupBtn" type="button">View</button></div>
+      </details>
+    </div>
+  </div>
+
+  <div id="msg" role="status" aria-live="polite" data-kind="idle">Connect a wallet to manage the vault, or paste an owner address to look at one.</div>
+
+  <div id="dash" hidden>
+    <div class="fgrid three">
+      <div class="card"><h3>Vault</h3>
+        <dl class="kv"><dt>Owner</dt><dd class="mono" id="vOwner">-</dd><dt>Balance</dt><dd id="vBal">-</dd><dt>Spent today</dt><dd id="vSpent">-</dd><dt>Status</dt><dd id="vStatus">-</dd><dt>Approved device</dt><dd class="mono" id="vAgent">-</dd></dl></div>
+      <div class="card"><h3>Rules in force</h3>
+        <dl class="kv"><dt>Per payment</dt><dd id="pMax">-</dd><dt>Per day</dt><dd id="pDay">-</dd><dt>Recipients</dt><dd id="pTrust">-</dd></dl>
+        <p class="muted small">A payment over these limits is rejected by the contract, whatever the AI says.</p></div>
+      <div class="card"><h3>Trusted contacts</h3>
+        <table class="ct"><thead><tr><th>Name</th><th>Address</th><th><span class="sr">Actions</span></th></tr></thead><tbody id="cBody"></tbody></table>
+        <p class="muted" id="cEmpty" hidden>No contacts yet.</p></div>
+    </div>
+    <div id="actions" hidden>
+      <h2 class="sect">Manage</h2>
+      <div class="fgrid">
+        <form class="card" id="fDeposit"><h3>Add funds</h3>
+          <div><label for="depAmt">Amount (MON)</label><input id="depAmt" type="number" step="any" min="0" placeholder="0.5"></div>
+          <button class="btn primary" type="submit">Deposit to vault</button>
+          <button class="btn" type="button" id="withdrawAll">Withdraw everything</button></form>
+        <form class="card" id="fPolicy"><h3>Spending rules</h3>
+          <div class="frow"><div><label for="polMax">Max per payment (MON)</label><input id="polMax" type="number" step="any" min="0" placeholder="0.1"></div>
+          <div><label for="polDay">Max per day (MON)</label><input id="polDay" type="number" step="any" min="0" placeholder="0.3"></div></div>
+          <label class="check"><input id="polTrust" type="checkbox"> Only pay people in the trusted contacts list</label>
+          <button class="btn primary" type="submit">Save rules</button></form>
+        <form class="card" id="fAgent"><h3>Approve the assistant's device</h3>
+          <div><label for="agAddr">Device address</label><input id="agAddr" type="text" placeholder="0x…" autocomplete="off"></div>
+          <button class="btn primary" type="submit">Approve this device</button>
+          <div class="frow"><button class="btn" type="button" id="pauseBtn">Pause payments</button><button class="btn" type="button" id="revokeBtn">Revoke device</button></div></form>
+        <form class="card" id="fContact"><h3>Add a trusted contact</h3>
+          <div class="frow"><div><label for="ctName">Name</label><input id="ctName" type="text" maxlength="32" placeholder="ramesh" autocomplete="off"></div>
+          <div><label for="ctAddr">Wallet address</label><input id="ctAddr" type="text" placeholder="0x…" autocomplete="off"></div></div>
+          <button class="btn primary" type="submit">Save contact</button></form>
+      </div>
+    </div>
+  </div>
+  <p class="muted small foot">Contract <a id="cLink" href="#" rel="noopener noreferrer" target="_blank" class="mono"></a> on Monad testnet (chain 10143).</p>
+</section>
+</main>
+
+<!-- Confirmation -->
+<div class="overlay" id="confirmOv" hidden>
+  <div class="confirm" id="confirmCard" role="alertdialog" aria-modal="true" aria-labelledby="cfH" aria-describedby="cfDesc" aria-live="assertive">
+    <h2 id="cfH">Please confirm this payment</h2>
+    <div class="cf-body">
+      <div class="amtwrap">
+        <svg class="ringsvg" viewBox="0 0 120 120" aria-hidden="true"><circle class="bg" cx="60" cy="60" r="54"/><circle class="fg" id="cfRing" cx="60" cy="60" r="54"/></svg>
+        <div class="secs"><b id="cfSecs">25</b><span>seconds</span></div>
+      </div>
+      <div class="cf-info" id="cfDesc">
+        <p class="amount" id="cfAmt">0.05 MON</p>
+        <p class="to">to <strong id="cfTo">Alice</strong> <span class="mono" id="cfAddr"></span></p>
+        <p class="note" id="cfNote" hidden></p>
+      </div>
+    </div>
+    <div class="cf-btns">
+      <button class="giant ok" id="cfYes" type="button"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Confirm</button>
+      <button class="giant no" id="cfNo" type="button"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg>Cancel</button>
+    </div>
+    <p class="muted center">Or say "confirm" / "haan", or double-blink. Silence cancels.</p>
+  </div>
+</div>
+
+<div id="toasts" role="status" aria-live="polite"></div>
+</body>
+</html>

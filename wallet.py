@@ -2,6 +2,7 @@
 import json
 import os
 import re
+import time
 from decimal import Decimal, InvalidOperation
 
 from dotenv import load_dotenv
@@ -13,13 +14,43 @@ from safety import match_contact
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-RPC = os.getenv("MONAD_RPC", "https://testnet-rpc.monad.xyz")
+# Public RPCs sometimes return empty/failed results under load. Measured: Ankr was the most reliable from browsers.
+# We keep several endpoints and rotate on transient failures (never on a contract revert, which is a real answer).
+_DEFAULT_RPCS = ["https://rpc.ankr.com/monad_testnet", "https://testnet-rpc.monad.xyz", "https://rpc-testnet.monadinfra.com"]
+RPCS = list(dict.fromkeys(([os.environ["MONAD_RPC"]] if os.getenv("MONAD_RPC") else []) + _DEFAULT_RPCS))
+RPC = RPCS[0]
 CHAIN_ID = int(os.getenv("MONAD_CHAIN_ID", "10143"))
 EXPLORER = "https://testnet.monadscan.com"
 CONTACTS_PATH = os.path.join(BASE_DIR, "contacts.json")
 MAX_SEND = Decimal(os.getenv("MAX_SEND_MON", "1"))  # hard safety cap per transfer
 
+_rpc_i = 0
 w3 = Web3(Web3.HTTPProvider(RPC, request_kwargs={"timeout": 15}))
+
+
+def _rotate_rpc():
+    global _rpc_i
+    _rpc_i = (_rpc_i + 1) % len(RPCS)
+    w3.provider = Web3.HTTPProvider(RPCS[_rpc_i], request_kwargs={"timeout": 15})
+
+
+def _is_revert(e: Exception) -> bool:
+    return "execution reverted" in str(e).lower() or type(e).__name__ == "ContractLogicError"
+
+
+def with_retry(fn, tries: int = 5):
+    """Run an RPC call, rotating endpoints on transient failures. Reverts are answers, so they are re-raised."""
+    last = None
+    for i in range(tries):
+        try:
+            return fn()
+        except Exception as e:
+            if _is_revert(e):
+                raise
+            last = e
+            _rotate_rpc()
+            time.sleep(0.25 * (i + 1))
+    raise last
 _acct = Account.from_key(os.environ["WALLET_PRIVATE_KEY"]) if os.getenv("WALLET_PRIVATE_KEY") else None
 
 # GuardVault: the on-chain policy contract every transfer goes through (see contracts/GuardVault.sol)
@@ -80,7 +111,7 @@ def contact_book() -> dict:
     """name -> address from the owner's ON-CHAIN contact book (falls back to the local mirror if offline)."""
     if vault is not None and OWNER:
         try:
-            names, addrs = vault.functions.contactsOf(OWNER).call()
+            names, addrs = with_retry(lambda: vault.functions.contactsOf(OWNER).call())
             return {n: Web3.to_checksum_address(a) for n, a in zip(names, addrs)}
         except Exception:
             pass
@@ -111,14 +142,14 @@ def address() -> str:
 def balance(addr: str | None = None) -> Decimal:
     """Plain wallet balance in MON."""
     a = Web3.to_checksum_address(addr or address())
-    return Decimal(w3.from_wei(w3.eth.get_balance(a), "ether"))
+    return Decimal(w3.from_wei(with_retry(lambda: w3.eth.get_balance(a)), "ether"))
 
 
 def vault_balance() -> Decimal:
     """MON in the OWNER's GuardVault (what this agent is allowed to spend)."""
     if vault is None:
         return balance()
-    return Decimal(w3.from_wei(vault.functions.balanceOf(OWNER).call(), "ether"))
+    return Decimal(w3.from_wei(with_retry(lambda: vault.functions.balanceOf(OWNER).call()), "ether"))
 
 
 def policy() -> dict:
@@ -126,7 +157,7 @@ def policy() -> dict:
     if vault is None:
         return {"configured": False, "max_per_tx": MAX_SEND, "daily_limit": MAX_SEND, "trusted_only": False,
                 "paused": False, "agent_ok": True}
-    p = vault.functions.policyOf(OWNER).call()  # (configured, trustedOnly, paused, maxPerTx, dailyLimit, agent)
+    p = with_retry(lambda: vault.functions.policyOf(OWNER).call())  # (configured, trustedOnly, paused, maxPerTx, dailyLimit, agent)
     return {"configured": p[0], "trusted_only": p[1], "paused": p[2],
             "max_per_tx": Decimal(w3.from_wei(p[3], "ether")), "daily_limit": Decimal(w3.from_wei(p[4], "ether")),
             "agent_ok": (p[5].lower() == address().lower()) or not FAMILY_MODE}
@@ -134,7 +165,7 @@ def policy() -> dict:
 
 def tx_status(tx_hash: str) -> str:
     try:
-        r = w3.eth.get_transaction_receipt(tx_hash)
+        r = with_retry(lambda: w3.eth.get_transaction_receipt(tx_hash))
         return "confirmed" if r.status == 1 else "failed"
     except Exception:
         return "pending"
@@ -146,21 +177,31 @@ def explorer_url(tx_hash: str) -> str:
 
 # ── writes ──────────────────────────────────────────────────────────────────
 def _vault_tx(fn, value: int = 0, wait: bool = True) -> str:
-    """Sign and broadcast a GuardVault call from the app wallet."""
+    """Sign and broadcast a GuardVault call from the app wallet, surviving flaky RPCs without double-sending."""
     if not _acct:
         raise WalletError("No wallet configured.")
-    tx = fn.build_transaction({
-        "from": _acct.address, "nonce": w3.eth.get_transaction_count(_acct.address),
-        "chainId": CHAIN_ID, "gasPrice": w3.eth.gas_price, "value": value,
-    })
+
+    def build():
+        return fn.build_transaction({
+            "from": _acct.address, "nonce": w3.eth.get_transaction_count(_acct.address, "pending"),
+            "chainId": CHAIN_ID, "gasPrice": w3.eth.gas_price, "value": value,
+        })
     try:
-        tx["gas"] = int(w3.eth.estimate_gas(tx) * 1.3)
+        tx = with_retry(build)
+        tx["gas"] = int(with_retry(lambda: w3.eth.estimate_gas(tx)) * 1.3)
     except Exception as e:  # a revert here means a GuardVault rule blocked it
         raise WalletError(_revert_reason(e))
-    h = w3.eth.send_raw_transaction(_acct.sign_transaction(tx).raw_transaction).hex()
+    signed = _acct.sign_transaction(tx)
+    h = signed.hash.hex()
     h = h if h.startswith("0x") else "0x" + h
+    try:
+        with_retry(lambda: w3.eth.send_raw_transaction(signed.raw_transaction))
+    except Exception as e:
+        if not re.search(r"already known|known transaction|nonce too low|already imported", str(e), re.I):
+            raise WalletError(f"Could not send the transaction: {str(e)[:100]}")
+        # a previous attempt reached the network: the same signed tx is already in flight, so just wait for it
     if wait:
-        r = w3.eth.wait_for_transaction_receipt(h, timeout=60)
+        r = with_retry(lambda: w3.eth.wait_for_transaction_receipt(h, timeout=60))
         if r.status != 1:
             raise WalletError("The transaction failed on-chain.")
     return h

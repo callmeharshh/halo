@@ -19,19 +19,29 @@ const ABI = [
 const state = { iface: null, rows: new Map(), lastBlock: null, started: false, failures: 0 };
 
 /* ---------- RPC (plain fetch, with timeout) ---------- */
+let rpcIdx = 0;
 async function rpc(method, params) {
-  const ctl = new AbortController();
-  const t = setTimeout(() => ctl.abort(), 10000);
-  try {
-    const r = await fetch(CHAIN.rpc, {
-      method: "POST", headers: { "content-type": "application/json" }, signal: ctl.signal,
-      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
-    });
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    const j = await r.json();
-    if (j.error) throw new Error(j.error.message || "RPC error");
-    return j.result;
-  } finally { clearTimeout(t); }
+  const list = CHAIN.rpcs || [CHAIN.rpc];
+  let lastErr;
+  for (let attempt = 0; attempt < list.length * 2; attempt++) {  // rotate endpoints, 2 passes
+    const url = list[(rpcIdx + attempt) % list.length];
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 10000);
+    try {
+      const r = await fetch(url, {
+        method: "POST", headers: { "content-type": "application/json" }, signal: ctl.signal,
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+      });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const j = await r.json();
+      if (j.error) throw new Error(j.error.message || "RPC error");
+      if (j.result === undefined || j.result === null || (method === "eth_call" && j.result === "0x")) throw new Error("empty result");
+      rpcIdx = (rpcIdx + attempt) % list.length;  // stick with the endpoint that worked
+      return j.result;
+    } catch (e) { lastErr = e; await new Promise((res) => setTimeout(res, 150 * (attempt + 1))); }
+    finally { clearTimeout(t); }
+  }
+  throw lastErr;
 }
 const hex = (n) => "0x" + n.toString(16);
 

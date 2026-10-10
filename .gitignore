@@ -7,3 +7,5 @@ llamacpp/
 llama-server.log
 *.pkl
 .DS_Store
+ui/devtools/shots/
+tests/shots/

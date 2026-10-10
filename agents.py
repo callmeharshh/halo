@@ -41,6 +41,7 @@ class Bus:
         self.on_event = lambda agent, kind, text: print(f"[{agent}] {kind}: {text}")
         self.speak = lambda text: print(f"SAY: {text}")
         self.is_speaking = lambda: False  # UI swaps in the real TTS state
+        self.on_confirm = lambda payload: None  # structured payment-confirmation card for the UI
 
 
 bus = Bus()
@@ -104,12 +105,13 @@ class ConfirmationGate:
     def active(self):
         return self.pending is not None
 
-    def ask(self, description: str, spoken: str, timeout: float = 25.0) -> bool:
+    def ask(self, description: str, spoken: str, timeout: float = 25.0, details: dict | None = None) -> bool:
         self._event.clear()
         self._decision = None
         self.armed = False
         self.pending = description
         bus.on_event("Guardian", "ask", description)
+        bus.on_confirm({"pending": True, "text": description, "timeout": timeout, **(details or {})})
         bus.speak(spoken + " Say confirm, or cancel.")
         t0 = time.time()
         time.sleep(0.3)
@@ -123,6 +125,7 @@ class ConfirmationGate:
         ok = answered and self._decision is True
         self.armed = False
         self.pending = None
+        bus.on_confirm({"pending": False})
         return ok
 
     def resolve(self, decision: bool, source: str = "voice"):
@@ -219,7 +222,8 @@ def t_send_mon(recipient, amount):
     short = prep["to"][:6] + "…" + prep["to"][-4:]
     shown = f"{note}Send {prep['amount'].normalize():f} MON to {prep['label']} ({short})."
     spoken = f"{note}Send {safety.say_amount(prep['amount'])} MON to {prep['label']}."
-    if not gate.ask(shown, spoken):
+    details = {"amount": format(prep["amount"].normalize(), "f"), "to": prep["label"], "address": short, "note": note.strip()}
+    if not gate.ask(shown, spoken, details=details):
         return "Transfer cancelled by the user. Nothing was sent."
     method = gate.last_source
     bus.on_event("Wallet", "send", f"GuardVault.guardedSend({prep['amount']} MON → {prep['label']}, approvedBy={method})")

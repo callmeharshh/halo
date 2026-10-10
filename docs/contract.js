@@ -4,7 +4,11 @@ window.GUARDVAULT = {
   "deployBlock": 69763475,
   "deployTx": "0x43356d3c4b6240ea3fada7a69ff3e6d68e455ed6a557fd40effa65bfd941921b",
   "chainId": 10143,
-  "rpc": "https://testnet-rpc.monad.xyz",
+  "rpc": "https://rpc.ankr.com/monad_testnet",
+  "rpcs": [
+    "https://rpc.ankr.com/monad_testnet",
+    "https://testnet-rpc.monad.xyz"
+  ],
   "explorer": "https://testnet.monadscan.com",
   "vision": "https://testnet.monadvision.com"
 };
