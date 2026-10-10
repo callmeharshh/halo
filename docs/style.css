@@ -89,3 +89,14 @@ body{background:radial-gradient(900px 520px at 12% -5%,rgba(131,110,249,.28),tra
 .btn{transition:transform .15s ease,box-shadow .2s ease}.btn:hover{transform:translateY(-2px)}.btn.primary{box-shadow:0 8px 28px rgba(131,110,249,.4)}
 @media (prefers-reduced-motion:reduce){.hero::after,.hero .wrap>*{animation:none}.card:hover,.btn:hover{transform:none}}
 @media (max-width:700px){.hero::after{width:300px;height:300px;right:-110px;top:-40px;opacity:.6}}
+
+/* simple landing */
+.idea{padding:26px}.idea h3{font-size:1.35rem;margin:.2em 0 .4em}.ico{font-size:2rem}
+.mock{margin-top:16px;padding:14px;border-radius:14px;background:rgba(0,0,0,.28);border:1px dashed var(--line);display:grid;gap:8px}
+.bub{background:#1f2a2f;border-radius:14px 14px 14px 4px;padding:10px 12px;font-size:.95rem}
+.flag{background:rgba(251,191,36,.12);border:1px solid var(--warn);border-radius:12px;padding:10px 12px;font-size:.95rem}
+.flag.bad{background:rgba(248,113,113,.12);border-color:var(--err)}
+.rule{display:flex;justify-content:space-between;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.05)}
+.steps3 .card h3{margin:.5em 0 .3em}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.chip2{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:.95rem}
