@@ -123,8 +123,37 @@ def _search(query_prompt: str):
     return r.output_text, sources
 
 
+def google_place(name: str, city: str):
+    """Google Places (New) lookup for official wheelchair-accessibility fields. Returns None if unavailable or not a confident name match."""
+    key = os.getenv("GOOGLE_PLACES_API_KEY")
+    if not key:
+        return None
+    try:
+        import requests
+        from rapidfuzz import fuzz
+        r = requests.post("https://places.googleapis.com/v1/places:searchText", timeout=15,
+                          headers={"X-Goog-Api-Key": key, "Content-Type": "application/json",
+                                   "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.googleMapsUri,places.accessibilityOptions"},
+                          json={"textQuery": f"{name} {city}".strip(), "maxResultCount": 1})
+        if r.status_code != 200:
+            return None
+        p = (r.json().get("places") or [None])[0]
+        if not p:
+            return None
+        got = (p.get("displayName") or {}).get("text", "")
+        if fuzz.token_set_ratio(name.lower(), got.lower()) < 70:  # avoid attaching another venue's data
+            return None
+        return {"name": got, "address": p.get("formattedAddress", ""), "uri": p.get("googleMapsUri", ""), "opts": p.get("accessibilityOptions") or {}}
+    except Exception:
+        return None
+
+
+GOOGLE_MAP = {"wheelchairAccessibleEntrance": "step_free", "wheelchairAccessibleRestroom": "accessible_restroom",
+              "wheelchairAccessibleSeating": "accessible_room", "wheelchairAccessibleParking": "accessible_parking"}
+
+
 def research(place: dict, needs: list[str], lang: str = "en") -> dict:
-    key = (place["name"].strip().lower() + "|" + (place.get("city") or "").strip().lower() + "|" + ",".join(sorted(needs)) + "|" + lang + "|v2")
+    key = (place["name"].strip().lower() + "|" + (place.get("city") or "").strip().lower() + "|" + ",".join(sorted(needs)) + "|" + lang + "|v3")
     with _cache_lock:
         cached = _load_cache().get(key)
     if cached:
@@ -166,6 +195,18 @@ def research(place: dict, needs: list[str], lang: str = "en") -> dict:
         d = data.get("draft") or {}
         if d.get("body"):
             out["draft"] = {"channel": "email", "subject": d.get("subject") or out["draft"]["subject"], "body": d["body"]}
+        g = google_place(place["name"], place.get("city", ""))
+        if g and g["opts"]:
+            for gk, fk in GOOGLE_MAP.items():
+                if gk in g["opts"]:
+                    out["access"]["features"][fk] = "yes" if g["opts"][gk] else "no"
+            out["access"]["google"] = {"matched": g["name"], "address": g["address"], "fields": {k: bool(v) for k, v in g["opts"].items()}}
+            if g["uri"]:
+                out["access"]["sources"] = ([{"title": "Google Maps listing: wheelchair accessibility data", "url": g["uri"]}] + out["access"]["sources"])[:5]
+            if out["access"]["confidence"] == "low":
+                out["access"]["confidence"] = "medium"  # an official listing is real evidence
+            elif len(sources) >= 1 and out["access"]["confidence"] == "medium":
+                out["access"]["confidence"] = "high"  # web sources plus an official listing agree
     except Exception as e:
         out["access"]["summary"] = "Could not complete online research for this place (" + str(e)[:60] + "). Please confirm directly with the venue."
     with _cache_lock:

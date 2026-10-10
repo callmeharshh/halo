@@ -42,7 +42,7 @@ try:
     b.eval("(()=>{const i=document.querySelector('#composer-input');i.value=%r;i.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('#send').click()})()" % MSG)
     check("live: planning agent hand-off appears", bool(b.wait("/planning agent/i.test(document.querySelector('#transcript').innerText)", 90)))
     check("live: the plan artifact reaches the Trip panel", bool(b.wait("/Itinerary|Day 1/i.test(document.querySelector('#arts').innerText)", 120)))
-    check("live: the concierge's final message arrives", bool(b.wait("document.querySelectorAll('#transcript article, #transcript [data-role=agent]').length>0 || /Next step|plan has been created|created/i.test(document.querySelector('#transcript').innerText)", 60)))
+    check("live: the concierge's final message arrives (with Read aloud)", bool(b.wait("/Read aloud/.test(document.querySelector('#transcript').innerText)", 60)))
     check("live: no JavaScript errors", not b.errors, str(b.errors[:2]))
     b.screenshot(os.path.join(ROOT, "tests", "shots", "concierge_live.png"), full=False)
 finally:

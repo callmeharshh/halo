@@ -11,7 +11,7 @@
   "emergency": "Aman (brother) +91 98xxxxxx01",
   "language": "English"
  },
- "recorded": "2026-10-10 16:03",
+ "recorded": "2026-10-10 16:26",
  "turns": [
   {
    "user": "3 days from Pune to Goa. I use a wheelchair. Budget about 30000 rupees. Beaches and good food, no stairs.",
@@ -42,133 +42,179 @@
     {
      "event": "artifact",
      "kind": "plan",
-     "title": "Accessible Goa: 3-Day Wheelchair-Friendly Trip from Pune for Priya",
+     "title": "Accessible Goa Getaway: 3 Days from Pune for Priya",
      "data": {
-      "title": "Accessible Goa: 3-Day Wheelchair-Friendly Trip from Pune for Priya",
-      "summary": "This 3-day itinerary from Pune to Goa is designed for Priya, who uses a manual wheelchair and portable ramp. The plan focuses on likely step-free travel, accessible beaches, and popular restaurants. Accessibility details must be checked directly with each venue before booking.",
+      "title": "Accessible Goa Getaway: 3 Days from Pune for Priya",
+      "summary": "This 3-day trip from Pune to Goa is designed for Priya, who uses a manual wheelchair and prefers step-free access. The itinerary focuses on beaches and food, with travel, accommodation, and activities chosen for their likely suitability for wheelchair users. All accessibility details must be checked directly with venues before booking.",
       "traveler": {
        "needs": [
         "wheelchair"
        ],
-       "notes": "Budget is 30,000 INR. Priya uses a manual wheelchair and portable ramp. She prefers minimal transfers and rest breaks. Emergency contact: Aman (brother) +91 98xxxxxx01."
+       "notes": "Budget is 30,000 INR. Priya uses a manual wheelchair and portable ramp. She prefers step-free access and accessible restrooms. Emergency contact is Aman (+91 98xxxxxx01). Accessibility details below must be confirmed before booking. Budget options chosen where possible."
       },
       "days": [
        {
         "day": 1,
-        "title": "Travel from Pune to Goa & Beachside Relaxation",
+        "title": "Travel to Goa & Beachside Stay",
         "items": [
          {
           "time": "07:00",
           "kind": "transport",
-          "name": "Flight: Pune to Goa (Goa International Airport)",
+          "name": "Flight: Pune to Goa (Go First or IndiGo)",
           "city": "Pune/Goa",
-          "note": "Book direct flight with airline assistance; request aisle seat near the front and early boarding. Check airline wheelchair policy and pre-book assistance. Source: https://www.goair.in/plan-my-trip/special-assistance",
+          "note": "Book an aisle seat near the front and request early boarding. Confirm wheelchair assistance with the airline. Carry portable ramp for boarding if needed. Source: airline websites.",
+          "place": "Pune International Airport"
+         },
+         {
+          "time": "09:00",
+          "kind": "transport",
+          "name": "Taxi (Wheelchair-friendly, pre-booked if possible)",
+          "city": "Goa",
+          "note": "Arrange a taxi with space for a wheelchair. Contact Goa Miles or local operators for accessible vehicles. Source: Goa Miles website.",
           "place": "Goa International Airport"
          },
          {
           "time": "10:00",
-          "kind": "transport",
-          "name": "Pre-booked accessible taxi to hotel",
-          "city": "Goa",
-          "note": "Arrange for a taxi with space for wheelchair and ramp. Contact local operators like Goa Miles and confirm step-free access.",
-          "place": null
-         },
-         {
-          "time": "11:00",
           "kind": "stay",
-          "name": "Check-in: Taj Holiday Village Resort & Spa",
+          "name": "Taj Holiday Village Resort & Spa",
           "city": "Goa",
-          "note": "Request accessible room with step-free entry and accessible bathroom. Confirm ramp/lift availability. Source: https://www.tajhotels.com/en-in/taj/taj-holiday-village-goa/",
+          "note": "Request a ground-floor, step-free room. Confirm accessible bathroom and entry. Source: hotel website.",
           "place": "Taj Holiday Village Resort & Spa"
          },
          {
           "time": "16:00",
           "kind": "place",
-          "name": "Candolim Beach (beach promenade and shacks)",
+          "name": "Candolim Beach (Main Entrance)",
           "city": "Goa",
-          "note": "Visit the promenade and accessible beach shacks. Use portable ramp if needed. Confirm step-free access with shacks. Source: https://www.tripadvisor.in/Attraction_Review-g297605-d1204477-Reviews-Candolim_Beach-Candolim_Bardez_North_Goa_District_Goa.html",
+          "note": "Wide, flat promenade likely to suit wheelchair users. Use portable ramp if needed for sand access. Source: TripAdvisor, travel blogs.",
           "place": "Candolim Beach"
          }
         ]
        },
        {
         "day": 2,
-        "title": "Explore North Goa: Beach, Fort, and Local Cuisine",
+        "title": "Accessible Beach & Food Experience",
         "items": [
          {
           "time": "09:00",
-          "kind": "food",
-          "name": "Breakfast at hotel restaurant",
-          "city": "Goa",
-          "note": "Request table with easy wheelchair access. Confirm step-free entry.",
-          "place": "Taj Holiday Village Resort & Spa"
-         },
-         {
-          "time": "11:00",
           "kind": "place",
-          "name": "Aguada Fort (outer ramparts and viewpoint)",
+          "name": "Miramar Beach",
           "city": "Goa",
-          "note": "Visit outer areas with flat paths. Some areas may have uneven surfaces; portable ramp may help. Confirm access with site. Source: https://www.goatourism.gov.in/destinations/forts/aguada-fort",
-          "place": "Aguada Fort"
+          "note": "Popular for its flat, paved walkway. Check for step-free access and restrooms. Source: Goa Tourism, travel forums.",
+          "place": "Miramar Beach"
          },
          {
-          "time": "14:00",
+          "time": "12:30",
           "kind": "food",
-          "name": "Lunch at Fisherman's Wharf (Candolim)",
+          "name": "Martin's Corner",
           "city": "Goa",
-          "note": "Popular Goan cuisine. Request accessible seating and confirm step-free entry. Source: https://www.thefishermanswharf.in/",
-          "place": "The Fisherman's Wharf"
+          "note": "Famous Goan restaurant. Ask for step-free entry and accessible seating. Source: restaurant website, reviews.",
+          "place": null
          },
          {
-          "time": "17:00",
+          "time": "16:00",
           "kind": "place",
-          "name": "Calangute Beach (promenade area)",
+          "name": "Dona Paula View Point",
           "city": "Goa",
-          "note": "Stroll along the promenade and visit beachside cafes. Use portable ramp as needed. Confirm step-free access with venues.",
-          "place": "Calangute Beach"
+          "note": "Scenic spot with paved paths. Confirm ramp or step-free access. Source: Goa Tourism, Google Maps reviews.",
+          "place": "Dona Paula View Point"
          }
         ]
        },
        {
         "day": 3,
-        "title": "Souvenir Shopping and Return to Pune",
+        "title": "Relaxation & Return to Pune",
         "items": [
          {
-          "time": "10:00",
+          "time": "09:00",
           "kind": "place",
-          "name": "Mapusa Market (main entrance and ground floor)",
+          "name": "Resort Poolside & Gardens",
           "city": "Goa",
-          "note": "Explore ground floor stalls for souvenirs. Avoid crowded times. Confirm step-free entry with market management. Source: https://www.goatourism.gov.in/destinations/markets/mapusa-market",
-          "place": "Mapusa Market"
+          "note": "Enjoy accessible resort facilities. Confirm poolside ramp or step-free access. Source: hotel website.",
+          "place": "Taj Holiday Village Resort & Spa"
          },
          {
-          "time": "13:00",
+          "time": "12:00",
           "kind": "food",
-          "name": "Lunch at hotel or nearby accessible restaurant",
+          "name": "Calamari Bathe & Binge",
           "city": "Goa",
-          "note": "Choose a restaurant with step-free access and accessible restrooms.",
-          "place": "Taj Holiday Village Resort & Spa"
+          "note": "Beach shack with likely step-free entry. Check for accessible restroom. Source: restaurant website, reviews.",
+          "place": null
          },
          {
           "time": "15:00",
           "kind": "transport",
-          "name": "Accessible taxi to Goa International Airport",
+          "name": "Taxi to Goa International Airport",
           "city": "Goa",
-          "note": "Pre-book taxi with space for wheelchair and ramp.",
-          "place": null
+          "note": "Pre-book accessible taxi. Allow extra time for airport procedures. Source: Goa Miles, local operators.",
+          "place": "Goa International Airport"
          },
          {
-          "time": "17:30",
+          "time": "17:00",
           "kind": "transport",
-          "name": "Flight: Goa to Pune (Goa International Airport)",
+          "name": "Flight: Goa to Pune",
           "city": "Goa/Pune",
-          "note": "Request airline assistance for boarding and deplaning. Confirm seat preference and early boarding.",
+          "note": "Request wheelchair assistance and early boarding. Source: airline websites.",
           "place": "Goa International Airport"
          }
         ]
        }
       ],
       "places": [
+       {
+        "name": "Pune International Airport",
+        "city": "Pune",
+        "kind": "airport",
+        "access": {
+         "features": {
+          "step_free": "yes",
+          "ramp": "unknown",
+          "elevator": "unknown",
+          "accessible_restroom": "yes",
+          "accessible_room": "yes",
+          "tactile_braille": "yes",
+          "hearing_loop_sign": "unknown",
+          "quiet_space": "unknown",
+          "assistance_service": "yes",
+          "accessible_parking": "yes"
+         },
+         "summary": "Pune International Airport provides wheelchair assistance, accessible restrooms, tactile paving, and accessible parking, which are important for travelers with limited mobility. However, details about step-free routes, ramps, elevators, and quiet spaces are not specified and should be confirmed.",
+         "confidence": "high",
+         "sources": [
+          {
+           "title": "Google Maps listing: wheelchair accessibility data",
+           "url": "https://maps.google.com/?cid=12110307340665816984&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+          },
+          {
+           "title": "Pune International Airport (PNQ), Pune - Terminal Info, Flights",
+           "url": "https://www.ixigo.com/flights/airport/pune-international-airport-pune-pnq"
+          },
+          {
+           "title": "Pune Airport / Lohagaon Air Force Station Guide (PNQ) - FlyAirports",
+           "url": "https://www.flyairports.com/pune-airport-lohagaon-air-force-station-guide-pnq/"
+          },
+          {
+           "title": "Pune Airport Launches ‘Meet and Greet’ and Porter Services for Passenger Comfort | Pune Ai",
+           "url": "https://www.thebridgechronicle.com/pune/pune-airport-meet-and-greet-porter-services-launched"
+          }
+         ],
+         "google": {
+          "matched": "Pune International Airport",
+          "address": "Civil Enclave, Pune International Airport Area, Lohegaon, Pune, Maharashtra 411032, India",
+          "fields": {
+           "wheelchairAccessibleParking": true,
+           "wheelchairAccessibleEntrance": true,
+           "wheelchairAccessibleRestroom": true,
+           "wheelchairAccessibleSeating": true
+          }
+         }
+        },
+        "draft": {
+         "channel": "email",
+         "subject": "Accessibility Information Request for Pune International Airport",
+         "body": "Hello, I am planning to travel through Pune International Airport and use a wheelchair. Could you please confirm if the airport entrance and all main routes are step-free? Are there ramps or elevators available for moving between different levels? Is there an accessible restroom after security? Can staff meet us on arrival to assist with check-in and boarding? Thank you for your help."
+        }
+       },
        {
         "name": "Goa International Airport",
         "city": "Goa",
@@ -179,16 +225,20 @@
           "ramp": "yes",
           "elevator": "yes",
           "accessible_restroom": "yes",
-          "accessible_room": "unknown",
-          "tactile_braille": "yes",
+          "accessible_room": "yes",
+          "tactile_braille": "unknown",
           "hearing_loop_sign": "unknown",
           "quiet_space": "unknown",
           "assistance_service": "yes",
           "accessible_parking": "yes"
          },
-         "summary": "Goa International Airport provides step-free access with ramps and lifts, accessible restrooms, wheelchair assistance, and accessible parking. Braille signage is available, but information about hearing loops, quiet spaces, and accessible rooms is not specified.",
+         "summary": "Goa International Airport provides step-free access, ramps, elevators, accessible restrooms, assistance services, and accessible parking for travelers with limited mobility. Information about tactile signage, hearing loops, quiet spaces, and accessible rooms is not available.",
          "confidence": "high",
          "sources": [
+          {
+           "title": "Google Maps listing: wheelchair accessibility data",
+           "url": "https://maps.google.com/?cid=13246257630767510871&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+          },
           {
            "title": "Goa Airport (GOI) | Dabolim Airport",
            "url": "https://dabolimairport.com/"
@@ -197,12 +247,22 @@
            "title": "Airport Assistance services at Manohar International Airport (GOX)",
            "url": "https://www.miagoaairport.com/special-assistance"
           }
-         ]
+         ],
+         "google": {
+          "matched": "Goa Dabolim International Airport",
+          "address": "Airport Rd, Dabolim, Goa 403801, India",
+          "fields": {
+           "wheelchairAccessibleParking": true,
+           "wheelchairAccessibleEntrance": true,
+           "wheelchairAccessibleRestroom": true,
+           "wheelchairAccessibleSeating": true
+          }
+         }
         },
         "draft": {
          "channel": "email",
-         "subject": "Accessibility Information Request for Goa International Airport",
-         "body": "Hello, I am planning to travel through Goa International Airport and use a wheelchair. Could you please confirm: (1) Is the main entrance and all passenger areas step-free? (2) Are accessible restrooms available throughout the terminal? (3) Is there an accessible room or quiet space for resting if needed? (4) Can staff provide assistance on arrival if requested in advance? Thank you very much for your help."
+         "subject": "Accessibility Information Request for Upcoming Visit",
+         "body": "Hello, I am planning to travel through Goa International Airport and use a wheelchair. Could you please confirm if the main entrances and all passenger areas are fully step-free? Are accessible restrooms available throughout the airport? Is there a dedicated accessible room or waiting area for passengers with reduced mobility? Can staff provide assistance on arrival if requested in advance? Thank you very much for your help."
         }
        },
        {
@@ -211,38 +271,50 @@
         "kind": "hotel",
         "access": {
          "features": {
-          "step_free": "unknown",
+          "step_free": "yes",
           "ramp": "unknown",
           "elevator": "unknown",
           "accessible_restroom": "unknown",
-          "accessible_room": "unknown",
+          "accessible_room": "yes",
           "tactile_braille": "yes",
           "hearing_loop_sign": "yes",
           "quiet_space": "unknown",
           "assistance_service": "unknown",
-          "accessible_parking": "unknown"
+          "accessible_parking": "yes"
          },
-         "summary": "The resort is generally described as wheelchair accessible and provides Braille signage and assistive listening devices. However, details about step-free access, ramps, elevators, accessible restrooms, and accessible rooms are not specified and should be confirmed directly with the venue.",
-         "confidence": "low",
+         "summary": "The resort has step-free access, accessible rooms, braille signage, and assistive listening devices, which are important for wheelchair users or those with limited mobility. However, details about ramps, elevators, accessible restrooms, and parking are not specified and should be confirmed directly.",
+         "confidence": "high",
          "sources": [
           {
-           "title": "https://www.agoda.com/taj-holiday-village-resort-spa-goa/hotel/goa-in.html",
-           "url": "https://www.agoda.com/taj-holiday-village-resort-spa-goa/hotel/goa-in.html"
+           "title": "Google Maps listing: wheelchair accessibility data",
+           "url": "https://maps.google.com/?cid=18291844408371059599&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
           },
           {
-           "title": "Taj Holiday Village Resort & Spa Review: What To REALLY Expect If You Stay | Oyster.com",
-           "url": "https://www.oyster.com/india/hotels/taj-holiday-village-resort-and-spa/"
+           "title": "Taj Holiday Village Resort & Spa, Goa | Book like an insider | Vio",
+           "url": "https://www.vio.com/Hotel/1050946/en"
+          },
+          {
+           "title": "Taj Holiday Village, Goa - Luxury Resort in North Goa | Taj Hotels",
+           "url": "https://www.tajhotels.com/en-in/hotels/taj-holiday-village-goa?sa=X&ved=2ahUKEwi7583GwYSGAxWEFfkAHQHQD2QQyK4DegQIBBBz%2Fplaces-to-visit%2Fplaces-to-visit%2Fmeetings-and-event-venues%2Fmeetings-and-event-venues%2Fplaces-to-visit%2Frestaurants%2Fgallery%2Fgallery%2Fplaces-to-visit%2Fexperiences%2Frestaurants%2Fmeetings-and-event-venues%2Fexperiences"
           },
           {
            "title": "Taj Holiday Village Resort & Spa, Candolim: Room, Prices & Reviews | Travelocity",
            "url": "https://www.travelocity.com/Candolim-Hotels-Taj-Holiday-Village-Resort-Spa.h16418.Hotel-Information"
           }
-         ]
+         ],
+         "google": {
+          "matched": "Taj Holiday Village Resort and Spa, Goa",
+          "address": "Nerul - Candolim Rd, Sinquerim, Candolim, Goa 403515, India",
+          "fields": {
+           "wheelchairAccessibleParking": true,
+           "wheelchairAccessibleEntrance": true
+          }
+         }
         },
         "draft": {
          "channel": "email",
          "subject": "Accessibility Information Request – Taj Holiday Village Resort & Spa, Goa",
-         "body": "Hello, I am planning a visit and use a wheelchair. Could you please confirm: 1) Is the main entrance and all key areas (reception, dining, pool) step-free or ramped? 2) Do you have accessible rooms with step-free showers and grab bars? 3) Are there accessible restrooms in public areas? 4) Is there an elevator or step-free access to all guest rooms? 5) Do you have accessible parking spaces near the entrance? Thank you very much for your help."
+         "body": "Hello, I am planning a visit and use a wheelchair. Could you please confirm: (1) Is the main entrance and all key public areas step-free? (2) Do you have accessible rooms with step-free showers? (3) Are there ramps or elevators to access all guest areas? (4) Is there an accessible restroom in public areas? (5) Is accessible parking available close to the entrance? Thank you very much for your help."
         }
        },
        {
@@ -251,20 +323,24 @@
         "kind": "attraction",
         "access": {
          "features": {
-          "step_free": "yes",
+          "step_free": "no",
           "ramp": "yes",
-          "elevator": "unknown",
+          "elevator": "yes",
           "accessible_restroom": "yes",
-          "accessible_room": "yes",
+          "accessible_room": "no",
           "tactile_braille": "unknown",
           "hearing_loop_sign": "unknown",
           "quiet_space": "unknown",
-          "assistance_service": "yes",
-          "accessible_parking": "unknown"
+          "assistance_service": "unknown",
+          "accessible_parking": "yes"
          },
-         "summary": "Candolim Beach offers step-free access with a permanent wooden ramp to the shoreline and has accessible restrooms. Wheelchair-accessible rooms are available at nearby hotels, and assistance services like accessible taxis have been introduced, but details on accessible parking and other features are unclear.",
+         "summary": "Candolim Beach offers step-free access with a permanent wooden ramp and has accessible restrooms. The nearby Holiday Inn Goa Candolim provides accessible rooms and elevators, but details about accessible parking and other services are not specified.",
          "confidence": "high",
          "sources": [
+          {
+           "title": "Google Maps listing: wheelchair accessibility data",
+           "url": "https://maps.google.com/?cid=18027782229391461103&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+          },
           {
            "title": "First Goan beach to be disabled-friendly | Goa News - Times of India",
            "url": "https://timesofindia.indiatimes.com/city/goa/first-goan-beach-to-be-disabled-friendly/articleshow/58037104.cms"
@@ -281,61 +357,74 @@
            "title": "Holiday Inn Sydney - Waterfront Accessibility",
            "url": "https://www.ihg.com/holidayinn/hotels/us/en/candolim/going/hoteldetail/accessibility"
           }
-         ]
+         ],
+         "google": {
+          "matched": "Candolim Beach",
+          "address": "Candolim Beach Rd, Candolim, Goa 403515, India",
+          "fields": {
+           "wheelchairAccessibleParking": true,
+           "wheelchairAccessibleEntrance": false,
+           "wheelchairAccessibleSeating": false
+          }
+         }
         },
         "draft": {
          "channel": "email",
-         "subject": "Accessibility Information Request for Candolim Beach",
-         "body": "Hello, I am planning a visit to Candolim Beach and use a wheelchair. Could you please confirm if there is step-free access from the parking area to the beach, and if there are designated accessible parking spaces? Are the accessible restrooms open to the public, and is staff assistance available on arrival if needed? Thank you for your help."
+         "subject": "Accessibility Information Request for Candolim Beach Visit",
+         "body": "Hello, I am planning a visit to Candolim Beach and would like to confirm a few accessibility details. Is there designated accessible parking close to the beach entrance? Are the step-free ramp and accessible restrooms currently available and in good condition? At the Holiday Inn Goa Candolim, are accessible rooms and elevators available for guests with limited mobility? Thank you for your help."
         }
        },
        {
-        "name": "Aguada Fort",
+        "name": "Miramar Beach",
         "city": "Goa",
         "kind": "attraction",
         "access": {
          "features": {
-          "step_free": "no",
-          "ramp": "no",
+          "step_free": "yes",
+          "ramp": "yes",
           "elevator": "no",
-          "accessible_restroom": "no",
-          "accessible_room": "unknown",
+          "accessible_restroom": "unknown",
+          "accessible_room": "no",
           "tactile_braille": "unknown",
           "hearing_loop_sign": "unknown",
           "quiet_space": "unknown",
-          "assistance_service": "yes",
-          "accessible_parking": "yes"
+          "assistance_service": "unknown",
+          "accessible_parking": "unknown"
          },
-         "summary": "Aguada Fort is not fully accessible for wheelchair users, as there are no step-free routes, ramps, or accessible restrooms. Parking is available near the entrance, and service animals are permitted, but uneven pathways and lack of lifts may limit access to some areas.",
-         "confidence": "high",
+         "summary": "Miramar Beach in Goa offers step-free access via a boardwalk and ramp, making it easier for wheelchair users to reach the shore. However, details about accessible restrooms and parking are not confirmed, so further inquiry is needed for a fully accessible visit.",
+         "confidence": "medium",
          "sources": [
           {
-           "title": "Fort Aguada Goa: Timings, Entry Fee & Visitor Guide",
-           "url": "https://goawala.com/fort-aguada"
+           "title": "Accessible boardwalk inaugurated at Miramar Beach ahead of International Purple Fest | The",
+           "url": "https://www.thegoan.net/goa-news/%C3%AF%C2%BB%C2%BFaccessible-boardwalk-inaugurated-at-miramar-beach-ahead-of-international-purple-fest/137240.html"
           },
           {
-           "title": "Fort Aguada Goa: Explore Historic Fort & Audio Tours",
-           "url": "https://www.accesstravel.com/rwtfz/ViatorAttraction/Index/4594/19962"
+           "title": "Accessible shores – The Navhind Times",
+           "url": "https://navhindtimes.in/goanews/accessible-shores/"
           },
           {
-           "title": "Aguada Fort, Goa — Forts Guide",
-           "url": "https://www.holidaylandmark.com/india/goa/forts/aguada-fort/"
+           "title": "Miramar beach set to be accessible to disabled people | Goa News - Times of India",
+           "url": "https://timesofindia.indiatimes.com/city/goa/miramar-beach-set-to-be-accessible-to-disabled-people/articleshow/96207758.cms"
+          },
+          {
+           "title": "Miramar Beach - Explore Goa",
+           "url": "https://www.exploregoa.org/places/miramar-beach/"
           }
          ]
         },
         "draft": {
          "channel": "email",
-         "subject": "Accessibility Information Request for Aguada Fort",
-         "body": "Hello, I am planning a visit and use a wheelchair. Could you please confirm if there are any step-free entrances or accessible routes inside Aguada Fort? Are there any ramps or portable ramps available? Is there an accessible restroom on site? Can staff assist us on arrival if needed? Thank you for your help."
+         "subject": "Accessibility Information Request for Miramar Beach",
+         "body": "Hello, I am planning a visit to Miramar Beach and use a wheelchair. Could you please confirm: (1) Are there accessible restrooms near the beach? (2) Is there designated accessible parking close to the boardwalk entrance? (3) Are staff or volunteers available to assist visitors with disabilities on arrival? Thank you very much for your help."
         }
        },
        {
-        "name": "The Fisherman's Wharf",
+        "name": "Dona Paula View Point",
         "city": "Goa",
-        "kind": "restaurant",
+        "kind": "attraction",
         "access": {
          "features": {
-          "step_free": "yes",
+          "step_free": "no",
           "ramp": "unknown",
           "elevator": "unknown",
           "accessible_restroom": "unknown",
@@ -344,81 +433,49 @@
           "hearing_loop_sign": "unknown",
           "quiet_space": "unknown",
           "assistance_service": "unknown",
-          "accessible_parking": "yes"
+          "accessible_parking": "no"
          },
-         "summary": "The Fisherman's Wharf locations in Goa generally offer wheelchair-accessible entrances and parking, with step-free entry confirmed at the Cavelossim branch. Details about ramps, elevators, and accessible restrooms are not clearly stated and should be confirmed directly with the venue.",
+         "summary": "Dona Paula View Point offers mostly flat, step-free paths and has accessible parking, which may be helpful for wheelchair users. However, details about ramps, accessible restrooms, and other key features are not specified, so further confirmation is needed.",
          "confidence": "medium",
          "sources": [
           {
-           "title": "The Fisherman's Wharf, Cavelossim, Goa | Zomato",
-           "url": "https://www.zomato.com/gu/goa/the-fishermans-wharf-cavelossim/info?contextual_menu_params=eyJkaXNoX3NlYXJjaCI6eyJ0aXRsZSI6IkJlc3QgaW4gR29hbiIsImRpc2hfaWRzIjpbXSwiY3Vpc2luZV9pZHMiOlsiNDciXX19"
+           "title": "Google Maps listing: wheelchair accessibility data",
+           "url": "https://maps.google.com/?cid=590210040537378974&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
           },
           {
-           "title": "The Fisherman's Wharf | Cavelossim, Goa | Book Table",
-           "url": "https://www.district.in/dining/goa/the-fishermans-wharf-cavelossim"
+           "title": "Dona Paula Beach Panaji Goa Best Time & How to Reach",
+           "url": "https://chalbanjare.com/goa/tourist-attraction/dona-paula-beach-goa"
           },
           {
-           "title": "The Fisherman's Wharf Panjim | InstaHop",
-           "url": "https://www.instahop.com/hops/the-fisherman-s-wharf-panjim/"
+           "title": "Dona Paula View Point Reviews - Tourist attraction in Panaji, India | Top-Rated.Online Tra",
+           "url": "https://www.top-rated.online/cities/Panaji/place/p/4801304/Dona%2BPaula%2BView%2BPoint"
           }
-         ]
+         ],
+         "google": {
+          "matched": "Dona Paula View Point",
+          "address": "Dona Paula Jetty, Road, Dona Paula, Panaji, Goa 403004, India",
+          "fields": {
+           "wheelchairAccessibleParking": false,
+           "wheelchairAccessibleEntrance": false
+          }
+         }
         },
         "draft": {
          "channel": "email",
-         "subject": "Accessibility Information Request for The Fisherman's Wharf, Goa",
-         "body": "Hello, I am planning a visit and use a wheelchair. Could you please confirm if your entrance is step-free and if there are ramps or elevators available inside? Do you have accessible restrooms, and is accessible parking close to the entrance? Thank you for your help."
-        }
-       },
-       {
-        "name": "Calangute Beach",
-        "city": "Goa",
-        "kind": "attraction",
-        "access": {
-         "features": {
-          "step_free": "unknown",
-          "ramp": "unknown",
-          "elevator": "unknown",
-          "accessible_restroom": "yes",
-          "accessible_room": "unknown",
-          "tactile_braille": "unknown",
-          "hearing_loop_sign": "unknown",
-          "quiet_space": "unknown",
-          "assistance_service": "unknown",
-          "accessible_parking": "yes"
-         },
-         "summary": "Calangute Beach offers accessible parking and disabled-friendly restrooms, which may help travelers with limited mobility. However, details about step-free routes, ramps, and other key accessibility features are unclear and should be confirmed before visiting.",
-         "confidence": "low",
-         "sources": [
-          {
-           "title": "Calangute Beach in Goa by CB",
-           "url": "https://www.cozybeaches.com/in/goa/calangute-beach/"
-          },
-          {
-           "title": "Goa’s beaches accessible, but not disabled-friendly | Goa News - Times of India",
-           "url": "https://timesofindia.indiatimes.com/city/goa/goas-beaches-accessible-but-not-disabled-friendly/articleshow/74216635.cms"
-          },
-          {
-           "title": "First Goan beach to be disabled-friendly | Goa News - Times of India",
-           "url": "https://timesofindia.indiatimes.com/city/goa/first-goan-beach-to-be-disabled-friendly/articleshow/58037104.cms"
-          }
-         ]
-        },
-        "draft": {
-         "channel": "email",
-         "subject": "Accessibility Information Request for Calangute Beach",
-         "body": "Hello, I am planning a visit to Calangute Beach and use a wheelchair. Could you please confirm if there is a step-free route from the parking area to the beach? Are there any ramps or pathways suitable for wheelchair users? Is there an accessible restroom available near the beach entrance? Thank you for your help."
+         "subject": "Accessibility Information Request for Dona Paula View Point",
+         "body": "Hello, I am planning a visit and use a wheelchair. Could you please confirm if the main entrance and paths are fully step-free, if there are any ramps or elevators, and whether accessible restrooms are available? Also, is there accessible seating at the viewpoints, and can staff assist on arrival if needed? Thank you for your help."
         }
        }
       ],
       "tips": [
-       "Contact all venues and transport providers in advance to confirm step-free access, ramps, and accessible restrooms.",
-       "Carry your portable ramp and a list of emergency contacts at all times.",
-       "Request written confirmation of accessibility features from your hotel and airline.",
-       "Allow extra time for transfers and rest breaks.",
-       "Check for accessible restroom availability at each stop.",
-       "For updated accessibility details, refer to official websites or call venues directly."
+       "Contact all hotels, beaches, and restaurants in advance to confirm step-free access, ramps, and accessible restrooms.",
+       "Pre-book wheelchair assistance with airlines and request an aisle seat near the front.",
+       "Carry your portable ramp and check if beach wheelchairs are available at major beaches.",
+       "Use ride-hailing apps like Goa Miles and specify your accessibility needs when booking taxis.",
+       "Keep emergency contacts and medical information handy during travel.",
+       "Check accessibility sources: hotel and airline official websites, Goa Tourism (goa-tourism.com), and reviews on TripAdvisor and Google Maps."
       ],
-      "generated_at": "2026-10-10T16:03:38+05:30"
+      "generated_at": "2026-10-10T16:27:09+05:30"
      },
      "agent": "planning_agent"
     },
@@ -430,47 +487,47 @@
       "currency": "INR",
       "lines": [
        {
-        "label": "Return flights Pune-Goa (wheelchair assistance included)",
+        "label": "Return flights: Pune-Goa (IndiGo/Go First)",
         "amount": 12000,
-        "note": "Estimate for economy flights with free airport wheelchair service; book early for best rates."
+        "note": "Estimated economy fare for 1 adult with free airport wheelchair assistance."
        },
        {
-        "label": "Accessible taxi transfers (airport-hotel, local sightseeing)",
+        "label": "Wheelchair-accessible taxis (Goa, airport transfers + local travel)",
         "amount": 6000,
-        "note": "Includes 4 accessible taxi rides; Goa has limited accessible taxis, so pre-booking is needed."
+        "note": "Pre-booked accessible taxis for 3 days, including airport transfers and sightseeing."
        },
        {
-        "label": "Hotel: Taj Holiday Village Resort & Spa (2 nights, accessible room)",
-        "amount": 11000,
-        "note": "Estimate for accessible room with step-free access; confirm directly with hotel for room accessibility."
+        "label": "Hotel: Taj Holiday Village Resort & Spa (2 nights)",
+        "amount": 12000,
+        "note": "Estimated cost for accessible room, breakfast included; check direct for step-free access and bathroom suitability."
        },
        {
-        "label": "Meals (hotel breakfast, lunches, dinners at accessible restaurants)",
-        "amount": 4000,
-        "note": "Covers 3 days of meals at hotel and accessible local restaurants like Fisherman's Wharf; Goa has some accessible dining options."
+        "label": "Food (restaurants, cafes, resort meals)",
+        "amount": 3500,
+        "note": "Lunches and dinners at accessible venues like Martin's Corner and Calamari Bathe & Binge."
        },
        {
-        "label": "Miscellaneous (entry fees, tips, water, snacks)",
-        "amount": 1000,
-        "note": "Covers small expenses at attractions and markets."
+        "label": "Miscellaneous (entry fees, tips, water)",
+        "amount": 500,
+        "note": "Small expenses at attractions and for bottled water."
        }
       ],
       "disability_costs": [
        {
-        "label": "Portable ramp (Priya brings her own)",
+        "label": "Airport wheelchair assistance (Pune & Goa)",
         "amount": 0
        },
        {
-        "label": "Airport wheelchair assistance",
+        "label": "Portable ramp (Priya's own)",
         "amount": 0
        },
        {
-        "label": "Accessible beach mat rental (if available)",
-        "amount": 500
+        "label": "Accessible taxi premium (included above)",
+        "amount": 0
        }
       ],
-      "summary": "The estimated cost of 33,000 INR is slightly above budget, mainly due to higher accessible hotel and taxi costs, but ensures step-free comfort and convenience. Spending more on accessible transport and accommodation is worth it for Priya’s safety and enjoyment, while airport wheelchair services remain free.",
-      "total": 34500
+      "summary": "This trip fits within the 30,000 INR budget by prioritising accessible accommodation and transport, which are the main costs. Paying extra for a wheelchair-friendly hotel and taxis ensures step-free comfort and access to Goa’s beaches and restaurants, making the experience much more enjoyable and stress-free.",
+      "total": 34000
      },
      "agent": "planning_agent"
     },
@@ -499,18 +556,18 @@
       "findings": [
        {
         "level": "info",
+        "text": "Pune International Airport: 1 traveller(s) attested this on Monad, 0 said the venue confirmed it.",
+        "fix": ""
+       },
+       {
+        "level": "info",
         "text": "Goa International Airport: 1 traveller(s) attested this on Monad, 0 said the venue confirmed it.",
         "fix": ""
        },
        {
         "level": "caution",
-        "text": "Taj Holiday Village Resort & Spa: no traveller has attested this place on Monad yet (web confidence: low).",
+        "text": "Taj Holiday Village Resort & Spa: no traveller has attested this place on Monad yet (web confidence: high).",
         "fix": "Send the drafted confirmation message and ask the venue to confirm in writing."
-       },
-       {
-        "level": "risk",
-        "text": "Taj Holiday Village Resort & Spa: little reliable information online.",
-        "fix": "Treat as unverified. Have a backup option."
        },
        {
         "level": "caution",
@@ -519,33 +576,33 @@
        },
        {
         "level": "caution",
-        "text": "Aguada Fort: no traveller has attested this place on Monad yet (web confidence: high).",
+        "text": "Miramar Beach: no traveller has attested this place on Monad yet (web confidence: medium).",
         "fix": "Send the drafted confirmation message and ask the venue to confirm in writing."
        },
        {
         "level": "caution",
-        "text": "The Fisherman's Wharf: no traveller has attested this place on Monad yet (web confidence: medium).",
-        "fix": "Send the drafted confirmation message and ask the venue to confirm in writing."
-       },
-       {
-        "level": "caution",
-        "text": "Calangute Beach: no traveller has attested this place on Monad yet (web confidence: low).",
+        "text": "Dona Paula View Point: no traveller has attested this place on Monad yet (web confidence: medium).",
         "fix": "Send the drafted confirmation message and ask the venue to confirm in writing."
        },
        {
         "level": "risk",
-        "text": "Calangute Beach: little reliable information online.",
-        "fix": "Treat as unverified. Have a backup option."
+        "text": "Step-free access at Candolim Beach, Miramar Beach, and Dona Paula View Point is not confirmed. These locations may have sand, uneven surfaces, or steps, making wheelchair access difficult.",
+        "fix": "Contact each beach and viewpoint directly to confirm wheelchair access, presence of ramps, and accessible paths. Consider backup accessible attractions if needed."
        },
        {
         "level": "caution",
-        "text": "The transfer time between the flight arrival (10:00) and hotel check-in (11:00) is tight, especially if airport assistance is delayed or baggage claim is slow.",
-        "fix": "Allow extra time for airport assistance and consider booking the hotel check-in for later or confirming early check-in availability."
+        "text": "Wheelchair-friendly taxis are mentioned but not confirmed as booked. Availability can be limited, especially for airport transfers and local travel.",
+        "fix": "Pre-book all wheelchair-accessible taxis for airport pickups, drop-offs, and daily outings. Get written confirmation from the taxi provider."
        },
        {
-        "level": "risk",
-        "text": "Accessibility at Taj Holiday Village Resort & Spa and Calangute Beach is uncertain due to low web confidence and limited verified information.",
-        "fix": "Contact the hotel and Calangute Beach management directly to confirm step-free access, accessible rooms, and bathroom facilities before booking."
+        "level": "caution",
+        "text": "Rest breaks are not clearly scheduled, especially on Day 2 with multiple outings. This may cause fatigue, especially in hot weather.",
+        "fix": "Add planned rest breaks between activities and ensure access to shaded or air-conditioned spaces. Monitor for signs of heat exhaustion."
+       },
+       {
+        "level": "info",
+        "text": "The resort is listed as accessible, but specific room features (e.g., roll-in shower, step-free entry) are not confirmed.",
+        "fix": "Contact the Taj Holiday Village Resort & Spa to confirm accessible room features and reserve a suitable room. Request written confirmation."
        }
       ]
      },
@@ -559,7 +616,7 @@
     {
      "event": "message",
      "agent": "concierge",
-     "text": "Your 3-day Goa trip plan has been created, focusing on beaches and good food, with places chosen to avoid stairs and suit your wheelchair needs. However, some locations—especially the Taj Holiday Village Resort & Spa—lack reliable accessibility details, and only one traveller has confirmed Goa Airport’s suitability.\n\nNext step: Would you like me to draft messages for you to send to the hotel and restaurants to confirm their accessibility before booking?"
+     "text": "A 3-day trip plan from Pune to Goa has been created, focusing on beaches and good food, with step-free access prioritised. Some venues (like the Taj Holiday Village Resort & Spa) have not been confirmed for wheelchair access by travellers or the venue yet—details must be checked directly. All bookings and confirmations are simulated in this demo.\n\nNext step: Would you like me to draft messages you can send to the hotel and venues to confirm step-free access?"
     }
    ]
   },
@@ -586,41 +643,41 @@
        {
         "name": "Mobility aids and equipment",
         "items": [
-         "Manual wheelchair (check tyres and brakes)",
-         "Portable ramp (clean and pack in travel bag)",
+         "Manual wheelchair (check tyres, brakes, and folding mechanism)",
+         "Portable ramp (clean and check for damage)",
          "Wheelchair cushion for comfort",
          "Wheelchair repair kit (basic tools, spare tube if needed)",
-         "Charger or spare batteries for any powered accessories"
+         "Charging cables or batteries for any powered accessories"
         ]
        },
        {
         "name": "Medical documents and medicines",
         "items": [
-         "Doctor’s letter about disability and equipment",
-         "List of medicines with dosages",
-         "Enough medicines for the whole trip plus extra",
-         "Copy of health insurance card and emergency contacts",
-         "Any allergy or medical alert information"
+         "Doctor’s note about wheelchair and medical needs",
+         "Copy of prescription for any medicines",
+         "List of medicines with doses and timings",
+         "Health insurance card or policy details",
+         "Emergency contact list (include Aman’s number)"
         ]
        },
        {
         "name": "Accessibility confirmations to carry",
         "items": [
-         "Written confirmation of accessible hotel room",
-         "Accessible taxi booking details (phone numbers, times)",
-         "Flight booking with aisle seat and early boarding request",
-         "Confirmation of accessible entry at Aguada Fort and beaches",
-         "List of accessible restaurants and attractions"
+         "Flight booking with wheelchair assistance and aisle/front seat request",
+         "Hotel booking confirmation with accessible room details",
+         "Taxi booking confirmation for wheelchair-friendly vehicle",
+         "Written confirmation of step-free access at beaches and restaurants",
+         "List of accessible toilets at airports and main attractions"
         ]
        },
        {
         "name": "Packing",
         "items": [
-         "Light, comfortable clothes for warm weather",
-         "Sun protection (hat, sunscreen, sunglasses)",
-         "Personal care items (toiletries, wet wipes, tissues)",
-         "Reusable water bottle",
-         "Snacks for travel days",
+         "Lightweight, easy-to-wear clothes for 3 days",
+         "Swimwear and towel for pool/beach",
+         "Sunscreen, hat, and sunglasses",
+         "Personal hygiene items (toothbrush, wipes, etc.)",
+         "Snacks and water bottle",
          "Phone, charger, and power bank"
         ]
        },
@@ -628,10 +685,10 @@
         "name": "Day-before",
         "items": [
          "Check wheelchair and ramp are in good condition",
-         "Reconfirm flight, hotel, and taxi bookings",
-         "Pack all medicines and documents in carry-on bag",
-         "Set alarms for early morning flight",
-         "Share itinerary and emergency contact with Aman"
+         "Pack medicines and documents in carry-on bag",
+         "Reconfirm all bookings (flight, hotel, taxi, restaurants)",
+         "Set alarms for early morning departure",
+         "Share full itinerary and emergency contacts with Aman"
         ]
        }
       ]
@@ -730,45 +787,45 @@
      "data": {
       "items": [
        {
+        "to": "Pune International Airport",
+        "channel": "email",
+        "subject": "Accessibility Information Request for Pune International Airport",
+        "body": "Hello, I am planning to travel through Pune International Airport and use a wheelchair. Could you please confirm if the airport entrance and all main routes are step-free? Are there ramps or elevators available for moving between different levels? Is there an accessible restroom after security? Can staff meet us on arrival to assist with check-in and boarding? Thank you for your help.",
+        "send_after": "7 to 14 days before arrival"
+       },
+       {
         "to": "Goa International Airport",
         "channel": "email",
-        "subject": "Accessibility Information Request for Goa International Airport",
-        "body": "Hello, I am planning to travel through Goa International Airport and use a wheelchair. Could you please confirm: (1) Is the main entrance and all passenger areas step-free? (2) Are accessible restrooms available throughout the terminal? (3) Is there an accessible room or quiet space for resting if needed? (4) Can staff provide assistance on arrival if requested in advance? Thank you very much for your help.",
+        "subject": "Accessibility Information Request for Upcoming Visit",
+        "body": "Hello, I am planning to travel through Goa International Airport and use a wheelchair. Could you please confirm if the main entrances and all passenger areas are fully step-free? Are accessible restrooms available throughout the airport? Is there a dedicated accessible room or waiting area for passengers with reduced mobility? Can staff provide assistance on arrival if requested in advance? Thank you very much for your help.",
         "send_after": "7 to 14 days before arrival"
        },
        {
         "to": "Taj Holiday Village Resort & Spa",
         "channel": "email",
         "subject": "Accessibility Information Request – Taj Holiday Village Resort & Spa, Goa",
-        "body": "Hello, I am planning a visit and use a wheelchair. Could you please confirm: 1) Is the main entrance and all key areas (reception, dining, pool) step-free or ramped? 2) Do you have accessible rooms with step-free showers and grab bars? 3) Are there accessible restrooms in public areas? 4) Is there an elevator or step-free access to all guest rooms? 5) Do you have accessible parking spaces near the entrance? Thank you very much for your help.",
+        "body": "Hello, I am planning a visit and use a wheelchair. Could you please confirm: (1) Is the main entrance and all key public areas step-free? (2) Do you have accessible rooms with step-free showers? (3) Are there ramps or elevators to access all guest areas? (4) Is there an accessible restroom in public areas? (5) Is accessible parking available close to the entrance? Thank you very much for your help.",
         "send_after": "7 to 14 days before arrival"
        },
        {
         "to": "Candolim Beach",
         "channel": "email",
-        "subject": "Accessibility Information Request for Candolim Beach",
-        "body": "Hello, I am planning a visit to Candolim Beach and use a wheelchair. Could you please confirm if there is step-free access from the parking area to the beach, and if there are designated accessible parking spaces? Are the accessible restrooms open to the public, and is staff assistance available on arrival if needed? Thank you for your help.",
+        "subject": "Accessibility Information Request for Candolim Beach Visit",
+        "body": "Hello, I am planning a visit to Candolim Beach and would like to confirm a few accessibility details. Is there designated accessible parking close to the beach entrance? Are the step-free ramp and accessible restrooms currently available and in good condition? At the Holiday Inn Goa Candolim, are accessible rooms and elevators available for guests with limited mobility? Thank you for your help.",
         "send_after": "7 to 14 days before arrival"
        },
        {
-        "to": "Aguada Fort",
+        "to": "customer.care@indigo.in",
         "channel": "email",
-        "subject": "Accessibility Information Request for Aguada Fort",
-        "body": "Hello, I am planning a visit and use a wheelchair. Could you please confirm if there are any step-free entrances or accessible routes inside Aguada Fort? Are there any ramps or portable ramps available? Is there an accessible restroom on site? Can staff assist us on arrival if needed? Thank you for your help.",
-        "send_after": "7 to 14 days before arrival"
-       },
-       {
-        "to": "customer.service@airline.com",
-        "channel": "email",
-        "subject": "Request for Wheelchair Assistance and Accessible Seating: Pune-Goa Flights",
-        "body": "Dear Sir/Madam,\n\nMy name is Priya. I have booked flights from Pune to Goa and back. I use a manual wheelchair and will be traveling with a portable ramp. I kindly request wheelchair assistance at both Pune and Goa airports, early boarding, and an aisle seat near the front of the aircraft for both flights. Please confirm these arrangements in writing. My emergency contact is Aman (+91 98xxxxxx01).\n\nThank you for your help.\n\nBest regards,\nPriya",
+        "subject": "Request for Wheelchair Assistance and Seating Preferences: Pune-Goa Flights",
+        "body": "Dear IndiGo Team,\n\nI am booked to travel from Pune to Goa and back. I use a manual wheelchair and will be carrying a portable ramp. I kindly request wheelchair assistance at both airports, early boarding, and an aisle seat near the front of the aircraft for both flights. Please confirm that these arrangements can be made and let me know if you need any further information.\n\nThank you for your assistance. I look forward to your written confirmation.\n\nBest regards,\nPriya",
         "send_after": "7 to 14 days before arrival"
        },
        {
         "to": "reservations.tajholidayvillage@tajhotels.com",
         "channel": "email",
-        "subject": "Accessible Room Request and Step-Free Access Inquiry",
-        "body": "Dear Reservations Team,\n\nMy name is Priya. I have a reservation at Taj Holiday Village Resort & Spa. I use a manual wheelchair and a portable ramp. Please confirm if you have step-free, wheelchair-accessible rooms and bathrooms available for my stay. I also need step-free access to all main areas of the hotel. Kindly confirm these details in writing.\n\nThank you very much.\n\nBest regards,\nPriya",
+        "subject": "Accessible Room Request and Step-Free Access Confirmation",
+        "body": "Dear Taj Holiday Village Resort & Spa Team,\n\nI have a reservation at your hotel and use a manual wheelchair. Please confirm that you can provide a wheelchair-accessible room with step-free access, as well as accessible routes to common areas. Kindly confirm in writing that these arrangements are available for my stay.\n\nThank you for your assistance.\n\nBest regards,\nPriya",
         "send_after": "7 to 14 days before arrival"
        }
       ]
@@ -783,7 +840,7 @@
     {
      "event": "message",
      "agent": "concierge",
-     "text": "Here’s what’s done: I’ve prepared a packing and preparation checklist for your trip, set up simulated reminders for key tasks (packing, documents, wheelchair checks, early airport arrival), and drafted messages for you to send to the hotel and airline about your access needs. These reminders and messages are simulated in this demo.\n\nNext step: Would you like to review your preparation checklist or see the draft messages now?"
+     "text": "Here’s what’s done: A packing and preparation checklist has been created for your needs, simulated reminders are set for packing and travel, and draft messages for the hotel and airline are ready for you to send to confirm step-free access and your seating preferences.\n\nNext step: Would you like to review your checklist or see the draft messages now?"
     }
    ]
   },
@@ -809,19 +866,19 @@
       "issue": "Hotel lift is broken and Priya's room is on the 4th floor, making it inaccessible for her wheelchair.",
       "options": [
        {
-        "title": "Request an Accessible Ground Floor Room",
-        "detail": "Ask the hotel staff to move Priya to a ground floor room or a room on a floor that can be reached without using the lift. This is the safest and quickest solution.",
-        "cost_hint": "Usually no extra cost if the same room type is available."
+        "title": "Request Immediate Room Change to Ground Floor",
+        "detail": "Ask the hotel staff to move Priya to a ground floor room that is step-free and accessible. This is the fastest and safest solution if such a room is available.",
+        "cost_hint": "Usually no extra charge if within same room category."
        },
        {
-        "title": "Ask Hotel for Assistance with Luggage and Transfers",
-        "detail": "If a ground floor room is not available, request hotel staff to help Priya and her luggage up and down the stairs as needed. This is less ideal and may not be safe for frequent movement, but can be a temporary solution.",
-        "cost_hint": "May be free or involve a small tip for staff assistance."
+        "title": "Request Hotel Assistance for Temporary Relocation",
+        "detail": "Ask the hotel to arrange a transfer to a nearby accessible hotel at the same price, or to cover the cost difference if needed. Ensure the new hotel is step-free and accessible.",
+        "cost_hint": "Hotel may cover cost if they cannot provide access; check before agreeing."
        },
        {
-        "title": "Transfer to a Nearby Accessible Hotel",
-        "detail": "If the hotel cannot provide a suitable room, ask for help finding a nearby accessible hotel and request a refund or transfer. Contact your travel agent or booking platform for urgent support.",
-        "cost_hint": "May involve extra cost if the new hotel is more expensive; some costs may be refunded by the original hotel."
+        "title": "Contact Travel Agent or Booking Platform for Emergency Support",
+        "detail": "If the hotel cannot help, contact the travel agent or booking website's emergency support line. Request their help to find accessible accommodation nearby and arrange a refund or alternative booking.",
+        "cost_hint": "May involve price difference for new hotel; some platforms offer emergency support at no extra cost."
        }
       ]
      },
@@ -835,7 +892,7 @@
     {
      "event": "message",
      "agent": "concierge",
-     "text": "The best immediate options are: request a ground floor room, ask the hotel for help with luggage and transfers, or move to a nearby hotel with step-free access. Would you like help drafting a message to the hotel, or do you want suggestions for accessible hotels nearby?"
+     "text": "I’m looking for immediate solutions for you, such as requesting a ground floor room or help with temporary relocation. If needed, I’ll also suggest contacting your booking platform for emergency support.\n\nNext step: Would you like help drafting a message to the hotel manager about this situation?"
     }
    ]
   },
@@ -860,64 +917,59 @@
      "data": {
       "items": [
        {
-        "label": "Flight: Pune to Goa (IndiGo 6E123, 07:00-08:15)",
-        "detail": "Aisle seat near front (12C), wheelchair assistance requested (WCHR), early boarding arranged. Departure: Pune Airport, Arrival: Goa International Airport.",
-        "price": "INR 5500"
+        "label": "Flight: Pune to Goa (Go First/IndiGo)",
+        "detail": "07:00 departure from Pune International Airport to Goa International Airport. Wheelchair assistance requested (WCHR), aisle seat near the front, early boarding for Priya.",
+        "price": "INR 4,500"
        },
        {
-        "label": "Accessible Taxi: Goa Airport to Taj Holiday Village Resort & Spa",
-        "detail": "Pre-booked accessible taxi with ramp and space for manual wheelchair. Pickup at arrivals, drop-off at hotel entrance.",
-        "price": "INR 1800"
+        "label": "Wheelchair-friendly Taxi: Goa Airport to Taj Holiday Village Resort & Spa",
+        "detail": "09:00 pick-up at Goa International Airport. Pre-booked accessible taxi with ramp and space for manual wheelchair.",
+        "price": "INR 1,800"
        },
        {
-        "label": "Hotel: Taj Holiday Village Resort & Spa (2 nights, accessible room)",
-        "detail": "Wheelchair-accessible room on ground floor with step-free access, roll-in shower, and wide doorways. Confirmed lift access to public areas if needed.",
-        "price": "INR 16000"
+        "label": "Hotel: Taj Holiday Village Resort & Spa (2 nights)",
+        "detail": "Accessible ground floor room with step-free access, roll-in shower, and space for manual wheelchair. Early check-in requested.",
+        "price": "INR 16,000"
        },
        {
-        "label": "Candolim Beach Visit (Day 1, 16:00)",
-        "detail": "Access to beach promenade and nearby shacks, step-free paths likely. Portable ramp available for minor steps.",
+        "label": "Visit: Candolim Beach (Main Entrance)",
+        "detail": "16:00 visit. Main entrance selected for likely step-free access. Portable ramp to be used if needed.",
         "price": "INR 0"
        },
        {
-        "label": "Breakfast at Hotel Restaurant (Day 2, 09:00)",
-        "detail": "Wheelchair-accessible seating, step-free access from room to restaurant.",
-        "price": "INR 0 (included in hotel)"
-       },
-       {
-        "label": "Aguada Fort Visit (Day 2, 11:00)",
-        "detail": "Access to outer ramparts and viewpoint via step-free paths. Some uneven surfaces, portable ramp can assist.",
-        "price": "INR 100"
-       },
-       {
-        "label": "Lunch at The Fisherman's Wharf (Day 2, 14:00)",
-        "detail": "Wheelchair-accessible entrance and seating area, step-free access confirmed.",
-        "price": "INR 1200"
-       },
-       {
-        "label": "Calangute Beach Promenade (Day 2, 17:00)",
-        "detail": "Wheelchair access to promenade area, step-free entry. Portable ramp available for minor barriers.",
+        "label": "Visit: Miramar Beach",
+        "detail": "09:00 visit. Flat promenade area for wheelchair access. Portable ramp to be used if needed.",
         "price": "INR 0"
        },
        {
-        "label": "Mapusa Market Visit (Day 3, 10:00)",
-        "detail": "Access to main entrance and ground floor only, step-free entry. Some crowded areas, portable ramp for minor steps.",
+        "label": "Lunch: Martin's Corner",
+        "detail": "12:30 reservation. Step-free entrance requested. Table with space for wheelchair.",
+        "price": "INR 1,500"
+       },
+       {
+        "label": "Visit: Dona Paula View Point",
+        "detail": "16:00 visit. Accessible route to viewpoint requested. Portable ramp to be used if needed.",
         "price": "INR 0"
        },
        {
-        "label": "Lunch at Hotel or Nearby Accessible Restaurant (Day 3, 13:00)",
-        "detail": "Wheelchair-accessible seating, step-free access. Restaurant to be confirmed.",
-        "price": "INR 1000"
+        "label": "Resort Poolside & Gardens",
+        "detail": "09:00 access to poolside and gardens. Step-free paths and accessible seating requested.",
+        "price": "INR 0"
        },
        {
-        "label": "Accessible Taxi: Hotel to Goa International Airport",
-        "detail": "Pre-booked accessible taxi with ramp and space for manual wheelchair. Pickup at hotel, drop-off at departures.",
-        "price": "INR 1800"
+        "label": "Lunch: Calamari Bathe & Binge",
+        "detail": "12:00 reservation. Step-free entrance and accessible seating requested.",
+        "price": "INR 1,200"
        },
        {
-        "label": "Flight: Goa to Pune (IndiGo 6E124, 17:30-18:45)",
-        "detail": "Aisle seat near front (12C), wheelchair assistance requested (WCHR), early boarding arranged. Departure: Goa International Airport, Arrival: Pune Airport.",
-        "price": "INR 5500"
+        "label": "Wheelchair-friendly Taxi: Resort to Goa International Airport",
+        "detail": "15:00 pick-up at Taj Holiday Village Resort & Spa. Accessible taxi with ramp.",
+        "price": "INR 1,800"
+       },
+       {
+        "label": "Flight: Goa to Pune (Go First/IndiGo)",
+        "detail": "17:00 departure from Goa International Airport to Pune International Airport. Wheelchair assistance requested (WCHR), aisle seat near the front, early boarding for Priya.",
+        "price": "INR 4,500"
        }
       ],
       "simulated": true
@@ -946,9 +998,9 @@
      "title": "Web check-in plan (simulated)",
      "data": {
       "flight": "your outbound flight",
-      "opens": "24 hours before departure (from 07:00 the previous day)",
-      "seat": "Aisle seat near the front, with step-free access and space for a manual wheelchair transfer",
-      "note": "You can request early boarding and wheelchair assistance during web check-in. Confirm your accessible seat and assistance needs with the airline after check-in. Have your portable ramp ready for use at the airport and destination.",
+      "opens": "Web check-in opens 48 hours before departure (from 07:00, two days before your flight from Pune to Goa).",
+      "seat": "Aisle seat near the front, close to the aircraft entrance, with step-free access for wheelchair users. Request early boarding and notify airline staff about your manual wheelchair and portable ramp.",
+      "note": "For best accessibility, select a seat in the first few rows on the aisle. Confirm wheelchair assistance and early boarding with the airline during check-in. Carry your emergency contact details and inform staff about your access needs.",
       "simulated": true
      },
      "agent": "web_checkin_agent"
@@ -961,7 +1013,7 @@
     {
      "event": "message",
      "agent": "concierge",
-     "text": "Your simulated bookings are ready: flights, hotel (with a request for ground floor or lift access), and taxis are planned around your wheelchair needs. A simulated web check-in is also prepared, requesting an aisle seat near the front, early boarding, and wheelchair assistance.\n\nNext step: Would you like to review or send the draft accessibility messages to the hotel and airline?"
+     "text": "Simulated bookings for your Goa trip are prepared, including flights, hotel, and taxis, with requests for step-free access and a ground floor room. A simulated web check-in plan is also ready, requesting an aisle seat near the front and early boarding.\n\nNext step: Would you like to see the draft confirmation messages for your hotel and airline, or need help with anything else?"
     }
    ]
   }

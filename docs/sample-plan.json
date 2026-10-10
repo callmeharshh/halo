@@ -1,107 +1,115 @@
 {
- "title": "3-Day Pune to Goa Trip (Wheelchair User, Budget Focus)",
- "summary": "This is a 3-day trip from Pune to Goa, focusing on beaches and good food. The plan uses places that are likely to suit wheelchair users, but all accessibility details must be checked before booking.",
+ "title": "3-Day Pune to Goa Trip Focused on Step-Free Access and Beaches",
+ "summary": "This trip is designed for a traveler using a wheelchair, with a focus on step-free routes, accessible hotels, and easy access to beaches and restaurants. All places were chosen because they are likely to suit your needs, but please check accessibility details directly before booking.",
  "traveler": {
   "needs": [
    "wheelchair"
   ],
-  "notes": "Budget is about 30,000 rupees. Traveler uses a wheelchair and wants to avoid stairs. Accessibility details below must be checked before travel."
+  "notes": "Budget is about 30,000 INR. Prioritize comfort, avoid stairs, and allow time for rest. Confirm accessibility and room type before booking."
  },
  "days": [
   {
    "day": 1,
-   "title": "Travel from Pune to Goa & Settle In",
+   "title": "Travel from Pune to Goa and Settle In",
    "items": [
     {
      "time": "08:00",
      "kind": "transport",
-     "name": "Flight from Pune to Goa",
-     "city": "Pune",
-     "note": "Choose an airline with wheelchair assistance. Arrive early for support.",
+     "name": "Flight: Pune to Goa (Dabolim)",
+     "city": "Pune/Goa",
+     "note": "Choose an airline that offers wheelchair assistance. Arrive early for support at Pune Airport.",
      "place": "Pune International Airport"
     },
     {
      "time": "10:30",
      "kind": "transport",
-     "name": "Arrive at Goa Airport",
+     "name": "Taxi with Luggage Assistance",
      "city": "Goa",
-     "note": "Request wheelchair assistance at arrival.",
+     "note": "Pre-book a taxi and request help with luggage and step-free access.",
      "place": "Goa International Airport"
     },
     {
      "time": "12:00",
      "kind": "stay",
-     "name": "Check-in at Novotel Goa Resort & Spa",
+     "name": "Check-in: Novotel Goa Resort & Spa",
      "city": "Goa",
-     "note": "Request an accessible room. Confirm step-free entry and bathroom features.",
+     "note": "Request an accessible room. Rest and unpack.",
      "place": "Novotel Goa Resort & Spa"
     },
     {
-     "time": "15:00",
+     "time": "18:00",
      "kind": "food",
-     "name": "Lunch at Fisherman's Wharf",
+     "name": "Dinner at Fisherman’s Wharf",
      "city": "Goa",
-     "note": "Popular Goan food. Ask staff about step-free access.",
-     "place": "Fisherman's Wharf"
+     "note": "Enjoy Goan cuisine. Confirm step-free entrance and accessible restroom in advance.",
+     "place": "Fisherman’s Wharf"
     }
    ]
   },
   {
    "day": 2,
-   "title": "Beach Time & Local Cuisine",
+   "title": "Relax at the Beach and Enjoy Local Food",
    "items": [
     {
-     "time": "09:00",
+     "time": "09:30",
      "kind": "place",
-     "name": "Visit Miramar Beach",
+     "name": "Visit: Miramar Beach",
      "city": "Goa",
-     "note": "Flat, urban beach. Check for step-free promenade and beach wheelchair availability.",
+     "note": "Choose this beach for its gentle slope and paved promenade. Check if beach wheelchairs are available.",
      "place": "Miramar Beach"
     },
     {
      "time": "13:00",
      "kind": "food",
-     "name": "Lunch at Mum's Kitchen",
+     "name": "Lunch at Ritz Classic Panaji",
      "city": "Goa",
-     "note": "Goan specialties. Confirm step-free entry.",
-     "place": "Mum's Kitchen"
+     "note": "Try Goan thali. Confirm step-free entry and accessible restroom.",
+     "place": "Ritz Classic Panaji"
     },
     {
      "time": "16:00",
      "kind": "place",
-     "name": "Relax at hotel pool or spa",
+     "name": "Rest at Hotel or Poolside",
      "city": "Goa",
-     "note": "Rest break. Ask staff about accessible pool or spa facilities.",
+     "note": "Enjoy hotel facilities or relax by the pool. Ask about pool lifts or ramps.",
      "place": "Novotel Goa Resort & Spa"
     }
    ]
   },
   {
    "day": 3,
-   "title": "Old Goa & Return",
+   "title": "Explore More and Return to Pune",
    "items": [
     {
      "time": "09:30",
      "kind": "place",
-     "name": "Visit Basilica of Bom Jesus",
+     "name": "Visit: Goa State Museum",
      "city": "Goa",
-     "note": "Historic church. Check for ramps and accessible restrooms.",
-     "place": "Basilica of Bom Jesus"
+     "note": "Explore local history. Confirm elevator and step-free access before visiting.",
+     "place": "Goa State Museum"
     },
     {
-     "time": "13:00",
+     "time": "12:30",
      "kind": "food",
-     "name": "Lunch at Gunpowder Goa",
+     "name": "Lunch at Mum’s Kitchen",
      "city": "Goa",
-     "note": "South Indian cuisine. Confirm step-free access.",
-     "place": "Gunpowder Goa"
+     "note": "Enjoy traditional Goan dishes. Call ahead to check for ramps and accessible restrooms.",
+     "place": "Mum’s Kitchen"
     },
     {
-     "time": "16:00",
+     "time": "15:00",
      "kind": "transport",
-     "name": "Return flight to Pune",
+     "name": "Taxi to Goa International Airport",
      "city": "Goa",
-     "note": "Book wheelchair assistance for return journey.",
+     "note": "Arrange a taxi with step-free access and luggage help.",
+     "place": "Goa International Airport"
+    },
+    {
+     "time": "17:30",
+     "kind": "transport",
+     "name": "Flight: Goa to Pune",
+     "city": "Goa/Pune",
+     "note": "Request wheelchair assistance for boarding and arrival at Pune.",
      "place": "Goa International Airport"
     }
    ]
@@ -114,20 +122,24 @@
    "kind": "airport",
    "access": {
     "features": {
-     "step_free": "unknown",
+     "step_free": "yes",
      "ramp": "unknown",
      "elevator": "unknown",
      "accessible_restroom": "yes",
-     "accessible_room": "unknown",
+     "accessible_room": "yes",
      "tactile_braille": "yes",
      "hearing_loop_sign": "unknown",
      "quiet_space": "unknown",
      "assistance_service": "yes",
      "accessible_parking": "yes"
     },
-    "summary": "Pune International Airport offers wheelchair assistance, accessible restrooms, and designated accessible parking. However, details about step-free routes, ramps, and elevators are not confirmed in the available sources.",
-    "confidence": "medium",
+    "summary": "Pune International Airport provides wheelchair assistance, accessible restrooms, tactile paving, and accessible parking, which are important for travelers with limited mobility. However, details about step-free routes, ramps, elevators, and quiet spaces are not specified and should be confirmed.",
+    "confidence": "high",
     "sources": [
+     {
+      "title": "Google Maps listing: wheelchair accessibility data",
+      "url": "https://maps.google.com/?cid=12110307340665816984&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+     },
      {
       "title": "Pune International Airport (PNQ), Pune - Terminal Info, Flights",
       "url": "https://www.ixigo.com/flights/airport/pune-international-airport-pune-pnq"
@@ -135,13 +147,27 @@
      {
       "title": "Pune Airport / Lohagaon Air Force Station Guide (PNQ) - FlyAirports",
       "url": "https://www.flyairports.com/pune-airport-lohagaon-air-force-station-guide-pnq/"
+     },
+     {
+      "title": "Pune Airport Launches ‘Meet and Greet’ and Porter Services for Passenger Comfort | Pune Ai",
+      "url": "https://www.thebridgechronicle.com/pune/pune-airport-meet-and-greet-porter-services-launched"
      }
-    ]
+    ],
+    "google": {
+     "matched": "Pune International Airport",
+     "address": "Civil Enclave, Pune International Airport Area, Lohegaon, Pune, Maharashtra 411032, India",
+     "fields": {
+      "wheelchairAccessibleParking": true,
+      "wheelchairAccessibleEntrance": true,
+      "wheelchairAccessibleRestroom": true,
+      "wheelchairAccessibleSeating": true
+     }
+    }
    },
    "draft": {
     "channel": "email",
     "subject": "Accessibility Information Request for Pune International Airport",
-    "body": "Hello, I am planning to travel through Pune International Airport and use a wheelchair. Could you please confirm if the airport entrance and all passenger routes are step-free? Are there ramps or elevators available throughout the terminal? Is there an accessible restroom after security, and can staff assist me from arrival to boarding? Thank you for your help."
+    "body": "Hello, I am planning to travel through Pune International Airport and use a wheelchair. Could you please confirm if the airport entrance and all main routes are step-free? Are there ramps or elevators available for moving between different levels? Is there an accessible restroom after security? Can staff meet us on arrival to assist with check-in and boarding? Thank you for your help."
    }
   },
   {
@@ -154,16 +180,20 @@
      "ramp": "yes",
      "elevator": "yes",
      "accessible_restroom": "yes",
-     "accessible_room": "unknown",
-     "tactile_braille": "yes",
+     "accessible_room": "yes",
+     "tactile_braille": "unknown",
      "hearing_loop_sign": "unknown",
      "quiet_space": "unknown",
      "assistance_service": "yes",
      "accessible_parking": "yes"
     },
-    "summary": "Goa International Airport provides step-free access with ramps and lifts, accessible restrooms, wheelchair assistance, and accessible parking. Braille signage is available, but information about hearing loops, quiet spaces, and accessible rooms is not specified.",
+    "summary": "Goa International Airport provides step-free access, ramps, elevators, accessible restrooms, assistance services, and accessible parking for travelers with limited mobility. Information about tactile signage, hearing loops, quiet spaces, and accessible rooms is not available.",
     "confidence": "high",
     "sources": [
+     {
+      "title": "Google Maps listing: wheelchair accessibility data",
+      "url": "https://maps.google.com/?cid=13246257630767510871&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+     },
      {
       "title": "Goa Airport (GOI) | Dabolim Airport",
       "url": "https://dabolimairport.com/"
@@ -172,12 +202,22 @@
       "title": "Airport Assistance services at Manohar International Airport (GOX)",
       "url": "https://www.miagoaairport.com/special-assistance"
      }
-    ]
+    ],
+    "google": {
+     "matched": "Goa Dabolim International Airport",
+     "address": "Airport Rd, Dabolim, Goa 403801, India",
+     "fields": {
+      "wheelchairAccessibleParking": true,
+      "wheelchairAccessibleEntrance": true,
+      "wheelchairAccessibleRestroom": true,
+      "wheelchairAccessibleSeating": true
+     }
+    }
    },
    "draft": {
     "channel": "email",
-    "subject": "Accessibility Information Request for Goa International Airport",
-    "body": "Hello, I am planning to travel through Goa International Airport and use a wheelchair. Could you please confirm: (1) Is the main entrance and all passenger areas step-free? (2) Are accessible restrooms available throughout the terminal? (3) Is there an accessible room or quiet space for resting if needed? (4) Can staff provide assistance on arrival if requested in advance? Thank you very much for your help."
+    "subject": "Accessibility Information Request for Upcoming Visit",
+    "body": "Hello, I am planning to travel through Goa International Airport and use a wheelchair. Could you please confirm if the main entrances and all passenger areas are fully step-free? Are accessible restrooms available throughout the airport? Is there a dedicated accessible room or waiting area for passengers with reduced mobility? Can staff provide assistance on arrival if requested in advance? Thank you very much for your help."
    }
   },
   {
@@ -194,26 +234,42 @@
      "tactile_braille": "unknown",
      "hearing_loop_sign": "unknown",
      "quiet_space": "unknown",
-     "assistance_service": "yes",
-     "accessible_parking": "unknown"
+     "assistance_service": "unknown",
+     "accessible_parking": "yes"
     },
-    "summary": "Novotel Goa Resort & Spa offers step-free access, an elevator, and has at least one accessible room for guests with reduced mobility. Wheelchairs are available and the concierge desk is wheelchair-accessible, but details about ramps, accessible restrooms, and parking are not stated.",
-    "confidence": "medium",
+    "summary": "Novotel Goa Resort & Spa offers step-free access, an elevator, and has at least one accessible room for guests with reduced mobility. However, details about accessible restrooms, ramps, and other features are not provided and should be confirmed directly with the hotel.",
+    "confidence": "high",
     "sources": [
      {
-      "title": "Novotel Goa Resort & Spa Hotel - Reviews, Deals & Photos 2026 - Expedia.com",
-      "url": "https://www.expedia.com/Candolim-Hotels-Novotel-Goa-Resort-Spa-Hotel.h7785821.Hotel-Information"
+      "title": "Google Maps listing: wheelchair accessibility data",
+      "url": "https://maps.google.com/?cid=15468720033432099342&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
      },
      {
       "title": "Novotel Goa Resort & Spa - ALL",
       "url": "https://all.accor.com/hotel/8861/index.en.shtml"
+     },
+     {
+      "title": "Hotel Novotel Goa Resort &amp; Spa in Candolim Beach günstig buchen bei TUI.com",
+      "url": "https://www.tui.com/hotels/novotel-goa-resort-and-spa-406458/hotelinformation/"
+     },
+     {
+      "title": "Novotel Goa Resort & Spa Hotel - Reviews, Deals & Photos 2026 - Expedia.com",
+      "url": "https://www.expedia.com/Candolim-Hotels-Novotel-Goa-Resort-Spa-Hotel.h7785821.Hotel-Information"
      }
-    ]
+    ],
+    "google": {
+     "matched": "Novotel Goa Resort & Spa",
+     "address": "off Candolim Road, Pintos Vaddo, Goa, Candolim, Goa 403515, India",
+     "fields": {
+      "wheelchairAccessibleParking": true,
+      "wheelchairAccessibleEntrance": true
+     }
+    }
    },
    "draft": {
     "channel": "email",
-    "subject": "Accessibility Information Request for Upcoming Stay",
-    "body": "Hello, I am planning a visit and use a wheelchair. Could you please confirm: (1) Is the main entrance fully step-free and are there ramps throughout public areas? (2) Is there an accessible restroom available in public areas? (3) Is your accessible room available during my stay, and what features does it include? (4) Do you have accessible parking on-site? Thank you for your help."
+    "subject": "Accessibility Information Request – Novotel Goa Resort & Spa",
+    "body": "Hello, I am planning a stay and use a wheelchair. Could you please confirm: (1) Is the main entrance step-free? (2) Is there a fully accessible restroom (with grab bars and space for a wheelchair) in the accessible room and in public areas? (3) Are there ramps throughout the property where needed? (4) Is accessible parking available? Thank you very much for your help."
    }
   },
   {
@@ -224,17 +280,17 @@
     "features": {
      "step_free": "yes",
      "ramp": "yes",
-     "elevator": "unknown",
+     "elevator": "no",
      "accessible_restroom": "unknown",
-     "accessible_room": "unknown",
+     "accessible_room": "no",
      "tactile_braille": "unknown",
      "hearing_loop_sign": "unknown",
      "quiet_space": "unknown",
      "assistance_service": "unknown",
      "accessible_parking": "unknown"
     },
-    "summary": "Miramar Beach in Goa offers step-free access and a ramp, making it easier for wheelchair users and those with limited mobility to reach the shore. Other accessibility features such as accessible restrooms, parking, and assistance services are not mentioned.",
-    "confidence": "high",
+    "summary": "Miramar Beach in Goa offers step-free access via a boardwalk and ramp, making it easier for wheelchair users to reach the shore. However, details about accessible restrooms and parking are not confirmed, so further inquiry is needed for a fully accessible visit.",
+    "confidence": "medium",
     "sources": [
      {
       "title": "Accessible boardwalk inaugurated at Miramar Beach ahead of International Purple Fest | The",
@@ -243,17 +299,25 @@
      {
       "title": "Accessible shores – The Navhind Times",
       "url": "https://navhindtimes.in/goanews/accessible-shores/"
+     },
+     {
+      "title": "Miramar beach set to be accessible to disabled people | Goa News - Times of India",
+      "url": "https://timesofindia.indiatimes.com/city/goa/miramar-beach-set-to-be-accessible-to-disabled-people/articleshow/96207758.cms"
+     },
+     {
+      "title": "Miramar Beach - Explore Goa",
+      "url": "https://www.exploregoa.org/places/miramar-beach/"
      }
     ]
    },
    "draft": {
     "channel": "email",
-    "subject": "Accessibility information for wheelchair users at Miramar Beach",
-    "body": "Hello, I am planning a visit to Miramar Beach and use a wheelchair. Could you please confirm if there are accessible restrooms and accessible parking available? Is staff assistance available on arrival if needed? Thank you very much for your help."
+    "subject": "Accessibility Information Request for Miramar Beach",
+    "body": "Hello, I am planning a visit to Miramar Beach and use a wheelchair. Could you please confirm: (1) Are there accessible restrooms near the beach? (2) Is there designated accessible parking close to the boardwalk entrance? (3) Are staff or volunteers available to assist visitors with disabilities on arrival? Thank you very much for your help."
    }
   },
   {
-   "name": "Basilica of Bom Jesus",
+   "name": "Goa State Museum",
    "city": "Goa",
    "kind": "attraction",
    "access": {
@@ -263,76 +327,52 @@
      "elevator": "yes",
      "accessible_restroom": "yes",
      "accessible_room": "unknown",
-     "tactile_braille": "yes",
-     "hearing_loop_sign": "unknown",
-     "quiet_space": "unknown",
-     "assistance_service": "no",
-     "accessible_parking": "unknown"
-    },
-    "summary": "The Basilica of Bom Jesus offers step-free access, ramps, an elevator, and accessible restrooms, making it suitable for visitors with limited mobility. Some areas may have uneven surfaces, and assistance services are limited, so advance planning is recommended.",
-    "confidence": "medium",
-    "sources": [
-     {
-      "title": "Basilica of Bom Jesus, Goa | UNESCO World Heritage",
-      "url": "https://www.accesstravel.com/en-US/ViatorAttraction/Index/4594/6827"
-     }
-    ]
-   },
-   "draft": {
-    "channel": "email",
-    "subject": "Accessibility Information Request for Basilica of Bom Jesus",
-    "body": "Hello, I am planning a visit and use a wheelchair. Could you please confirm if the main entrance is step-free, if there are accessible restrooms available, and whether there is an elevator for moving between floors? Also, is there accessible parking nearby, and can staff provide any assistance if needed? Thank you very much."
-   }
-  },
-  {
-   "name": "Fisherman's Wharf",
-   "city": "Goa",
-   "kind": "restaurant",
-   "access": {
-    "features": {
-     "step_free": "yes",
-     "ramp": "unknown",
-     "elevator": "unknown",
-     "accessible_restroom": "unknown",
-     "accessible_room": "no",
      "tactile_braille": "unknown",
      "hearing_loop_sign": "unknown",
      "quiet_space": "unknown",
-     "assistance_service": "unknown",
+     "assistance_service": "yes",
      "accessible_parking": "yes"
     },
-    "summary": "All Fisherman's Wharf locations in Goa offer step-free, wheelchair-accessible entrances and seating, with accessible parking available. Details about ramps, elevators, and accessible restrooms are not confirmed, so further inquiry is needed for a wheelchair user.",
-    "confidence": "medium",
+    "summary": "The Goa State Museum offers step-free access, ramps, elevators, accessible restrooms, assistance services, and accessible parking, according to two independent sources. However, details about accessible rooms, tactile/braille signage, hearing loops, and quiet spaces are not specified.",
+    "confidence": "high",
     "sources": [
      {
-      "title": "The Fisherman's Wharf Panjim | InstaHop",
-      "url": "https://www.instahop.com/hops/the-fisherman-s-wharf-panjim/"
+      "title": "Google Maps listing: wheelchair accessibility data",
+      "url": "https://maps.google.com/?cid=10735649641859217348&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
      },
      {
-      "title": "The Fisherman's Wharf Calangute | BizGoa",
-      "url": "https://bizgoa.in/listings/the-fisherman%27s-wharf-calangute"
+      "title": "Goa State Museum: Unearthing Goa's Vibrant History, Art, and Cultural Heritage - Wonderful",
+      "url": "https://www.wonderfulmuseums.com/museum/goa-state-museum/"
      },
      {
-      "title": "THE FISHERMAN'S WHARF, Cavelossim - Menu, Prices & Restaurant Reviews - Tripadvisor",
-      "url": "https://www.tripadvisor.com/Restaurant_Review-g775971-d1699725-Reviews-The_Fisherman_s_Wharf-Cavelossim_South_Goa_District_Goa.html"
+      "title": "Goa State Museum – Timing, Ticket Price, Address, Nearby Places & Facilities Available - T",
+      "url": "https://www.theinsightspark.com/goa-state-museum/"
      }
-    ]
+    ],
+    "google": {
+     "matched": "Goa State Museum",
+     "address": "Old Secretariat (Adilshaha Palace), Panaji instead of, EDC Complex, patto, Patto Colony, Panaji, Goa 403001, India",
+     "fields": {
+      "wheelchairAccessibleEntrance": true,
+      "wheelchairAccessibleRestroom": true
+     }
+    }
    },
    "draft": {
     "channel": "email",
-    "subject": "Accessibility Information Request",
-    "body": "Hello, I am planning to visit The Fisherman's Wharf and use a wheelchair. Could you please confirm: (1) Is the entrance fully step-free? (2) Are there ramps or elevators inside if needed? (3) Is there an accessible restroom? (4) Is accessible parking available close to the entrance? Thank you for your help."
+    "subject": "Accessibility Information Request – Goa State Museum",
+    "body": "Hello, I am planning a visit and use a wheelchair. Could you please confirm if the main entrance and all exhibition areas are step-free? Are there accessible restrooms and parking spaces available? Is there an elevator to access all floors, and can staff assist us on arrival if needed? Thank you very much for your help."
    }
   }
  ],
  "tips": [
-  "Contact all hotels and restaurants in advance to confirm step-free access and accessible restrooms.",
-  "Ask the airline and airports for wheelchair assistance at every stage.",
-  "Consider booking a taxi with a company that offers vehicles suitable for wheelchairs.",
-  "Allow extra time for transfers and rest breaks.",
-  "Check if the beach offers beach wheelchairs or accessible paths."
+  "Contact all hotels and restaurants in advance to confirm step-free access, ramps, and accessible restrooms.",
+  "Book flights with airlines that offer wheelchair assistance and notify them at least 48 hours before travel.",
+  "Consider traveling with a companion for extra support at beaches or public places.",
+  "Carry a list of accessible taxi services in Goa and pre-book when possible.",
+  "Plan for extra rest time each day and avoid rushing between stops."
  ],
- "generated_at": "2026-10-10T15:29:58+05:30",
+ "generated_at": "2026-10-10T16:26:55+05:30",
  "sample": true,
  "request": "3 days from Pune to Goa. I use a wheelchair. Budget about 30000 rupees. I want beaches and good food, no stairs."
 }

@@ -300,7 +300,7 @@ ROOT_SYSTEM = (
 # ── the turn ─────────────────────────────────────────────────────────────────
 def _turn_key(msg, S):
     base = msg.strip().lower() + "|" + (S.get("plan") or {}).get("title", "") + "|" + ",".join(sorted(S["profile"].get("needs") or [])) + "|" + S["lang"]
-    return "turn2|" + hashlib.sha1(base.encode()).hexdigest()
+    return "turn3|" + hashlib.sha1(base.encode()).hexdigest()
 
 
 def chat(session_id: str, message: str, profile: dict, lang: str, emit):
