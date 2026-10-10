@@ -10,3 +10,4 @@ llama-server.log
 ui/devtools/shots/
 tests/shots/
 video/out/
+.netlify/
