@@ -84,7 +84,14 @@ class App(ctk.CTk):
         except Exception:
             a, short = "", "no wallet"
         self.addr_lbl = ctk.CTkLabel(card, text=short, text_color="gray", font=ctk.CTkFont(family="Menlo", size=12))
-        self.addr_lbl.pack(pady=(0, 6))
+        self.addr_lbl.pack(pady=(0, 2))
+        if wl.FAMILY_MODE:
+            mode_txt = f"Family-managed · owner {wl.OWNER[:6]}…{wl.OWNER[-4:]}"
+        else:
+            mode_txt = "Solo vault · you own it"
+        ctk.CTkLabel(card, text=mode_txt, text_color="#34d399", font=ctk.CTkFont(size=11)).pack()
+        ctk.CTkButton(card, text="Copy device address", width=150, height=22, fg_color="#374151",
+                      font=ctk.CTkFont(size=11), command=self.copy_device_address).pack(pady=(4, 6))
         self.policy_lbl = ctk.CTkLabel(card, text="", text_color="#a78bfa", wraplength=250, font=ctk.CTkFont(size=11))
         self.policy_lbl.pack(pady=(0, 6))
         brow = ctk.CTkFrame(card, fg_color="transparent")
@@ -127,6 +134,14 @@ class App(ctk.CTk):
         ctk.CTkButton(bar, text="Send", width=80, height=40, command=self.submit_text).grid(row=0, column=1)
 
     # ── actions ───────────────────────────────────────────────────────────
+    def copy_device_address(self):
+        try:
+            self.clipboard_clear()
+            self.clipboard_append(wl.address())
+            self._append("System", "tool", "Device address copied. Paste it into the Family Console under 'Approve the assistant's device'.")
+        except Exception:
+            pass
+
     def open_contract(self):
         if wl.VAULT_ADDRESS:
             webbrowser.open(f"{wl.EXPLORER}/address/{wl.VAULT_ADDRESS}")
