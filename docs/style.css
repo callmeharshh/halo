@@ -100,3 +100,14 @@ body{background:radial-gradient(900px 520px at 12% -5%,rgba(131,110,249,.28),tra
 .steps3 .card h3{margin:.5em 0 .3em}
 .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
 .chip2{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:.95rem}
+
+/* try it */
+.tryg h3{margin:.1em 0 .6em}.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0}.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:600}
+select,.tryg input[type=range]{width:100%;margin-top:6px}
+select{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font:inherit}
+.tryg input[type=range]{accent-color:var(--accent);height:34px}
+.tryout{margin-top:16px;padding:22px 24px;border-radius:18px;border:1px solid var(--line);background:var(--card);transition:border-color .25s,background .25s}
+.tryout .trh{font-size:1.6rem;font-weight:800}.trraw{display:block;margin-top:8px;font-size:.9rem;color:var(--muted)}
+.tryout[data-kind=ok]{border-color:var(--ok);background:rgba(74,222,128,.08)}.tryout[data-kind=ok] .trh{color:var(--ok)}
+.tryout[data-kind=bad]{border-color:var(--err);background:rgba(248,113,113,.09)}.tryout[data-kind=bad] .trh{color:var(--err)}
+.tryout[data-kind=wait] .trh{color:var(--warn)}

@@ -98,7 +98,7 @@
       msg("wait", "Check your wallet to connect…");
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       await ensureChain();
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider(window.ethereum, G.chainId);
       st.signer = await provider.getSigner();
       st.owner = ethers.getAddress(accounts[0]);
       st.write = new ethers.Contract(G.address, ABI, st.signer);
@@ -305,7 +305,16 @@
     });
     if (window.ethereum && window.ethereum.on) {
       const reset = () => { st.writable = false; st.write = null; st.signer = null; $("who").textContent = "Wallet changed. Connect again."; $("connect").textContent = "Connect MetaMask"; $("actions").hidden = true; updateOneClick(); };
-      window.ethereum.on("accountsChanged", reset); window.ethereum.on("chainChanged", reset);
+      // MetaMask fires both events during a NORMAL connect (permission grant, then switch to Monad). Ignore those; reset only on a real change.
+      window.ethereum.on("accountsChanged", (a) => {
+        if (!st.writable) return;
+        if (a && a[0] && st.owner && a[0].toLowerCase() === st.owner.toLowerCase()) return;
+        reset();
+      });
+      window.ethereum.on("chainChanged", (c) => {
+        if (parseInt(c, 16) === G.chainId) return;
+        if (st.writable) reset();
+      });
     }
     updateOneClick();
   }

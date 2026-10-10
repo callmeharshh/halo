@@ -43,7 +43,7 @@ async function connect() {
     msg("wait", "Check your wallet to connect…");
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
     await ensureChain();
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    const provider = new ethers.BrowserProvider(window.ethereum, G.chainId);
     st.signer = await provider.getSigner();
     st.owner = ethers.getAddress(accounts[0]);
     st.write = new ethers.Contract(G.address, ABI, st.signer);
@@ -186,8 +186,16 @@ function wire() {
     $("ctName").value = ""; $("ctAddr").value = "";
   });
   if (window.ethereum && window.ethereum.on) {
-    window.ethereum.on("accountsChanged", () => location.reload());
-    window.ethereum.on("chainChanged", () => location.reload());
+    // MetaMask fires both events during a NORMAL connect; only reload on a real account/network change.
+    window.ethereum.on("accountsChanged", (a) => {
+      if (!st.writable) return;
+      if (a && a[0] && st.owner && a[0].toLowerCase() === st.owner.toLowerCase()) return;
+      location.reload();
+    });
+    window.ethereum.on("chainChanged", (c) => {
+      if (parseInt(c, 16) === G.chainId) return;
+      if (st.writable) location.reload();
+    });
   }
   const dev = new URLSearchParams(location.search).get("device");
   if (dev && ethers.isAddress(dev)) {  // pairing link from the Halo app: prefill the device to approve

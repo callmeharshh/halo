@@ -8,15 +8,16 @@
 <meta name="color-scheme" content="dark light">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23836EF9' stroke-width='5'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
-<script defer src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<script defer src="vendor/ethers.umd.min.js"></script>
 <script src="contract.js"></script>
 <script defer src="app.js"></script>
+<script defer src="play.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap">
   <div class="brand"><i aria-hidden="true"></i><span data-name>Halo</span></div>
-  <nav aria-label="Primary"><a href="#ideas">The idea</a><a href="#live">Live on Monad</a><a href="#roadmap">Roadmap</a><a href="console.html">Family console</a></nav>
+  <nav aria-label="Primary"><a href="#ideas">The idea</a><a href="#try">Try it</a><a href="#live">Live on Monad</a><a href="#roadmap">Roadmap</a><a href="console.html">Family console</a></nav>
 </div></header>
 
 <main id="main">
@@ -58,6 +59,39 @@
         <small class="muted">Illustration of the on-chain rule</small>
       </div>
     </div>
+  </div>
+</div></section>
+
+<section id="try"><div class="wrap">
+  <p class="eyebrow">Try it · no wallet, no install</p>
+  <h2>Can a scammer move this family’s money?</h2>
+  <p class="muted">Pretend you are the scammer. Pick who gets paid and how much, and ask the <b>real contract on Monad</b>. It checks the family’s live rules and answers. This is a safe dry run: it moves no money.</p>
+  <div class="grid g2 tryg">
+    <div class="card">
+      <h3>The family’s rules (live from Monad)</h3>
+      <dl class="kv">
+        <dt>Per payment</dt><dd id="tr-max">…</dd>
+        <dt>Per day</dt><dd id="tr-day">…</dd>
+        <dt>Who can be paid</dt><dd id="tr-who">…</dd>
+        <dt>Trusted contacts</dt><dd id="tr-contacts">…</dd>
+        <dt>Vault</dt><dd id="tr-bal">…</dd>
+        <dt>Status</dt><dd id="tr-state">Loading from Monad…</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <h3>Ask Halo to pay</h3>
+      <label for="tryWho" class="muted">Who should get the money?</label>
+      <select id="tryWho"><option value="alice">Alice (a trusted contact)</option><option value="stranger">A stranger (0x9f3a…c21e)</option></select>
+      <label for="tryAmt" class="muted" style="margin-top:12px">Amount: <b id="tryAmtVal">0.05 MON</b></label>
+      <input id="tryAmt" type="range" min="0.01" max="6" step="0.01" value="0.05">
+      <div class="row-links" style="margin:10px 0 14px"><button class="btn sm" type="button" data-amt="0.05">0.05</button><button class="btn sm" type="button" data-amt="0.1">0.1</button><button class="btn sm" type="button" data-amt="1">1</button><button class="btn sm" type="button" data-amt="5">5 MON</button></div>
+      <button class="btn primary" id="tryBtn" type="button" disabled>Ask the contract</button>
+    </div>
+  </div>
+  <div id="tryOut" class="tryout" role="status" aria-live="polite" data-kind="idle">
+    <div id="tryHead" class="trh">Pick a person and an amount, then ask.</div>
+    <div id="tryWhy" class="muted"></div>
+    <code id="tryRaw" class="trraw"></code>
   </div>
 </div></section>
 

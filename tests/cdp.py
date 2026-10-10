@@ -87,15 +87,18 @@ class Chrome:
 MOCK_WALLET = """
 (() => {
   const KEY = '%s';
-  let wallet, rpc, nextNonce = 0;
+  let wallet, rpc, nextNonce = 0, chain = '0x1', granted = false; const L = {};
   const boot = () => { if (!wallet) { rpc = new ethers.JsonRpcProvider('https://rpc.ankr.com/monad_testnet'); wallet = new ethers.Wallet(KEY, rpc); } };
-  window.ethereum = { isMock: true, on() {},
+  const emit = (ev, arg) => setTimeout(() => (L[ev] || []).forEach((f) => f(arg)), 40);
+  window.ethereum = { isMock: true, on(ev, f) { (L[ev] = L[ev] || []).push(f); }, removeListener() {},
     async request({method, params}) {
       boot();
-      if (method === 'eth_requestAccounts' || method === 'eth_accounts') return [wallet.address];
-      if (method === 'eth_chainId') return '0x279f';
+      if (method === 'eth_accounts') return granted ? [wallet.address] : [];
+      if (method === 'eth_requestAccounts') { if (!granted) { granted = true; emit('accountsChanged', [wallet.address]); } return [wallet.address]; }
+      if (method === 'eth_chainId') return chain;
       if (method === 'net_version') return '10143';
-      if (method === 'wallet_switchEthereumChain' || method === 'wallet_addEthereumChain') return null;
+      if (method === 'wallet_switchEthereumChain') { if (chain !== params[0].chainId) { chain = params[0].chainId; emit('chainChanged', chain); } return null; }
+      if (method === 'wallet_addEthereumChain') { chain = params[0].chainId; emit('chainChanged', chain); return null; }
       if (method === 'eth_sendTransaction') {
         // like a real wallet: track the nonce locally so a lagging RPC node cannot hand us a stale one
         const t = params[0];
