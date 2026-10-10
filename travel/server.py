@@ -4,6 +4,7 @@ import argparse
 import asyncio
 import json
 import os
+import re
 import sys
 import webbrowser
 
@@ -15,6 +16,7 @@ sys.path.insert(0, os.path.join(ROOT, "travel"))
 from dotenv import load_dotenv
 load_dotenv(os.getenv("HALO_ENV_PATH") or os.path.join(ROOT, ".env"))
 import agent  # noqa: E402
+import concierge  # noqa: E402
 
 DOCS = os.path.join(ROOT, "docs")
 allowed_origins: set[str] = set()
@@ -69,6 +71,41 @@ async def plan(request):
     return resp
 
 
+async def chat(request):
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"event": "error", "text": "bad request"}, status=400)
+    msg = str(body.get("message", "")).strip()[:1500]
+    if not msg:
+        return web.json_response({"event": "error", "text": "empty message"}, status=400)
+    sid = re.sub(r"[^a-zA-Z0-9_-]", "", str(body.get("session", "default")))[:60] or "default"
+    profile = body.get("profile") if isinstance(body.get("profile"), dict) else {}
+    lang = "hi" if body.get("lang") == "hi" else "en"
+    resp = web.StreamResponse(headers={"Content-Type": "application/x-ndjson", "X-Accel-Buffering": "no"})
+    await resp.prepare(request)
+    loop = asyncio.get_running_loop()
+    q: asyncio.Queue = asyncio.Queue()
+    emit = lambda ev: loop.call_soon_threadsafe(q.put_nowait, ev)
+
+    def run():
+        try:
+            concierge.chat(sid, msg, profile, lang, emit)
+        except Exception as e:
+            emit({"event": "error", "text": "Sorry, something went wrong: " + str(e)[:120]})
+            emit({"event": "done"})
+        finally:
+            emit(None)
+    loop.run_in_executor(None, run)
+    while True:
+        ev = await q.get()
+        if ev is None:
+            break
+        await resp.write((json.dumps(ev, ensure_ascii=False) + "\n").encode())
+    await resp.write_eof()
+    return resp
+
+
 async def tts(request):
     try:
         body = await request.json()
@@ -99,6 +136,7 @@ def make_app(port):
     app.router.add_get("/", index)
     app.router.add_get("/api/config", config)
     app.router.add_post("/api/plan", plan)
+    app.router.add_post("/api/chat", chat)
     app.router.add_post("/api/tts", tts)
     app.router.add_static("/", DOCS, show_index=False)
     return app

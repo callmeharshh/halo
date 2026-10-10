@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Halo Journeys Concierge</title>
+<meta name="description" content="A conversational travel concierge for travellers with disabilities. Plans, prepares and checks your trip, and separates what the web claims from what travellers have verified.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='11' fill='%23F7F2E9' stroke='%23A9875A' stroke-width='2.5'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='Georgia,serif' font-size='14' fill='%231F1D24'%3EH%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="concierge.css">
+<script>
+/* apply saved display preferences before first paint (shared with Halo Journeys) */
+(function(){try{var d=document.documentElement,s=localStorage.getItem("halo.j.size"),c=localStorage.getItem("halo.j.contrast");if(s==="1"||s==="2")d.dataset.size=s;if(c==="1")d.dataset.contrast="high";}catch(e){}})();
+</script>
+<script src="registry.js"></script>
+<script src="vendor/ethers.umd.min.js"></script>
+<script src="concierge.js" defer></script>
+</head>
+<body data-view="chat">
+<a class="skip" href="#composer-input">Skip to the message box</a>
+<a class="skip skip-2" href="#transcript">Skip to the conversation</a>
+
+<header class="hdr" role="banner">
+  <div class="brand">
+    <span class="mono mono-lg" aria-hidden="true">H</span>
+    <div class="brand-text">
+      <h1 class="brand-name">Halo Concierge</h1>
+      <span class="session" id="session-label">Session</span>
+    </div>
+  </div>
+  <div class="hdr-actions">
+    <div id="tools" class="tools" role="group" aria-label="Display settings">
+      <div class="seg" role="group" aria-label="Text size">
+        <button type="button" class="seg-b" data-size="0" aria-pressed="true" aria-label="Normal text size">A</button>
+        <button type="button" class="seg-b" data-size="1" aria-pressed="false" aria-label="Large text size">A+</button>
+        <button type="button" class="seg-b" data-size="2" aria-pressed="false" aria-label="Largest text size">A++</button>
+      </div>
+      <button type="button" class="btn btn-quiet" id="contrast" aria-pressed="false">High contrast</button>
+    </div>
+    <button type="button" class="icon-btn tools-toggle" id="tools-btn" aria-expanded="false" aria-controls="tools" aria-label="Text size and contrast"><span aria-hidden="true" class="aa">Aa</span></button>
+    <button type="button" class="btn btn-quiet profile-btn" id="profile-btn" aria-haspopup="dialog" aria-label="Edit my profile">
+      <span data-ic="user"></span><span class="lbl" id="profile-chip-text">My profile</span><span data-ic="edit" class="pencil"></span>
+    </button>
+    <button type="button" class="btn btn-quiet" id="new-btn" aria-label="New session"><span data-ic="plus"></span><span class="lbl">New session</span></button>
+  </div>
+</header>
+
+<div class="tabs-m" role="tablist" aria-label="View">
+  <button type="button" role="tab" class="tab-m" id="tab-chat" aria-selected="true" aria-controls="main" data-view="chat">Conversation</button>
+  <button type="button" role="tab" class="tab-m" id="tab-trip" aria-selected="false" aria-controls="trip" data-view="trip" tabindex="-1">Trip <span class="count" id="trip-count" hidden>0</span></button>
+</div>
+
+<div class="shell">
+  <main id="main" class="chat" aria-label="Conversation with your concierge">
+    <div id="banner" class="banner" hidden>
+      <p id="banner-text">Replaying a real session recorded from the agent. Run it locally to talk to your own concierge.</p>
+      <button type="button" class="btn btn-quiet" id="replay-btn">Replay</button>
+    </div>
+    <div id="transcript" class="transcript" tabindex="0" aria-label="Conversation transcript"></div>
+    <form id="composer" class="composer" novalidate>
+      <p id="composer-note" class="composer-note" hidden></p>
+      <div class="composer-box">
+        <label for="composer-input" class="sr">Message your concierge</label>
+        <textarea id="composer-input" rows="1" maxlength="2000" placeholder="Ask your concierge" enterkeyhint="send"></textarea>
+        <div class="composer-actions">
+          <button type="button" id="lang-btn" class="btn btn-quiet lang-btn" hidden aria-label="Speaking language: English (India). Press to switch to Hindi.">EN</button>
+          <button type="button" id="mic" class="icon-btn" aria-pressed="false" aria-label="Speak your message" hidden><span data-ic="mic"></span></button>
+          <button type="submit" id="send" class="icon-btn send-btn" aria-label="Send message"><span data-ic="send"></span></button>
+        </div>
+      </div>
+      <p id="mic-status" class="sr" role="status"></p>
+    </form>
+  </main>
+
+  <aside id="trip" class="trip" aria-label="Your trip">
+    <div class="trip-head">
+      <div class="ptabs" role="tablist" aria-label="Trip panel">
+        <button type="button" role="tab" class="ptab" id="ptab-trip" aria-selected="true" aria-controls="pane-trip">Trip</button>
+        <button type="button" role="tab" class="ptab" id="ptab-agents" aria-selected="false" aria-controls="pane-agents" tabindex="-1">Agents</button>
+      </div>
+      <nav id="jump" class="jump" aria-label="Jump to a section of your trip" hidden></nav>
+    </div>
+    <div id="pane-trip" class="pane" role="tabpanel" aria-labelledby="ptab-trip" tabindex="0">
+      <div id="trip-empty" class="trip-empty">
+        <span class="mono mono-lg" aria-hidden="true">H</span>
+        <h2>Your trip will gather here</h2>
+        <p>Itineraries, budgets, checklists and drafted messages appear as we talk, so you never have to scroll back to find them.</p>
+      </div>
+      <div id="arts" class="arts"></div>
+    </div>
+    <div id="pane-agents" class="pane" role="tabpanel" aria-labelledby="ptab-agents" tabindex="0" hidden>
+      <p class="pane-intro">Fourteen specialists work behind one concierge. The one working now is marked.</p>
+      <ul id="agents" class="agents"></ul>
+    </div>
+  </aside>
+</div>
+
+<div id="sr-live" class="sr" aria-live="polite" aria-atomic="true"></div>
+<div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+
+<div id="drawer-back" class="back back-right" hidden>
+  <div id="drawer" class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-h" tabindex="-1">
+    <div class="drawer-head">
+      <h2 id="drawer-h">My profile</h2>
+      <button type="button" class="icon-btn" id="drawer-x" aria-label="Close profile"><span data-ic="close"></span></button>
+    </div>
+    <p class="hint">Saved on this device only. It is sent with each message so your concierge plans around you.</p>
+    <form id="profile-form" novalidate>
+      <div class="field"><label for="pf-name">Name</label><input id="pf-name" name="name" autocomplete="given-name"></div>
+      <fieldset class="field fs"><legend>Access needs</legend>
+        <div class="chips" id="pf-needs"></div>
+      </fieldset>
+      <div class="field"><label for="pf-aids">Mobility aids and equipment</label><input id="pf-aids" name="aids" placeholder="Manual foldable wheelchair, cane, hearing aids"></div>
+      <div class="field"><label for="pf-assist">Assistance preferences</label><input id="pf-assist" name="assistance" placeholder="Wheelchair to the aircraft door, written instructions"></div>
+      <fieldset class="field fs"><legend>Language</legend>
+        <div class="chips" role="radiogroup" aria-label="Language">
+          <label class="chip"><input type="radio" name="language" value="en" checked><span>English</span></label>
+          <label class="chip"><input type="radio" name="language" value="hi"><span lang="hi">हिन्दी (Hindi)</span></label>
+        </div>
+      </fieldset>
+      <div class="field two">
+        <div class="field"><label for="pf-city">Home city</label><input id="pf-city" name="home_city" autocomplete="address-level2"></div>
+        <div class="field"><label for="pf-budget">Usual budget (INR)</label><input id="pf-budget" name="budget" inputmode="numeric" type="number" min="0" step="500"></div>
+      </div>
+      <div class="field two">
+        <div class="field"><label for="pf-ecn">Emergency contact name</label><input id="pf-ecn" name="ecn" autocomplete="off"></div>
+        <div class="field"><label for="pf-ecp">Emergency contact phone</label><input id="pf-ecp" name="ecp" type="tel" autocomplete="off"></div>
+      </div>
+      <div class="field"><label for="pf-email">Email</label><input id="pf-email" name="email" type="email" autocomplete="email"></div>
+      <div class="row end">
+        <button type="button" class="btn btn-quiet" id="pf-clear">Clear profile</button>
+        <button type="submit" class="btn btn-primary" id="pf-save">Save profile</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="dlg-back" class="back" hidden>
+  <div id="dlg" class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlg-h" aria-describedby="dlg-d" tabindex="-1">
+    <h2 id="dlg-h">I have been here</h2>
+    <p id="dlg-d" class="hint"></p>
+    <form id="att-form" novalidate>
+      <fieldset class="fs">
+        <legend>What was accessible when you were there?</legend>
+        <div id="att-feats" class="checks"></div>
+      </fieldset>
+      <label class="check venue"><input type="checkbox" id="att-venue"><span>The venue confirmed this to me in writing</span></label>
+      <div class="field"><label for="att-note">Note (optional, up to 280 characters)</label>
+        <textarea id="att-note" rows="3" maxlength="280"></textarea>
+        <p class="hint" id="att-count" aria-hidden="true">0 / 280</p></div>
+      <p id="att-err" class="err-text" role="alert" hidden></p>
+      <div id="att-status" class="att-status" role="status" aria-live="polite"></div>
+      <div class="row end">
+        <button type="button" id="att-close" class="btn btn-quiet">Close</button>
+        <button type="submit" id="att-go" class="btn btn-primary">Submit with my wallet</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

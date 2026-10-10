@@ -46,6 +46,19 @@ async def main():
                 check("summary does not claim places are accessible/barrier-free before verification", not re.search(r"all (stops|places|venues) (are|is) (wheelchair|accessible|barrier)", txt) and "barrier-free" not in txt, result["summary"][:120])
                 names = {p["name"] for p in result["places"]}
                 check("itinerary items link to researched places", any(i.get("place") in names for d in result["days"] for i in d["items"]))
+            agents_seen, arts, msgs = set(), [], []
+            async with s.post(BASE + "/api/chat", headers={"Origin": BASE}, json={"session": "chk", "message": "The lift at my hotel is broken and I use a wheelchair. What now?", "profile": {"needs": ["wheelchair"], "name": "Test"}, "lang": "en"}) as r:
+                async for line in r.content:
+                    if not line.strip(): continue
+                    ev = json.loads(line)
+                    if ev["event"] == "agent": agents_seen.add(ev["name"])
+                    elif ev["event"] == "artifact": arts.append(ev["kind"])
+                    elif ev["event"] == "message": msgs.append(ev["text"])
+            check("concierge hands off to a specialist agent", "concierge" in agents_seen and len(agents_seen) >= 2, agents_seen)
+            check("barrier request yields a 'barrier' artifact with options", "barrier" in arts, arts)
+            check("concierge replies with a final message", bool(msgs))
+            async with s.post(BASE + "/api/chat", headers={"Origin": "http://evil.example"}, json={"message": "x"}) as r:
+                check("chat refuses foreign websites (403)", r.status == 403, r.status)
             async with s.post(BASE + "/api/tts", json={"text": "Your trip is ready."}, headers={"Origin": BASE}) as r:
                 data = await r.read(); check("text-to-speech returns audio", r.status == 200 and len(data) > 2000, r.status)
     finally:

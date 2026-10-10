@@ -19,7 +19,7 @@
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap">
   <div class="brand"><i aria-hidden="true"></i><span data-name>Halo</span></div>
-  <nav aria-label="Primary"><a href="journeys.html">Plan a trip</a><a href="#ideas">The idea</a><a href="#atts">Live on Monad</a><a href="#guard">Also: Halo Guard</a><a href="#roadmap">Roadmap</a></nav>
+  <nav aria-label="Primary"><a href="concierge.html">Concierge</a><a href="#ideas">The idea</a><a href="#agents">Agents</a><a href="#atts">Live on Monad</a><a href="#guard">Also: Halo Guard</a><a href="#roadmap">Roadmap</a></nav>
 </div></header>
 
 <main id="main">
@@ -28,8 +28,8 @@
   <h1>Travel without guessing.</h1>
   <p class="lead"><span data-name>Halo</span> Journeys plans your whole trip around your needs, then shows what is <i>actually</i> accessible: facts from the web with their sources, and what real travellers have verified on Monad. No invented claims.</p>
   <div class="btns">
-    <a class="btn primary" href="journeys.html">Plan a trip</a>
-    <a class="btn" href="journeys.html#sample">See a real sample plan</a>
+    <a class="btn primary" href="concierge.html">Talk to the concierge</a>
+    <a class="btn" href="journeys.html">Plan with a form</a>
     <a class="btn" data-repo href="#" rel="noopener">GitHub</a>
     <a class="btn" href="#atts">Live on Monad</a>
   </div>
@@ -41,7 +41,7 @@
   <h2>Accessibility information you can trust.</h2>
   <div class="grid g2">
     <div class="card idea">
-      <div class="ico" aria-hidden="true">🔎</div>
+      <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l5 5"/><path d="M8.5 11h5M11 8.5v5"/></svg></div>
       <h3>1 · Honest research</h3>
       <p>Tell it your trip and your needs, by typing or speaking. The agent researches every airport, station, hotel and sight, and shows each fact <b>with its source link</b>. If nothing reliable is found, it says <b>“unknown”</b> instead of guessing.</p>
       <div class="mock" role="img" aria-label="Illustration of a place card with sources">
@@ -51,7 +51,7 @@
       </div>
     </div>
     <div class="card idea">
-      <div class="ico" aria-hidden="true">⛓️</div>
+      <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1"/><path d="M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1"/></svg></div>
       <h3>2 · Proof from real travellers, on-chain</h3>
       <p>Travellers who have been there attest what they really found, and can mark “the venue confirmed this in writing”. It lives on <b>Monad</b>, so nobody can quietly edit it. Each place gets an honest badge.</p>
       <div class="mock" role="img" aria-label="Illustration of verification badges">
@@ -71,6 +71,18 @@
     <div class="card"><span class="step-n">2</span><h3>It checks</h3><p>In about 20 seconds: a day-by-day plan, every place researched with sources, cross-checked against Monad.</p></div>
     <div class="card"><span class="step-n">3</span><h3>You confirm</h3><p>Send the ready-made message to the venue. Been there? Attest what you found, and help the next traveller.</p></div>
   </div>
+</div></section>
+
+<section id="agents"><div class="wrap">
+  <p class="eyebrow">The concierge</p>
+  <h2>A team of fourteen agents, one conversation.</h2>
+  <p class="muted">You talk to one concierge. It hands your request to the right specialist, and you can watch each hand-off happen. Every agent below is our own implementation.</p>
+  <div class="grid g3 agentg">
+    <div class="card"><h3>Core travel</h3><ul class="alist"><li>Inspiration agent</li><li>Planning agent</li><li>Booking agent <em>simulated</em></li><li>Pre-trip agent</li><li>In-trip agent</li><li>Post-trip agent</li></ul></div>
+    <div class="card"><h3>Accessibility</h3><ul class="alist"><li>Accessibility research agent</li><li>Mobility preparation agent</li><li>Transit support agent</li><li>Barrier navigation agent</li></ul></div>
+    <div class="card"><h3>Automation and safety</h3><ul class="alist"><li>Notification agent <em>simulated</em></li><li>Accessibility communication agent</li><li>Web check-in agent <em>simulated</em></li><li>Smart guardrails agent</li></ul></div>
+  </div>
+  <p class="muted" style="margin-top:14px"><b>Honest about what is real.</b> Real: itinerary planning, web research with source links, on-chain checks on Monad, cost estimates, checklists, risk reviews, message drafts. <em>Simulated</em> in this demo: bookings, payments, web check-in and reminders, because no airline, hotel or payment system is connected, and nothing is sent for you.</p>
 </div></section>
 
 <section id="atts"><div class="wrap">
@@ -165,7 +177,7 @@ python travel/server.py</code></pre>
 </main>
 
 <footer><div class="wrap">
-  <p><span data-name>Halo</span> Journeys was built at Monad Blitz Pune V3. The idea of an AI agent for disabled travellers was inspired by <a href="https://github.com/codersbeyondborders/inclusive-travel-agent" target="_blank" rel="noopener noreferrer">Inclusive Travel Agent</a> by Coders Beyond Borders; this is our own implementation, and our addition is the traveller-verified on-chain registry and source-linked research. We started from <a href="https://github.com/Sourajit1234/GemGuide" target="_blank" rel="noopener noreferrer">GemGuide</a> by Sourajit (voice, gaze and screen vision).</p>
+  <p><span data-name>Halo</span> Journeys was built at Monad Blitz Pune V3. The idea of an AI agent for disabled travellers was inspired by <a href="https://github.com/codersbeyondborders/inclusive-travel-agent" target="_blank" rel="noopener noreferrer">Inclusive Travel Agent</a> by Coders Beyond Borders; this is our own implementation, and our addition is the traveller-verified on-chain registry and source-linked research. The agent roster and its structure were also inspired by Google's open-source <a href="https://github.com/google/adk-samples" target="_blank" rel="noopener noreferrer">inclusive-travel-agent sample</a> (Apache-2.0); we copied no code. We started from <a href="https://github.com/Sourajit1234/GemGuide" target="_blank" rel="noopener noreferrer">GemGuide</a> by Sourajit (voice, gaze and screen vision).</p>
   <p>Accessibility information comes from public web sources and traveller attestations. It can be wrong or out of date: always confirm with the venue. Testnet demo.</p>
 </div></footer>
 </body>

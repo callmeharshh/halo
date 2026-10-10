@@ -2,14 +2,15 @@
 
 **An AI travel agent for travellers with disabilities. Travel without guessing.**
 
-Tell it your trip and your needs, by typing or speaking ("3 days Pune to Goa, I use a wheelchair, budget 30000"). In about 20 seconds it returns an accessibility-first day-by-day plan. For every key place (airports, stations, hotels, sights) it researches accessibility on the web and shows each fact **with its source link**, never inventing ("unknown" stays "unknown"). Then it cross-checks an **on-chain community registry on Monad** where real travellers attest what they actually found accessible, so you can see what is *verified* versus only *claimed*.
+Talk to a concierge of **fourteen specialist agents** about your trip and your needs, by typing or speaking ("3 days Pune to Goa, I use a wheelchair, budget 30000"). In about 20 seconds it returns an accessibility-first day-by-day plan. For every key place (airports, stations, hotels, sights) it researches accessibility on the web and shows each fact **with its source link**, never inventing ("unknown" stays "unknown"). Then it cross-checks an **on-chain community registry on Monad** where real travellers attest what they actually found accessible, so you can see what is *verified* versus only *claimed*.
 
 Built at **Monad Blitz Pune V3**.
 
 | | |
 |---|---|
 | **Live site** | https://callmeharshh.github.io/halo/ |
-| **Travel agent page** | https://callmeharshh.github.io/halo/journeys.html (public site shows a real sample plan; run it locally to plan any trip live) |
+| **Concierge (chat)** | https://callmeharshh.github.io/halo/concierge.html (public site replays a real recorded session; run it locally to chat live) |
+| **Classic planner** | https://callmeharshh.github.io/halo/journeys.html |
 | **GitHub repo** | https://github.com/callmeharshh/halo |
 | **AccessRegistry contract (Monad Testnet)** | [`0x3aaE87a424aA7F9fcD7FB98D27a621FcD6f14A7f`](https://testnet.monadscan.com/address/0x3aaE87a424aA7F9fcD7FB98D27a621FcD6f14A7f) · [verified on MonadVision](https://testnet.monadvision.com/address/0x3aaE87a424aA7F9fcD7FB98D27a621FcD6f14A7f) · [deploy tx](https://testnet.monadscan.com/tx/0x6d5df3f327aa5f142425e3743d3b3468fdaf13c0df9d3920c39898cfeedd7e5b) |
 | **GuardVault contract (Halo Guard)** | [`0x3e89164abbc8852955F179D964B696a4b713418A`](https://testnet.monadscan.com/address/0x3e89164abbc8852955F179D964B696a4b713418A) · [verified](https://testnet.monadvision.com/address/0x3e89164abbc8852955F179D964B696a4b713418A) |
@@ -38,9 +39,21 @@ cd halo
 ./setup.sh                 # creates .venv, installs everything, creates .env
 # edit .env: set OPENAI_API_KEY
 source .venv/bin/activate
-python travel/server.py    # opens http://127.0.0.1:8780 : plan any trip live
+python travel/server.py    # opens http://127.0.0.1:8780 : chat with the concierge live
 ```
 To attest a place you need MetaMask on Monad Testnet with a little test MON ([faucet](https://faucet.monad.xyz)).
+
+## The concierge: fourteen agents, one conversation
+A root **concierge** hands each request to the right specialist (`transfer_to_agent`), and you can watch every hand-off in the chat.
+
+| Tier | Agents |
+|---|---|
+| Core travel | `inspiration_agent`, `planning_agent`, `booking_agent` *(simulated)*, `pre_trip_agent`, `in_trip_agent`, `post_trip_agent` |
+| Accessibility | `accessibility_research_agent`, `mobility_preparation_agent`, `transit_support_agent`, `barrier_navigation_agent` |
+| Automation and safety | `notification_agent` *(simulated)*, `accessibility_communication_agent`, `web_checkin_agent` *(simulated)*, `smart_guardrails_agent` |
+
+**Real:** itinerary planning, forced web research with source links, on-chain checks on Monad (the safety agent reads the registry), cost estimates (clearly labelled estimates, with disability-related expenses shown separately), checklists, risk review, barrier alternatives, message drafts, a personal profile that personalises every answer, and an on-chain attestation after the trip.
+**Simulated, and labelled as such in the UI:** bookings, payments, web check-in, reminders, and sending messages (no airline, hotel, payment or email system is connected, and nothing is sent for you).
 
 ## Honest limitations
 - Web sources can be wrong or out of date. That is exactly why traveller attestations and "confirm with the venue" exist. Always confirm before booking.
@@ -54,9 +67,11 @@ A second module, `GuardVault`: a family sets on-chain spending rules (per-paymen
 ## Project layout
 | Path | Purpose |
 |---|---|
-| `travel/agent.py` | The travel agent: plan outline, forced web research with citations, drafts |
-| `travel/server.py` | Local server: `/api/plan` (streaming), `/api/tts`, serves the page |
-| `docs/journeys.*` | The travel agent web page (sample mode on GitHub Pages, live mode locally) |
+| `travel/concierge.py` | The root concierge and the 14 specialist agents |
+| `travel/agent.py` | Planning outline, forced web research with citations, drafts |
+| `travel/server.py` | Local server: `/api/chat` and `/api/plan` (streaming), `/api/tts`, serves the pages |
+| `docs/concierge.*` | The chat concierge (replays a real session on GitHub Pages, live mode locally) |
+| `docs/journeys.*` | The classic form-based planner |
 | `docs/index.html` | Public site with the live attestations feed |
 | `contracts/AccessRegistry.sol` | Traveller attestation registry |
 | `contracts/GuardVault.sol` | Family-owned spending rules (Halo Guard) |
@@ -64,7 +79,7 @@ A second module, `GuardVault`: a family sets on-chain spending rules (per-paymen
 | `tests/`, `scripts/` | Regression checks (`python scripts/check_all.py`) and site helpers |
 
 ## Credits and honesty
-- The idea of an AI agent for disabled travellers was **inspired by [Inclusive Travel Agent](https://github.com/codersbeyondborders/inclusive-travel-agent)** by Coders Beyond Borders, which won a prize at another hackathon. This repository is our own implementation, and our addition is the **traveller-verified on-chain registry** and source-linked research. We do not claim any of their research, user testing or integrations.
+- The idea of an AI agent for disabled travellers was **inspired by [Inclusive Travel Agent](https://github.com/codersbeyondborders/inclusive-travel-agent)** by Coders Beyond Borders, which won a prize at another hackathon, and the roster and structure of the concierge by Google's open-source [inclusive-travel-agent sample](https://github.com/google/adk-samples) (Apache-2.0). We copied no code. This repository is our own implementation, and our addition is the **traveller-verified on-chain registry** and source-linked research. We do not claim any of their research, user testing or integrations.
 - We started from **[GemGuide](https://github.com/Sourajit1234/GemGuide)** by Sourajit (voice, eye-gaze and screen vision with Gemma 4), whose foundation we ported to macOS for Halo Guard.
 
 Testnet only. Use a throwaway wallet. Not financial or medical advice.
