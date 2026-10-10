@@ -40,7 +40,7 @@ We do **not** claim voice payments are flawless. Instead every step is bounded, 
 - One pending payment at a time, plus a cooldown after each send.
 - Finally the contract enforces limits no matter what the AI or the speech recogniser did.
 
-Unit tests: `python tests/test_safety.py`.
+Checks: `python scripts/check_all.py` runs the whole regression suite (safety unit tests, on-chain/contract consistency, the public site, agent behaviour plus a Scam Shield test set, the server protocol, the browser UI end to end, and the Family Console with a wallet). `python scripts/check_all.py --live-tx` also sends one real payment.
 
 ### Family-owned vault (the elderly / disabled user's safety net)
 
@@ -81,13 +81,15 @@ cd halo
 ./setup.sh                # creates .venv, installs everything, creates .env
 # edit .env: set OPENAI_API_KEY and WALLET_PRIVATE_KEY (a throwaway testnet key, never a real one)
 source .venv/bin/activate
+python doctor.py          # preflight: keys, network, contract, mic, camera, permissions (fix any ❌)
 python setup_vault.py     # solo mode: deposits MON into YOUR vault on the deployed contract, sets limits, adds a demo contact "alice"
-python main.py
+python halo.py            # opens the Halo interface in your browser (http://127.0.0.1:8765)
 ```
+(`python main.py` is the older desktop window, kept as a fallback.)
 
-**Family mode (recommended story):** instead of `setup_vault.py`, put the family member's wallet address in `.env` as `VAULT_OWNER=0x…`, click *Copy device address* in the app, then open the [Family Console](https://callmeharshh.github.io/halo/console.html), connect the family wallet, deposit, set limits, add contacts and paste the device address under *Approve the assistant's device*.
+**Family mode (recommended story):** instead of `setup_vault.py`, open the **Family** tab in the app, copy the device address or send the pairing link to your family member on WhatsApp, connect their MetaMask and press *Make this wallet the owner of this device and approve it* (this also saves `VAULT_OWNER` for you). Or do it by hand with the public [Family Console](https://callmeharshh.github.io/halo/console.html), connect the family wallet, deposit, set limits, add contacts and paste the device address under *Approve the assistant's device*.
 
-Click **START LISTENING** and try: *"What's my balance?"*, *"Open Calculator"*, *"What's on my screen?"*, *"Send 0.1 MON to Alice"* → *"confirm"*. You can also type commands in the box at the bottom.
+In the browser, press the **Microphone** button (or the **M** key) and try: *"What's my balance?"*, *"Open Calculator"*, *"What's on my screen?"*, *"Send 0.1 MON to Alice"* → *"confirm"*. You can also type commands in the box at the bottom.
 
 **macOS permissions** (System Settings → Privacy & Security), granted to the app you launch from (Terminal / VS Code): **Microphone**, **Camera** (eye tracking), **Accessibility** (mouse and keyboard control), **Screen Recording** (vision).
 
@@ -109,7 +111,9 @@ We measured this on a 16 GB M-series Mac: the model loads in about 13s and handl
 
 | File | Purpose |
 |---|---|
-| `main.py` | Desktop UI: agent activity feed, vault panel, Guardian buttons, mic and gaze controls |
+| `halo.py` + `ui/` | The Halo interface: local web server + browser UI (companion screen, confirmation card, Family tab with MetaMask) |
+| `main.py` | Older desktop window (fallback) |
+| `doctor.py` | Preflight checker to run before a demo |
 | `agents.py` | Orchestrator, System/Vision/Writer/Wallet agents, Guardian confirmation gate, transcribe mode |
 | `wallet.py` | Monad layer: reads vault/policy, resolves on-chain contacts, sends via `guardedSend` |
 | `voice.py` | Mic capture, WebRTC VAD, speech-to-text (OpenAI or local Parakeet), macOS TTS |
@@ -120,7 +124,7 @@ We measured this on a 16 GB M-series Mac: the model loads in about 13s and handl
 | `contracts/` | `GuardVault.sol`, `deploy.py`, `verify.py`, `deployment.json` (address + ABI) |
 | `docs/` | The public website (GitHub Pages): live on-chain feed + the Family Console (`console.html`) |
 | `demo/` | Fictional scam message for the Scam Shield demo |
-| `tests/` | `python tests/test_safety.py` |
+| `tests/`, `scripts/` | Regression suite (`scripts/check_all.py`), site/feed helpers (`sync_site.py`, `snapshot_feed.py`) |
 
 ## Credits
 
