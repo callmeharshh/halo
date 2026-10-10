@@ -70,7 +70,7 @@ class Voice:
                     w.writeframes(pcm.astype(np.int16).tobytes())
                 bio.name = "speech.wav"; bio.seek(0)
                 r = self._oa.audio.transcriptions.create(
-                    model="gpt-4o-mini-transcribe", file=bio,  # language auto-detected: English, Hindi, Hinglish, Marathi
+                    model=os.getenv("STT_MODEL", "gpt-4o-transcribe"), file=bio,  # language auto-detected: English, Hindi, Hinglish, Marathi
                     prompt="Voice commands for a computer assistant in India: open Safari, send zero point one MON to Alice, "
                            "confirm, cancel, haan, nahi, bhej do, kya hai screen par.")
                 return r.text.strip()
