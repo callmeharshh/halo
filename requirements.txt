@@ -1,0 +1,17 @@
+openai
+python-dotenv
+web3
+sounddevice
+numpy
+webrtcvad-wheels
+onnx-asr[cpu,hub]
+customtkinter
+pyautogui
+pyobjc-core
+pyobjc-framework-Quartz
+psutil
+pyperclip
+rapidfuzz
+Pillow
+opencv-python
+eyetrax
