@@ -1,0 +1,219 @@
+/* Halo landing page. Plain JS, no build step. Placeholders are the constants below. */
+const PROJECT_NAME = "Halo";                                   // <- rename here
+const REPO_URL = "https://github.com/callmeharshh/REPLACE_ME"; // <- your repo
+const DEMO_URL = "#";                                          // <- demo video link
+
+const CHAIN = {
+  rpc: "https://testnet-rpc.monad.xyz",
+  address: "0xD8337b5C8F0a18ad72C183C6292BA260ad2c57d6",
+  deployBlock: 69756876,
+  explorer: "https://testnet.monadscan.com",
+  vision: "https://testnet.monadvision.com",
+};
+const LOG_RANGE = 99;        // verified: RPC allows up to 100 (to - from <= 100); 99 keeps margin
+const CONCURRENCY = 6;
+const MAX_BACKFILL_BLOCKS = 30000; // ~ 300 requests max on first load, never unbounded
+const POLL_MS = 5000;
+const MAX_ROWS = 50;
+
+const ABI = [
+  "event GuardedTransfer(address indexed owner, address indexed to, string contactName, uint256 amount, string approvedBy, uint256 timestamp)",
+  "function totalTransfers() view returns (uint256)",
+  "function totalVolume() view returns (uint256)",
+];
+
+const state = { iface: null, rows: new Map(), lastBlock: null, started: false, failures: 0 };
+
+/* ---------- RPC (plain fetch, with timeout) ---------- */
+async function rpc(method, params) {
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), 10000);
+  try {
+    const r = await fetch(CHAIN.rpc, {
+      method: "POST", headers: { "content-type": "application/json" }, signal: ctl.signal,
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+    });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    if (j.error) throw new Error(j.error.message || "RPC error");
+    return j.result;
+  } finally { clearTimeout(t); }
+}
+const hex = (n) => "0x" + n.toString(16);
+
+async function getLogs(from, to) {
+  const topic = state.iface.getEvent("GuardedTransfer").topicHash;
+  const logs = await rpc("eth_getLogs", [{ address: CHAIN.address, fromBlock: hex(from), toBlock: hex(to), topics: [topic] }]);
+  return logs.map((l) => {
+    const p = state.iface.parseLog(l);
+    return {
+      key: l.transactionHash + ":" + l.logIndex, tx: l.transactionHash, block: parseInt(l.blockNumber, 16),
+      to: p.args.to, contact: p.args.contactName, amount: p.args.amount, approvedBy: p.args.approvedBy,
+      ts: Number(p.args.timestamp),
+    };
+  });
+}
+
+async function getStats() {
+  const call = async (fn) => state.iface.decodeFunctionResult(fn, await rpc("eth_call", [{ to: CHAIN.address, data: state.iface.encodeFunctionData(fn) }, "latest"]))[0];
+  const [n, v] = await Promise.all([call("totalTransfers"), call("totalVolume")]);
+  return { transfers: n, volume: v };
+}
+
+/* scan ranges [from..to] in LOG_RANGE chunks, newest first, limited concurrency */
+async function scan(from, to, onRows) {
+  const chunks = [];
+  for (let hi = to; hi >= from; hi -= LOG_RANGE + 1) chunks.push([Math.max(from, hi - LOG_RANGE), hi]);
+  let i = 0;
+  async function worker() {
+    while (i < chunks.length) {
+      const [a, b] = chunks[i++];
+      onRows(await getLogs(a, b));
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(CONCURRENCY, chunks.length) }, worker));
+}
+
+/* ---------- formatting ---------- */
+function fmtMon(wei) {
+  const s = state.iface ? ethersFormat(wei) : "0";
+  return s;
+}
+function ethersFormat(wei) {
+  const x = Number(ethers.formatEther(wei));
+  if (x === 0) return "0";
+  if (x >= 1000) return x.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  return String(parseFloat(x.toPrecision(4)));
+}
+const short = (a) => a.slice(0, 6) + "…" + a.slice(-4);
+function ago(ts) {
+  const d = Math.max(0, Math.floor(Date.now() / 1000) - ts);
+  if (d < 60) return d + "s ago";
+  if (d < 3600) return Math.floor(d / 60) + "m ago";
+  if (d < 86400) return Math.floor(d / 3600) + "h ago";
+  return Math.floor(d / 86400) + "d ago";
+}
+function methodClass(m) {
+  m = (m || "").toLowerCase();
+  if (m.includes("blink")) return "m-blink";
+  if (m.includes("voice")) return "m-voice";
+  if (m.includes("button")) return "m-button";
+  return "m-other";
+}
+
+/* ---------- UI ---------- */
+const $ = (id) => document.getElementById(id);
+function setStatus(kind, msg) {
+  const el = $("feed-status");
+  el.dataset.kind = kind;
+  el.textContent = msg;
+  $("retry").hidden = kind !== "error";
+}
+function renderRows() {
+  const rows = [...state.rows.values()].sort((a, b) => b.block - a.block || b.ts - a.ts).slice(0, MAX_ROWS);
+  const body = $("feed-body");
+  body.textContent = "";
+  $("feed-table").hidden = rows.length === 0;
+  for (const r of rows) {
+    const tr = document.createElement("tr");
+    const cells = [];
+    const td = (txt, label) => { const c = document.createElement("td"); c.dataset.label = label; c.textContent = txt; tr.appendChild(c); return c; };
+    const tc = td(ago(r.ts), "Time"); tc.title = new Date(r.ts * 1000).toLocaleString();
+    td(r.contact ? r.contact + " (" + short(r.to) + ")" : short(r.to), "To").title = r.to;
+    td(fmtMon(r.amount) + " MON", "Amount").className = "num";
+    const ap = td("", "Approved by");
+    const b = document.createElement("span");
+    b.className = "badge " + methodClass(r.approvedBy);
+    b.textContent = r.approvedBy || "unknown";
+    ap.appendChild(b);
+    const tx = td("", "Tx");
+    const a = document.createElement("a");
+    a.href = CHAIN.explorer + "/tx/" + r.tx; a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.textContent = short(r.tx); a.setAttribute("aria-label", "View transaction " + r.tx + " on Monadscan");
+    tx.appendChild(a);
+    body.appendChild(tr);
+  }
+}
+function addRows(list) {
+  let added = false;
+  for (const r of list) if (!state.rows.has(r.key)) { state.rows.set(r.key, r); added = true; }
+  if (added) renderRows();
+}
+function renderStats(s) {
+  $("stat-transfers").textContent = s.transfers.toString();
+  $("stat-volume").textContent = fmtMon(s.volume);
+}
+
+/* ---------- main loop ---------- */
+async function refreshStats() {
+  try { renderStats(await getStats()); } catch (e) { /* feed status reports errors */ }
+}
+async function initialLoad() {
+  setStatus("loading", "Loading on-chain activity from Monad testnet…");
+  $("retry").hidden = true;
+  try {
+    const head = parseInt(await rpc("eth_blockNumber", []), 16);
+    refreshStats();
+    const from = Math.max(CHAIN.deployBlock, head - MAX_BACKFILL_BLOCKS);
+    await scan(from, head, addRows);
+    state.lastBlock = head;
+    state.failures = 0;
+    afterSync();
+    schedule();
+  } catch (e) {
+    setStatus("error", "Could not reach the Monad testnet RPC (" + (e.message || e) + "). The contract is still live on-chain.");
+  }
+}
+function afterSync() {
+  if (state.rows.size === 0) setStatus("empty", "No transfers yet. The first guarded payment will appear here within seconds of confirmation.");
+  else setStatus("ok", "Live. Updated " + new Date().toLocaleTimeString() + ", refreshing every " + POLL_MS / 1000 + "s.");
+  renderRows();
+}
+let timer = null;
+function schedule() { clearTimeout(timer); timer = setTimeout(poll, POLL_MS); }
+async function poll() {
+  try {
+    const head = parseInt(await rpc("eth_blockNumber", []), 16);
+    if (head > state.lastBlock) {
+      await scan(state.lastBlock + 1, head, addRows);
+      state.lastBlock = head;
+    }
+    state.failures = 0;
+    refreshStats();
+    afterSync();
+  } catch (e) {
+    state.failures++;
+    if (state.failures >= 2) setStatus("error", "Connection to the RPC lost; retrying automatically…");
+  }
+  schedule();
+}
+
+/* ---------- page wiring ---------- */
+function wire() {
+  document.title = PROJECT_NAME + " - hands-free computing and money, guarded on-chain";
+  document.querySelectorAll("[data-name]").forEach((el) => { el.textContent = PROJECT_NAME; });
+  document.querySelectorAll("[data-repo]").forEach((el) => { el.href = REPO_URL; });
+  document.querySelectorAll("[data-demo]").forEach((el) => { el.href = DEMO_URL; if (DEMO_URL === "#") el.setAttribute("aria-disabled", "false"); });
+  document.querySelectorAll("[data-repo-text]").forEach((el) => { el.textContent = REPO_URL; });
+  document.querySelectorAll("[data-addr]").forEach((el) => { el.textContent = CHAIN.address; });
+  document.querySelectorAll("[data-scan]").forEach((el) => { el.href = CHAIN.explorer + "/address/" + CHAIN.address; });
+  document.querySelectorAll("[data-vision]").forEach((el) => { el.href = CHAIN.vision + "/address/" + CHAIN.address; });
+  const copy = $("copy");
+  copy.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(CHAIN.address); copy.textContent = "Copied"; }
+    catch { copy.textContent = "Select and copy"; }
+    setTimeout(() => (copy.textContent = "Copy address"), 1800);
+  });
+  $("retry").addEventListener("click", () => initialLoad());
+}
+function start() {
+  wire();
+  if (typeof ethers === "undefined") { setStatus("error", "Could not load the ethers library, so live data is unavailable. The contract is still live on-chain."); return; }
+  state.iface = new ethers.Interface(ABI);
+  initialLoad();
+  setInterval(() => { if (state.rows.size) renderRows(); }, 30000);
+}
+if (typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", start);
+}
+if (typeof module !== "undefined") module.exports = { getLogs, scan, state, rpc, getStats, CHAIN, ABI, LOG_RANGE };

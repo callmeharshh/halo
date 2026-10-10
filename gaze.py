@@ -65,7 +65,8 @@ class GazeController:
         sw, sh = pg.size()
         closed_frames, closed_since = 0, None
         blink_times, last_click = [], 0.0
-        sx = sy = None  # smoothed cursor position
+        from eyetrax.filters import KalmanSmoother, make_kalman
+        smoother = KalmanSmoother(make_kalman())  # Kalman filter keeps the cursor from jittering
         self.on_event("Gaze tracking on.")
         while self.running.is_set():
             ok, frame = cap.read()
@@ -104,9 +105,8 @@ class GazeController:
                 x2, y2 = self.est2.predict([f2])[0]
                 x = max(0, min(sw - 1, x1 * 0.6 + x2 * 0.4))
                 y = max(0, min(sh - 1, y1 * 0.6 + y2 * 0.4))
-                sx = x if sx is None else sx + (x - sx) * 0.35  # exponential smoothing
-                sy = y if sy is None else sy + (y - sy) * 0.35
-                pg.moveTo(int(sx), int(sy), _pause=False)
+                kx, ky = smoother.step(int(x), int(y))
+                pg.moveTo(max(0, min(sw - 1, kx)), max(0, min(sh - 1, ky)), _pause=False)
             time.sleep(0.005)
         cap.release()
         self.on_event("Gaze tracking off.")

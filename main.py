@@ -74,7 +74,7 @@ class App(ctk.CTk):
 
         card = ctk.CTkFrame(sb, corner_radius=12)
         card.pack(padx=16, pady=14, fill="x")
-        ctk.CTkLabel(card, text="MONAD TESTNET WALLET", font=ctk.CTkFont(size=11, weight="bold"), text_color="gray").pack(pady=(12, 2))
+        ctk.CTkLabel(card, text="GUARDVAULT · MONAD TESTNET", font=ctk.CTkFont(size=11, weight="bold"), text_color="gray").pack(pady=(12, 2))
         self.bal_lbl = ctk.CTkLabel(card, text="— MON", font=ctk.CTkFont(size=28, weight="bold"))
         self.bal_lbl.pack()
         try:
@@ -84,7 +84,12 @@ class App(ctk.CTk):
             a, short = "", "no wallet"
         self.addr_lbl = ctk.CTkLabel(card, text=short, text_color="gray", font=ctk.CTkFont(family="Menlo", size=12))
         self.addr_lbl.pack(pady=(0, 6))
-        ctk.CTkButton(card, text="Refresh", width=80, height=26, fg_color="#374151", command=self.refresh_wallet).pack(pady=(0, 12))
+        self.policy_lbl = ctk.CTkLabel(card, text="", text_color="#a78bfa", wraplength=250, font=ctk.CTkFont(size=11))
+        self.policy_lbl.pack(pady=(0, 6))
+        brow = ctk.CTkFrame(card, fg_color="transparent")
+        brow.pack(pady=(0, 12))
+        ctk.CTkButton(brow, text="Refresh", width=80, height=26, fg_color="#374151", command=self.refresh_wallet).pack(side="left", padx=3)
+        ctk.CTkButton(brow, text="Contract ↗", width=90, height=26, fg_color="#4c1d95", command=self.open_contract).pack(side="left", padx=3)
 
         ctk.CTkLabel(sb, text="GUARDIAN", font=ctk.CTkFont(size=11, weight="bold"), text_color="gray").pack(pady=(4, 4))
         row = ctk.CTkFrame(sb, fg_color="transparent")
@@ -121,10 +126,17 @@ class App(ctk.CTk):
         ctk.CTkButton(bar, text="Send", width=80, height=40, command=self.submit_text).grid(row=0, column=1)
 
     # ── actions ───────────────────────────────────────────────────────────
+    def open_contract(self):
+        if wl.VAULT_ADDRESS:
+            webbrowser.open(f"{wl.EXPLORER}/address/{wl.VAULT_ADDRESS}")
+
     def refresh_wallet(self):
         def work():
             try:
-                self.q.put(("balance", f"{wl.balance():.4f} MON"))
+                self.q.put(("balance", f"{wl.vault_balance():.3f} MON"))
+                p = wl.policy()
+                self.q.put(("policy", f"On-chain limits: {p['max_per_tx'].normalize():f}/tx · {p['daily_limit'].normalize():f}/day"
+                            + (" · contacts only" if p["trusted_only"] else "")))
             except Exception:
                 self.q.put(("balance", "offline"))
         threading.Thread(target=work, daemon=True).start()
@@ -242,6 +254,8 @@ class App(ctk.CTk):
                     self._set_state(m[1])
                 elif kind == "balance":
                     self.bal_lbl.configure(text=m[1])
+                elif kind == "policy":
+                    self.policy_lbl.configure(text=m[1])
                 elif kind == "mic_on":
                     self.mic_btn.configure(text="■  STOP LISTENING", fg_color="#dc2626", state="normal")
                 elif kind == "mic_off":

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Halo - hands-free computing and money, guarded on-chain</title>
+<meta name="description" content="A voice and eye-gaze controlled desktop assistant whose spending is enforced on-chain by a Monad smart contract, so even a hijacked AI agent cannot overspend.">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23836EF9' stroke-width='5'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<script defer src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<script defer src="app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap">
+  <div class="brand"><i aria-hidden="true"></i><span data-name>Halo</span></div>
+  <nav aria-label="Primary"><a href="#problem">Problem</a><a href="#how">How it works</a><a href="#guardrails">Guardrails</a><a href="#live">Live</a><a href="#market">Market</a><a href="#run">Run it</a></nav>
+</div></header>
+
+<main id="main">
+<section class="hero"><div class="wrap">
+  <p class="eyebrow">Voice + eye-gaze assistant · Monad testnet</p>
+  <h1>Hands-free computing. Hands-free money. Guarded on-chain.</h1>
+  <p class="lead"><span data-name>Halo</span> lets people who cannot use a keyboard or mouse run their computer by voice and eye gaze, and pay people safely, because a smart contract, not the AI, has the final say on every payment.</p>
+  <div class="btns">
+    <a class="btn primary" data-repo href="#" rel="noopener">View GitHub</a>
+    <a class="btn" data-scan href="#" target="_blank" rel="noopener noreferrer">View contract</a>
+    <a class="btn" data-demo href="#" rel="noopener">Watch demo</a>
+  </div>
+  <span class="pill">Live on Monad testnet · chain ID 10143</span>
+</div></section>
+
+<section id="problem"><div class="wrap">
+  <p class="eyebrow">The problem</p>
+  <h2>An AI that can move money is a risk you cannot easily interrupt.</h2>
+  <div class="grid g2">
+    <div class="card"><h3>1.3 billion people</h3><p>According to the WHO, about 1.3 billion people live with a significant disability. Many cannot use a standard keyboard or mouse, and voice and gaze are their main way in.</p></div>
+    <div class="card"><h3>Hard to intervene</h3><p>If an AI agent hallucinates or is hijacked, a user who cannot quickly grab the controls has no safety net. Prompts and app-level checks can be bypassed. A contract's rules cannot.</p></div>
+  </div>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <p class="eyebrow">How it works</p>
+  <h2>Four steps from intent to a verified payment.</h2>
+  <ol class="steps grid g4">
+    <li class="card"><span class="step-n" aria-hidden="true">1</span><h3>Speak or look</h3><p>Voice commands, plus eye-gaze cursor control from a webcam.</p></li>
+    <li class="card"><span class="step-n" aria-hidden="true">2</span><h3>Orchestrator routes</h3><p>One agent picks the right specialist: System, Vision, Writer or Wallet.</p></li>
+    <li class="card"><span class="step-n" aria-hidden="true">3</span><h3>Guardian confirms</h3><p>Every money action waits for the human: say "confirm", double-blink, or press a button.</p></li>
+    <li class="card"><span class="step-n" aria-hidden="true">4</span><h3>GuardVault enforces</h3><p>The contract checks the limits and records how the payment was approved.</p></li>
+  </ol>
+  <figure class="diagram" style="margin-inline:0">
+    <svg viewBox="0 0 760 250" role="img" aria-labelledby="dt dd">
+      <title id="dt">Agent architecture</title>
+      <desc id="dd">The user's voice or gaze goes to the Orchestrator, which routes to System, Vision, Writer and Wallet agents. The Wallet agent passes through the Guardian, which asks the human to confirm, then calls the GuardVault contract on Monad.</desc>
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="arrow"/></marker></defs>
+      <rect class="box" x="10" y="95" width="110" height="60" rx="10"/><text x="65" y="122" text-anchor="middle">Voice / gaze</text><text class="sub" x="65" y="140" text-anchor="middle">the user</text>
+      <path class="ln" d="M120 125H160" marker-end="url(#ar)"/>
+      <rect class="hl" x="162" y="95" width="120" height="60" rx="10"/><text x="222" y="122" text-anchor="middle">Orchestrator</text><text class="sub" x="222" y="140" text-anchor="middle">routes intent</text>
+      <path class="ln" d="M282 110L330 40M282 118L330 98M282 132L330 152M282 140L330 210" marker-end="url(#ar)"/>
+      <rect class="box" x="332" y="15" width="100" height="40" rx="8"/><text x="382" y="40" text-anchor="middle">System</text>
+      <rect class="box" x="332" y="78" width="100" height="40" rx="8"/><text x="382" y="103" text-anchor="middle">Vision</text>
+      <rect class="box" x="332" y="132" width="100" height="40" rx="8"/><text x="382" y="157" text-anchor="middle">Writer</text>
+      <rect class="box" x="332" y="190" width="100" height="40" rx="8"/><text x="382" y="215" text-anchor="middle">Wallet</text>
+      <path class="ln" d="M432 210H470" marker-end="url(#ar)"/>
+      <rect class="hl" x="472" y="188" width="110" height="44" rx="10"/><text x="527" y="208" text-anchor="middle">Guardian</text><text class="sub" x="527" y="223" text-anchor="middle">human confirms</text>
+      <path class="ln" d="M582 210H620" marker-end="url(#ar)"/>
+      <rect class="hl" x="622" y="170" width="130" height="80" rx="10"/><text x="687" y="200" text-anchor="middle">GuardVault</text><text class="sub" x="687" y="218" text-anchor="middle">on Monad: limits</text><text class="sub" x="687" y="233" text-anchor="middle">+ approval log</text>
+    </svg>
+  </figure>
+</div></section>
+
+<section id="guardrails"><div class="wrap">
+  <p class="eyebrow">On-chain guardrails</p>
+  <h2>The AI proposes. The contract decides.</h2>
+  <p class="muted">Each user has a vault and a policy stored in the <strong>GuardVault</strong> contract. Rules live on-chain, so a compromised agent cannot talk its way around them.</p>
+  <div class="grid g3">
+    <div class="card"><h3>Per-transaction limit</h3><p>Any single payment above the cap reverts.</p></div>
+    <div class="card"><h3>Daily limit</h3><p>Total spend per UTC day is capped, however many small payments are tried.</p></div>
+    <div class="card"><h3>Trusted contacts only</h3><p>Optionally allow payments only to names saved in the user's on-chain contact book.</p></div>
+    <div class="card"><h3>Approved agent key</h3><p>Only the owner or one designated agent key can call the vault. Change or revoke it any time.</p></div>
+    <div class="card"><h3>Approval method, recorded forever</h3><p>Every payment logs whether it was approved by voice, double-blink or button, creating a permanent, auditable trail.</p></div>
+    <div class="card"><h3>Verified and open</h3><p>Source verified on Sourcify and MonadVision. <a data-vision href="#" target="_blank" rel="noopener noreferrer">Inspect it</a>.</p></div>
+  </div>
+</div></section>
+
+<section id="live"><div class="wrap">
+  <p class="eyebrow">Live on-chain activity</p>
+  <h2>Real payments, straight from Monad testnet.</h2>
+  <div class="stats">
+    <div class="card stat"><div class="k">Total transfers</div><div class="v" id="stat-transfers" aria-live="polite">-</div></div>
+    <div class="card stat"><div class="k">Total volume</div><div class="v"><span id="stat-volume" aria-live="polite">-</span> <small>MON</small></div></div>
+    <div class="card stat"><div class="k">GuardVault contract</div><code class="addr" data-addr></code>
+      <div class="row-links"><button class="btn sm" id="copy" type="button">Copy address</button><a class="btn sm" data-scan href="#" target="_blank" rel="noopener noreferrer">Monadscan</a><a class="btn sm" data-vision href="#" target="_blank" rel="noopener noreferrer">MonadVision</a></div></div>
+  </div>
+  <div id="feed-status" role="status" data-kind="loading">Loading on-chain activity…<button id="retry" class="btn sm" type="button" hidden>Retry</button></div>
+  <div class="tablewrap">
+    <table id="feed-table" hidden>
+      <caption class="muted" style="position:absolute;left:-9999px">Recent GuardedTransfer events</caption>
+      <thead><tr><th scope="col">Time</th><th scope="col">To</th><th scope="col">Amount</th><th scope="col">Approved by</th><th scope="col">Tx</th></tr></thead>
+      <tbody id="feed-body"></tbody>
+    </table>
+    <noscript><p class="ph">Enable JavaScript to see live on-chain activity, or open the contract on Monadscan.</p></noscript>
+  </div>
+  <p class="muted" style="font-size:.85rem;margin-top:10px">Reads the <code>GuardedTransfer</code> event directly from the public RPC. Recent history only; testnet MON has no value.</p>
+</div></section>
+
+<section id="market"><div class="wrap">
+  <p class="eyebrow">Why now</p>
+  <h2>Accessibility meets agent spending.</h2>
+  <p class="muted">Local multimodal models now run on a laptop, making voice and gaze control practical. At the same time, AI agents are starting to spend money, and nobody has settled how to limit them.</p>
+  <div class="grid g3">
+    <div class="card"><h3>Consumer accessibility</h3><p>A subscription for people who rely on voice and gaze, with safe payments built in.</p></div>
+    <div class="card"><h3>Agent spend-policy infrastructure</h3><p>Enterprises and developers need enforceable limits for agents that hold funds. GuardVault is a starting point.</p></div>
+    <div class="card"><h3>Policy-as-a-service</h3><p>Hosted policy templates, audit trails of human approval, and caregiver or guardian controls.</p></div>
+  </div>
+</div></section>
+
+<section id="run"><div class="wrap">
+  <p class="eyebrow">Run it yourself</p>
+  <h2>Try it on a Mac in a few commands.</h2>
+<pre><code>git clone <span data-repo-text>https://github.com/callmeharshh/REPLACE_ME</span>
+cd REPLACE_ME
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env     # add your keys
+python main.py</code></pre>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p><span data-name>Halo</span> was built at Monad Blitz Pune V3. It builds on the open-source <a href="https://github.com/Sourajit1234/GemGuide" target="_blank" rel="noopener noreferrer">GemGuide</a> by Sourajit (Gemma 4, EyeTrax, Parakeet), to whom full credit is due for the voice and gaze foundation. Our additions: the multi-agent system, the Guardian, and the GuardVault contract.</p>
+  <p>Testnet demo. Not financial advice and not a production wallet.</p>
+</div></footer>
+</body>
+</html>
