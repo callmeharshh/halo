@@ -41,6 +41,7 @@ cd halo
 source .venv/bin/activate
 python travel/server.py    # opens http://127.0.0.1:8780 : chat with the concierge live
 ```
+For a live demo, `./demo.sh` runs the preflight checks and then starts the live concierge in one go.
 To attest a place you need MetaMask on Monad Testnet with a little test MON ([faucet](https://faucet.monad.xyz)).
 
 ## The concierge: fourteen agents, one conversation

@@ -127,7 +127,7 @@ async def tts(request):
 
 
 async def index(request):
-    return web.FileResponse(os.path.join(DOCS, "journeys.html"))
+    return web.FileResponse(os.path.join(DOCS, "concierge.html"))
 
 
 def make_app(port):
