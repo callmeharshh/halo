@@ -13,6 +13,7 @@ Built at **Monad Blitz Pune V3**.
 | **Contract (Monad Testnet)** | [`0x3e89164abbc8852955F179D964B696a4b713418A`](https://testnet.monadscan.com/address/0x3e89164abbc8852955F179D964B696a4b713418A) |
 | **Verified source** | [MonadVision (Sourcify)](https://testnet.monadvision.com/address/0x3e89164abbc8852955F179D964B696a4b713418A) · [Monadscan](https://testnet.monadscan.com/address/0x3e89164abbc8852955F179D964B696a4b713418A) |
 | **Deploy tx** | [`0x43356d3c…1921b`](https://testnet.monadscan.com/tx/0x43356d3c4b6240ea3fada7a69ff3e6d68e455ed6a557fd40effa65bfd941921b) |
+| **Family Console** | https://callmeharshh.github.io/halo/console.html · [read-only demo vault](https://callmeharshh.github.io/halo/console.html?owner=0xb5848eF465b06Ade36461e0f49aE2809Bae08b98) (no wallet needed) |
 | **Network** | Monad Testnet, chain ID `10143` |
 | **Demo video** | _added before submission_ |
 
