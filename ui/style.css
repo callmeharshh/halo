@@ -216,3 +216,12 @@ table.ct{width:100%;border-collapse:collapse;font-size:.92rem}table.ct td,table.
 
 /* simplified demo: dictation mode is hidden to keep the product simple (code stays in the repo) */
 .seg[aria-label="Mode"]{display:none!important}
+
+/* quick setup checklist */
+.quicksteps{list-style:none;padding:0;margin:12px 0 4px;display:grid;gap:6px}
+.quicksteps li{position:relative;padding:8px 12px 8px 38px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.quicksteps li::before{content:"";position:absolute;left:12px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;border:2px solid var(--muted)}
+.quicksteps li.doing{border-color:var(--accent)} .quicksteps li.doing::before{border-color:var(--accent);border-top-color:transparent;animation:qspin .8s linear infinite}
+.quicksteps li.done{border-color:var(--ok)} .quicksteps li.done::before{background:var(--ok);border-color:var(--ok)}
+.quicksteps li.err{border-color:var(--err)} .quicksteps li.err::before{border-color:var(--err);background:var(--err)}
+@keyframes qspin{to{transform:rotate(360deg)}}

@@ -101,10 +101,11 @@ def main():
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((mix * 32767).astype(np.int16).tobytes())
     mp4 = os.path.join(OUT, "halo_ad.mp4")
     ff = subprocess.Popen([FFMPEG, "-y", "-loglevel", "error", "-f", "image2pipe", "-framerate", str(FPS), "-i", "-", "-i", wavp,
-                           "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", "-preset", "medium", "-c:a", "aac", "-b:a", "192k",
+                           "-vf", "scale=1280:720:flags=lanczos,format=yuv420p", "-c:v", "libx264", "-crf", "18", "-preset", "medium", "-c:a", "aac", "-b:a", "192k",
                            "-shortest", "-movflags", "+faststart", mp4], stdin=subprocess.PIPE)
     b = cdp.Chrome(1280, 720); t0 = time.time()
     try:
+        b.send("Emulation.setDeviceMetricsOverride", width=1280, height=720, deviceScaleFactor=1, mobile=False)  # exact 1280x720 viewport
         b.open("file://" + os.path.join(ROOT, "video", "ad.html"), settle=1)
         import base64
         for f in range(int(DUR * FPS)):

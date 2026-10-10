@@ -137,6 +137,15 @@
         <button class="bigbtn go needs-ws" id="oneBtn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Make this wallet the owner of this device and approve it</span></button>
         <p class="muted small">Two steps: approve the device in your wallet, then tell this device who its owner is.</p>
       </div>
+      <div class="oneclick" id="quick" hidden>
+        <button class="bigbtn go needs-ws" id="quickBtn" type="button"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Quick setup: fund the vault, set safe limits, add Alice</span></button>
+        <ol class="quicksteps small" id="quickSteps">
+          <li data-s="fund">Put <b>0.3 MON</b> in your vault (the money the assistant may use)</li>
+          <li data-s="rules">Limits: <b>0.1 MON per payment</b>, <b>0.3 MON per day</b>, trusted contacts only</li>
+          <li data-s="contact">Add <b>Alice</b> as a trusted contact (your own wallet unless you type another below)</li>
+        </ol>
+        <p class="muted small">Three MetaMask confirmations. You can change everything later.</p>
+      </div>
       <details class="lookup"><summary>No wallet? View a vault read-only</summary>
         <label for="lookup">Owner address</label>
         <div class="row"><input id="lookup" type="text" placeholder="0x… owner address" autocomplete="off"><button class="btn" id="lookupBtn" type="button">View</button></div>

@@ -119,15 +119,30 @@ async function refresh() {
   }
 }
 
+
+/* Confirm a transaction through OUR reliable RPCs. MetaMask's own RPC can hang or lag, so tx.wait() is not trusted. */
+async function waitReceipt(hash, timeoutMs) {
+  const urls = G.rpcs || [G.rpc]; const t0 = Date.now(); let i = 0;
+  while (Date.now() - t0 < (timeoutMs || 90000)) {
+    try {
+      const prov = new ethers.JsonRpcProvider(urls[i % urls.length], G.chainId, { staticNetwork: true, batchMaxCount: 1 });
+      const r = await prov.getTransactionReceipt(hash);
+      if (r) return r;
+    } catch (e) { i++; }
+    await new Promise((res) => setTimeout(res, 1200));
+  }
+  return null;
+}
+
 async function act(label, send) {
   if (!st.writable) { msg("err", "Connect the owner's wallet first."); return; }
   try {
     msg("wait", esc(label) + "… confirm in your wallet.");
     const tx = await send();
     msg("wait", esc(label) + "… sent " + txLink(tx.hash) + ", waiting for Monad to confirm.");
-    const r = await tx.wait();
-    if (r.status !== 1) throw new Error("transaction failed on-chain");
-    await refresh();
+    const r = await waitReceipt(tx.hash, 90000);
+    if (r && r.status !== 1) throw new Error("transaction failed on-chain");
+    try { await refresh(); } catch (e) { /* balances refresh on the next action */ }
     msg("ok", esc(label) + " done. " + txLink(tx.hash));
   } catch (e) {
     const code = e && (e.code === "ACTION_REJECTED" || e.code === 4001);

@@ -21,7 +21,7 @@ from aiohttp import WSMsgType, web
 from dotenv import load_dotenv
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-load_dotenv(os.path.join(ROOT, ".env"))
+load_dotenv(os.getenv("HALO_ENV_PATH") or os.path.join(ROOT, ".env"))
 
 import agents
 import wallet as wl
@@ -29,7 +29,7 @@ from gaze import GazeController
 from voice import Voice
 
 UI_DIR = os.path.join(ROOT, "ui")
-ENV_PATH = os.path.join(ROOT, ".env")
+ENV_PATH = os.getenv("HALO_ENV_PATH") or os.path.join(ROOT, ".env")  # tests point this at a temp file
 
 clients: set = set()
 loop: asyncio.AbstractEventLoop | None = None

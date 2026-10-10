@@ -77,7 +77,7 @@
   function updateOneClick() {
     const b = $("oneBtn"); if (!b) return;
     const ok = st.writable && isAddr(H.status.device) && H.up;
-    $("oneclick").hidden = !st.writable;
+    $("oneclick").hidden = !st.writable; if ($("quick")) $("quick").hidden = !st.writable;
     b.disabled = !ok;
     b.title = ok ? "" : !H.up ? "Waiting for the device connection" : "Waiting for the device address";
   }
@@ -169,15 +169,30 @@
       $("polMax").placeholder = ethers.formatEther(pol.maxPerTx); $("polDay").placeholder = ethers.formatEther(pol.dailyLimit); $("polTrust").checked = pol.trustedOnly;
     }
   }
+
+  /* Confirm a transaction through OUR reliable RPCs. MetaMask's own RPC can hang or lag, so tx.wait() is not trusted. */
+  async function waitReceipt(hash, timeoutMs) {
+    const urls = G.rpcs || [G.rpc]; const t0 = Date.now(); let i = 0;
+    while (Date.now() - t0 < (timeoutMs || 90000)) {
+      try {
+        const prov = new ethers.JsonRpcProvider(urls[i % urls.length], G.chainId, { staticNetwork: true, batchMaxCount: 1 });
+        const r = await prov.getTransactionReceipt(hash);
+        if (r) return r;
+      } catch (e) { i++; }
+      await new Promise((res) => setTimeout(res, 1200));
+    }
+    return null;
+  }
   async function act(label, send, quiet) {
     if (!st.writable) { msg("err", "Connect the owner's wallet first."); return false; }
     try {
       msg("wait", esc(label) + "… confirm in your wallet.");
       const tx = await send();
       msg("wait", esc(label) + "… sent " + txLink(tx.hash) + ", waiting for Monad to confirm.");
-      const r = await tx.wait();
-      if (r.status !== 1) throw new Error("transaction failed on-chain");
-      await refresh();
+      const r = await waitReceipt(tx.hash, 90000);
+      if (r && r.status !== 1) throw new Error("transaction failed on-chain");
+      if (!r) msg("wait", esc(label) + ": sent " + txLink(tx.hash) + ". Monad is slow to confirm; it should land shortly (check the explorer).");
+      try { await refresh(); } catch (e) { /* balances refresh on the next poll */ }
       if (!quiet) msg("ok", esc(label) + " done. " + txLink(tx.hash));
       return tx.hash;
     } catch (e) {
@@ -201,8 +216,10 @@
     busy = true; $("oneBtn").disabled = true;
     try {
       const addr = st.owner;
+      H.toast("info", "Step 1 of 2: approve the device", { sub: "Confirm in MetaMask, then wait a few seconds." });
       const hash = await act("Step 1 of 2: approving this device", () => st.write.setAgent(ethers.getAddress(dev)), true);
       if (!hash) return;
+      H.toast("info", "Step 2 of 2: linking this device to your wallet");
       msg("wait", "Step 2 of 2: telling this device you are its owner…");
       if (!H.send({ type: "set_owner", address: addr })) { msg("err", "Device approved, but the device connection dropped. Press the button again once it reconnects."); return; }
       const ok = await waitOwner(addr, 6000);
@@ -210,6 +227,40 @@
       H.toast("ok", "This wallet now owns the device", { sub: "The device can spend only inside your rules." });
     } finally { busy = false; updateOneClick(); }
   }
+  /* Quick setup: fund the vault, set safe limits, add Alice. Visible checklist; each step is one MetaMask confirmation. */
+  let quickBusy = false;
+  async function quickSetup() {
+    if (quickBusy) return;
+    if (!st.writable) { msg("err", "Connect MetaMask first."); return; }
+    const D = window.HALO_QUICK_DEFAULTS || { deposit: "0.3", max: "0.1", day: "0.3" };
+    const mark = (k, cls) => { const li = document.querySelector(`#quickSteps li[data-s="${k}"]`); if (li) li.className = cls; };
+    quickBusy = true; $("quickBtn").disabled = true;
+    ["fund", "rules", "contact"].forEach((k) => mark(k, ""));
+    try {
+      mark("fund", "doing");
+      let have = 0n; try { have = await st.read.balanceOf(st.owner); } catch (e) { /* treat as empty */ }
+      const want = ethers.parseEther(D.deposit);
+      if (have < want) {
+        const ok = await act("Funding the vault", () => st.write.deposit({ value: want - have }), true);
+        if (!ok) { mark("fund", "err"); return; }
+      }
+      mark("fund", "done");
+      mark("rules", "doing");
+      const ok2 = await act("Setting safe limits", () => st.write.setPolicy(ethers.parseEther(D.max), ethers.parseEther(D.day), true), true);
+      if (!ok2) { mark("rules", "err"); return; }
+      mark("rules", "done");
+      mark("contact", "doing");
+      const typed = $("ctAddr") ? $("ctAddr").value.trim() : "";
+      const alice = ethers.isAddress(typed) ? ethers.getAddress(typed) : ethers.getAddress(st.owner);
+      const ok3 = await act("Adding Alice", () => st.write.setContact("alice", alice), true);
+      if (!ok3) { mark("contact", "err"); return; }
+      mark("contact", "done");
+      msg("ok", "All set. Now say: \"Send 0.05 MON to Alice\".");
+      H.toast("ok", "Setup complete", { sub: 'Try: "Send 0.05 MON to Alice"' });
+      H.send({ type: "refresh" });
+    } finally { quickBusy = false; $("quickBtn").disabled = false; }
+  }
+
   function waitOwner(addr, ms) {
     return new Promise((res) => {
       const t0 = Date.now();
@@ -225,6 +276,7 @@
     st.ready = true;
     $("connect").addEventListener("click", connect);
     $("oneBtn").addEventListener("click", oneClick);
+    if ($("quickBtn")) $("quickBtn").addEventListener("click", quickSetup);
     $("lookupBtn").addEventListener("click", lookup);
     $("lookup").addEventListener("keydown", (e) => { if (e.key === "Enter") lookup(); });
     $("fDeposit").addEventListener("submit", (e) => { e.preventDefault(); const v = amount("depAmt", "amount"); if (v) act("Depositing", () => st.write.deposit({ value: v })); });

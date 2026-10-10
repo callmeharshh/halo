@@ -12,7 +12,7 @@ from eth_account import Account
 from safety import match_contact
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-load_dotenv(os.path.join(BASE_DIR, ".env"))
+load_dotenv(os.getenv("HALO_ENV_PATH") or os.path.join(BASE_DIR, ".env"))
 
 # Public RPCs sometimes return empty/failed results under load. Measured: Ankr was the most reliable from browsers.
 # We keep several endpoints and rotate on transient failures (never on a contract revert, which is a real answer).
