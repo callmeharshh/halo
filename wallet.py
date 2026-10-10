@@ -31,6 +31,12 @@ if os.path.exists(_DEPLOY):
     VAULT_ADDRESS = Web3.to_checksum_address(_d["address"])
     vault = w3.eth.contract(address=VAULT_ADDRESS, abi=_d["abi"])
 
+# OWNER = whose vault/policy/contacts we spend from. Solo mode: this wallet. Family mode (VAULT_OWNER set): a family
+# member's wallet owns the vault and sets the rules; this device only holds the agent key and cannot change them.
+OWNER = (Web3.to_checksum_address(os.environ["VAULT_OWNER"]) if os.getenv("VAULT_OWNER")
+         else (_acct.address if _acct else None))
+FAMILY_MODE = bool(_acct and OWNER and OWNER != _acct.address)
+
 DEFAULT_CONTACTS = {
     # Demo contacts. Edit contacts.json (or say "add contact ...") to change.
     "alice": "0x7321B96eC8A116652C4d701371BEa23B6d199b39",
@@ -58,6 +64,8 @@ def save_contacts(c: dict):
 def add_contact(name: str, address: str) -> str:
     if not Web3.is_address(address):
         raise WalletError(f"'{address}' is not a valid address.")
+    if FAMILY_MODE:
+        raise WalletError("Only your family can add contacts. Ask them to add this person in the Family Console.")
     key = re.sub(r"[^a-z0-9 ]", "", name.lower()).strip()
     c = load_contacts()
     c[key] = Web3.to_checksum_address(address)
@@ -68,6 +76,17 @@ def add_contact(name: str, address: str) -> str:
     return f"Saved contact {name}."
 
 
+def contact_book() -> dict:
+    """name -> address from the owner's ON-CHAIN contact book (falls back to the local mirror if offline)."""
+    if vault is not None and OWNER:
+        try:
+            names, addrs = vault.functions.contactsOf(OWNER).call()
+            return {n: Web3.to_checksum_address(a) for n, a in zip(names, addrs)}
+        except Exception:
+            pass
+    return {k: Web3.to_checksum_address(v) for k, v in load_contacts().items()}
+
+
 def resolve_recipient(who: str) -> tuple[str, str]:
     """Return (label, checksum address) for a contact name or 0x address."""
     who = who.strip()
@@ -75,19 +94,11 @@ def resolve_recipient(who: str) -> tuple[str, str]:
         addr = Web3.to_checksum_address(who)
         return addr[:6] + "…" + addr[-4:], addr
     key = re.sub(r"[^a-z0-9 ]", "", who.lower()).strip()
-    matched, why = match_contact(key, list(load_contacts().keys()))  # tolerate mishearing, refuse ambiguity
+    book = contact_book()
+    matched, why = match_contact(key, list(book.keys()))  # tolerate mishearing, refuse ambiguity
     if matched is None:
         raise WalletError(f"I couldn't be sure who you meant: {why}. Please say the name again.")
-    key = matched
-    if vault is not None and _acct is not None and key:
-        try:
-            onchain = vault.functions.contactOf(_acct.address, key).call()
-            if int(onchain, 16) != 0:
-                return key.title(), Web3.to_checksum_address(onchain)
-        except Exception:
-            pass  # fall back to the local mirror below
-    c = load_contacts()
-    return key.title(), Web3.to_checksum_address(c[key])
+    return matched.title(), book[matched]
 
 
 # ── reads ───────────────────────────────────────────────────────────────────
@@ -104,19 +115,21 @@ def balance(addr: str | None = None) -> Decimal:
 
 
 def vault_balance() -> Decimal:
-    """MON the user has deposited in their GuardVault (what the agent is allowed to spend)."""
+    """MON in the OWNER's GuardVault (what this agent is allowed to spend)."""
     if vault is None:
         return balance()
-    return Decimal(w3.from_wei(vault.functions.balanceOf(address()).call(), "ether"))
+    return Decimal(w3.from_wei(vault.functions.balanceOf(OWNER).call(), "ether"))
 
 
 def policy() -> dict:
-    """The spending policy enforced on-chain by GuardVault."""
+    """The spending policy enforced on-chain by GuardVault (set by the owner, not by this device)."""
     if vault is None:
-        return {"configured": False, "max_per_tx": MAX_SEND, "daily_limit": MAX_SEND, "trusted_only": False}
-    p = vault.functions.policyOf(address()).call()  # (configured, trustedOnly, maxPerTx, dailyLimit, agent)
-    return {"configured": p[0], "trusted_only": p[1],
-            "max_per_tx": Decimal(w3.from_wei(p[2], "ether")), "daily_limit": Decimal(w3.from_wei(p[3], "ether"))}
+        return {"configured": False, "max_per_tx": MAX_SEND, "daily_limit": MAX_SEND, "trusted_only": False,
+                "paused": False, "agent_ok": True}
+    p = vault.functions.policyOf(OWNER).call()  # (configured, trustedOnly, paused, maxPerTx, dailyLimit, agent)
+    return {"configured": p[0], "trusted_only": p[1], "paused": p[2],
+            "max_per_tx": Decimal(w3.from_wei(p[3], "ether")), "daily_limit": Decimal(w3.from_wei(p[4], "ether")),
+            "agent_ok": (p[5].lower() == address().lower()) or not FAMILY_MODE}
 
 
 def tx_status(tx_hash: str) -> str:
@@ -173,6 +186,10 @@ def prepare_transfer(to: str, amount) -> dict:
     label, addr = resolve_recipient(to)
     amt = parse_amount(amount)
     pol = policy()
+    if pol["paused"]:
+        raise WalletError("Payments are paused by your family.")
+    if not pol["agent_ok"]:
+        raise WalletError("This device is not approved to spend. Ask your family to approve it in the Family Console.")
     if amt > pol["max_per_tx"]:
         raise WalletError(f"That is above your safety limit of {pol['max_per_tx'].normalize():f} MON per transfer.")
     bal = vault_balance()
@@ -188,7 +205,7 @@ def send_mon(prep: dict, approved_by: str = "voice") -> str:
     if vault is None:
         raise WalletError("GuardVault is not deployed.")
     fn = vault.functions.guardedSend(
-        _acct.address, prep.get("contact", ""),
+        OWNER, prep.get("contact", ""),
         prep["to"] if not prep.get("contact") else "0x0000000000000000000000000000000000000000",
         w3.to_wei(prep["amount"], "ether"), approved_by,
     )

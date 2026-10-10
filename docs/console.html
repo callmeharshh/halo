@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Halo Family Console - set the rules, on-chain</title>
+<meta name="description" content="Family console for Halo: fund a vault, set spending limits, trusted contacts and approve or pause the assistant's device. Rules are enforced by a Monad smart contract.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23836EF9' stroke-width='5'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<style>
+.cgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.cgrid>.card{display:flex;flex-direction:column;gap:10px}
+label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:4px}
+input[type=text],input[type=number]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font:inherit}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);vertical-align:middle}
+.frow{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.95rem}
+.kv dt{color:var(--muted)} .kv dd{margin:0;word-break:break-all}
+.mono{font-family:ui-monospace,Menlo,monospace;font-size:.85rem}
+#msg{margin:16px 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);min-height:48px}
+#msg[data-kind=ok]{border-color:var(--ok)} #msg[data-kind=err]{border-color:var(--err)} #msg[data-kind=wait]{border-color:var(--warn)}
+.tag{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.8rem;border:1px solid var(--line)}
+.tag.ok{color:var(--ok);border-color:var(--ok)} .tag.warn{color:var(--warn);border-color:var(--warn)} .tag.err{color:var(--err);border-color:var(--err)}
+table.ct{width:100%;border-collapse:collapse;font-size:.92rem} table.ct td,table.ct th{padding:6px 4px;text-align:left;border-bottom:1px solid var(--line)}
+button.mini{padding:4px 10px;font-size:.8rem}
+</style>
+<script src="contract.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<script defer src="console.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;padding-top:14px;padding-bottom:14px">
+  <a class="brand" href="./" style="text-decoration:none;color:inherit"><span style="display:inline-block;width:12px;height:12px;border:3px solid var(--accent);border-radius:50%;margin-right:8px"></span><strong data-name>Halo</strong> · Family Console</a>
+  <a class="btn" href="./">Back to site</a>
+</div></header>
+
+<main id="main"><div class="wrap">
+  <p class="eyebrow">For the family</p>
+  <h1 style="margin-top:0">You set the rules. The contract enforces them.</h1>
+  <p class="muted" style="max-width:720px">Your parent's or relative's device runs the assistant, but it holds only an <strong>agent key</strong>: it can spend from <em>your</em> vault inside the limits you set here, and it cannot change them. Pause or revoke it any time. Everything below is a real transaction on Monad testnet.</p>
+
+  <div class="btns" style="margin:18px 0">
+    <button class="btn primary" id="connect" type="button">Connect wallet</button>
+    <span id="who" class="muted"></span>
+  </div>
+  <div style="max-width:560px;margin-bottom:8px">
+    <label for="lookup">No wallet? View any owner's vault read-only</label>
+    <div style="display:flex;gap:8px"><input id="lookup" type="text" placeholder="0x… owner address" autocomplete="off"><button class="btn" id="lookupBtn" type="button">View</button></div>
+  </div>
+  <div id="msg" role="status" aria-live="polite" data-kind="idle">Connect a wallet to manage a vault, or paste an address above to look at one.</div>
+
+  <section style="padding:8px 0 24px" id="dash" hidden>
+    <div class="cgrid">
+      <div class="card"><h3 style="margin:0">Vault</h3>
+        <dl class="kv">
+          <dt>Owner</dt><dd class="mono" id="vOwner">-</dd>
+          <dt>Balance</dt><dd id="vBal">-</dd>
+          <dt>Spent today</dt><dd id="vSpent">-</dd>
+          <dt>Status</dt><dd id="vStatus">-</dd>
+          <dt>Approved device</dt><dd class="mono" id="vAgent">-</dd>
+        </dl>
+      </div>
+      <div class="card"><h3 style="margin:0">Rules in force</h3>
+        <dl class="kv">
+          <dt>Per payment</dt><dd id="pMax">-</dd>
+          <dt>Per day</dt><dd id="pDay">-</dd>
+          <dt>Recipients</dt><dd id="pTrust">-</dd>
+        </dl>
+        <p class="muted" style="margin:0;font-size:.85rem">A payment over these limits is rejected by the contract, whatever the AI says.</p>
+      </div>
+      <div class="card"><h3 style="margin:0">Trusted contacts</h3>
+        <table class="ct"><thead><tr><th>Name</th><th>Address</th><th></th></tr></thead><tbody id="cBody"></tbody></table>
+        <p class="muted" id="cEmpty" style="margin:0" hidden>No contacts yet.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:0 0 56px" id="actions" hidden>
+    <h2 style="margin-top:0">Manage</h2>
+    <div class="cgrid">
+      <form class="card" id="fDeposit"><h3 style="margin:0">Add funds</h3>
+        <div><label for="depAmt">Amount (MON)</label><input id="depAmt" type="number" step="any" min="0" placeholder="0.5"></div>
+        <button class="btn primary" type="submit">Deposit to vault</button>
+        <button class="btn" type="button" id="withdrawAll">Withdraw everything</button>
+      </form>
+
+      <form class="card" id="fPolicy"><h3 style="margin:0">Spending rules</h3>
+        <div class="frow">
+          <div><label for="polMax">Max per payment (MON)</label><input id="polMax" type="number" step="any" min="0" placeholder="0.1"></div>
+          <div><label for="polDay">Max per day (MON)</label><input id="polDay" type="number" step="any" min="0" placeholder="0.3"></div>
+        </div>
+        <label style="display:flex;gap:10px;align-items:center;color:var(--text)"><input id="polTrust" type="checkbox"> Only pay people in the trusted contacts list</label>
+        <button class="btn primary" type="submit">Save rules</button>
+      </form>
+
+      <form class="card" id="fAgent"><h3 style="margin:0">Approve the assistant's device</h3>
+        <div><label for="agAddr">Device address (shown in the Halo app)</label><input id="agAddr" type="text" placeholder="0x…" autocomplete="off"></div>
+        <button class="btn primary" type="submit">Approve this device</button>
+        <div class="frow"><button class="btn" type="button" id="pauseBtn">Pause payments</button><button class="btn" type="button" id="revokeBtn">Revoke device</button></div>
+      </form>
+
+      <form class="card" id="fContact"><h3 style="margin:0">Add a trusted contact</h3>
+        <div class="frow">
+          <div><label for="ctName">Name (letters/numbers)</label><input id="ctName" type="text" maxlength="32" placeholder="ramesh" autocomplete="off"></div>
+          <div><label for="ctAddr">Wallet address</label><input id="ctAddr" type="text" placeholder="0x…" autocomplete="off"></div>
+        </div>
+        <button class="btn primary" type="submit">Save contact</button>
+      </form>
+    </div>
+  </section>
+
+  <p class="muted" style="font-size:.85rem;padding-bottom:40px">Contract <a id="cLink" href="#" rel="noopener noreferrer" target="_blank" class="mono"></a> on Monad testnet (chain 10143). Testnet only: use a throwaway wallet.</p>
+</div></main>
+</body>
+</html>

@@ -1,0 +1,453 @@
+{
+  "contract": "GuardVault",
+  "address": "0xD8337b5C8F0a18ad72C183C6292BA260ad2c57d6",
+  "chainId": 10143,
+  "network": "Monad Testnet",
+  "deployTx": "0x2c17553ab9a7874a58b38674d3a40a4a699de4fac070f4cb3f2addf36f0cf3b4",
+  "deployer": "0xF54224dcD8eCD1D38c59a9e38Da333f3939402Ed",
+  "block": 69756876,
+  "solc": "0.8.26",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "agent",
+          "type": "address"
+        }
+      ],
+      "name": "AgentSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "who",
+          "type": "address"
+        }
+      ],
+      "name": "ContactSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Deposited",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "contactName",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "approvedBy",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "GuardedTransfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint128",
+          "name": "maxPerTx",
+          "type": "uint128"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint128",
+          "name": "dailyLimit",
+          "type": "uint128"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "trustedOnly",
+          "type": "bool"
+        }
+      ],
+      "name": "PolicySet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Withdrawn",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "name": "contactOf",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "currentDay",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "deposit",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "contactName",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "approvedBy",
+          "type": "string"
+        }
+      ],
+      "name": "guardedSend",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "policyOf",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "configured",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "trustedOnly",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint128",
+          "name": "maxPerTx",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint128",
+          "name": "dailyLimit",
+          "type": "uint128"
+        },
+        {
+          "internalType": "address",
+          "name": "agent",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "agent",
+          "type": "address"
+        }
+      ],
+      "name": "setAgent",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "who",
+          "type": "address"
+        }
+      ],
+      "name": "setContact",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint128",
+          "name": "maxPerTx",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint128",
+          "name": "dailyLimit",
+          "type": "uint128"
+        },
+        {
+          "internalType": "bool",
+          "name": "trustedOnly",
+          "type": "bool"
+        }
+      ],
+      "name": "setPolicy",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "spentInDay",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalTransfers",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalVolume",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ],
+  "standardInput": {
+    "language": "Solidity",
+    "sources": {
+      "contracts/GuardVault.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.26;\n\n/// @title GuardVault\n/// @notice On-chain guardrails for AI agents that move money on behalf of people who cannot use a\n///         keyboard or mouse (voice / eye-gaze controlled). Every user has their own vault, spending\n///         policy, trusted contact book and approved agent key. The policy is enforced by the contract,\n///         so even a hijacked or hallucinating AI agent cannot exceed what the user allowed.\n///         Every transfer records HOW it was approved (voice, double-blink, button, ...).\ncontract GuardVault {\n    struct Policy {\n        bool configured;\n        bool trustedOnly;   // only pay addresses saved in the user's contact book\n        uint128 maxPerTx;   // wei; 0 = nothing may be sent\n        uint128 dailyLimit; // wei per UTC day\n        address agent;      // hot key (the voice agent) allowed to call guardedSend for the user\n    }\n\n    mapping(address => uint256) public balanceOf;\n    mapping(address => Policy) public policyOf;\n    mapping(address => mapping(bytes32 => address)) private _contacts;\n    mapping(address => uint256) public spentInDay;\n    mapping(address => uint256) public currentDay;\n\n    uint256 public totalTransfers;\n    uint256 public totalVolume;\n\n    event Deposited(address indexed owner, uint256 amount);\n    event Withdrawn(address indexed owner, uint256 amount);\n    event PolicySet(address indexed owner, uint128 maxPerTx, uint128 dailyLimit, bool trustedOnly);\n    event AgentSet(address indexed owner, address indexed agent);\n    event ContactSet(address indexed owner, string name, address indexed who);\n    event GuardedTransfer(\n        address indexed owner,\n        address indexed to,\n        string contactName,\n        uint256 amount,\n        string approvedBy,\n        uint256 timestamp\n    );\n\n    uint256 private _lock = 1;\n\n    modifier nonReentrant() {\n        require(_lock == 1, \"reentrancy\");\n        _lock = 2;\n        _;\n        _lock = 1;\n    }\n\n    // \u2500\u2500 funds \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    function deposit() external payable {\n        require(msg.value > 0, \"no value\");\n        balanceOf[msg.sender] += msg.value;\n        emit Deposited(msg.sender, msg.value);\n    }\n\n    receive() external payable {\n        balanceOf[msg.sender] += msg.value;\n        emit Deposited(msg.sender, msg.value);\n    }\n\n    function withdraw(uint256 amount) external nonReentrant {\n        require(balanceOf[msg.sender] >= amount, \"insufficient balance\");\n        balanceOf[msg.sender] -= amount;\n        (bool ok,) = msg.sender.call{value: amount}(\"\");\n        require(ok, \"withdraw failed\");\n        emit Withdrawn(msg.sender, amount);\n    }\n\n    // \u2500\u2500 configuration (owner only) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    function setPolicy(uint128 maxPerTx, uint128 dailyLimit, bool trustedOnly) external {\n        Policy storage p = policyOf[msg.sender];\n        p.configured = true;\n        p.maxPerTx = maxPerTx;\n        p.dailyLimit = dailyLimit;\n        p.trustedOnly = trustedOnly;\n        emit PolicySet(msg.sender, maxPerTx, dailyLimit, trustedOnly);\n    }\n\n    function setAgent(address agent) external {\n        policyOf[msg.sender].agent = agent;\n        emit AgentSet(msg.sender, agent);\n    }\n\n    /// @param name lowercase contact name, e.g. \"alice\" (clients normalise before calling)\n    function setContact(string calldata name, address who) external {\n        require(who != address(0), \"zero address\");\n        require(bytes(name).length > 0 && bytes(name).length <= 32, \"bad name\");\n        _contacts[msg.sender][keccak256(bytes(name))] = who;\n        emit ContactSet(msg.sender, name, who);\n    }\n\n    function contactOf(address owner, string calldata name) external view returns (address) {\n        return _contacts[owner][keccak256(bytes(name))];\n    }\n\n    // \u2500\u2500 the guarded transfer \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    /// @notice Send MON from `owner`'s vault. Callable by the owner or their approved agent key.\n    /// @param contactName if non-empty, the recipient is resolved from the owner's on-chain contacts\n    /// @param to          raw recipient, only used when contactName is empty (and trustedOnly is off)\n    /// @param approvedBy  how the human approved it: \"voice\", \"double-blink\", \"button\", ...\n    function guardedSend(\n        address owner,\n        string calldata contactName,\n        address to,\n        uint256 amount,\n        string calldata approvedBy\n    ) external nonReentrant {\n        Policy memory p = policyOf[owner];\n        require(p.configured, \"policy not set\");\n        require(msg.sender == owner || msg.sender == p.agent, \"not owner or agent\");\n\n        address dest = to;\n        if (bytes(contactName).length > 0) {\n            dest = _contacts[owner][keccak256(bytes(contactName))];\n            require(dest != address(0), \"unknown contact\");\n        } else {\n            require(!p.trustedOnly, \"recipient not a saved contact\");\n        }\n        require(dest != address(0), \"zero recipient\");\n        require(amount > 0, \"zero amount\");\n        require(amount <= p.maxPerTx, \"exceeds per-transaction limit\");\n\n        uint256 today = block.timestamp / 1 days;\n        if (currentDay[owner] != today) {\n            currentDay[owner] = today;\n            spentInDay[owner] = 0;\n        }\n        require(spentInDay[owner] + amount <= p.dailyLimit, \"exceeds daily limit\");\n        require(balanceOf[owner] >= amount, \"insufficient vault balance\");\n\n        spentInDay[owner] += amount;\n        balanceOf[owner] -= amount;\n        totalTransfers += 1;\n        totalVolume += amount;\n\n        (bool ok,) = dest.call{value: amount}(\"\");\n        require(ok, \"transfer failed\");\n        emit GuardedTransfer(owner, dest, contactName, amount, approvedBy, block.timestamp);\n    }\n}\n"
+      }
+    },
+    "settings": {
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "evmVersion": "cancun",
+      "metadata": {
+        "bytecodeHash": "none",
+        "useLiteralContent": true
+      },
+      "outputSelection": {
+        "*": {
+          "*": [
+            "abi",
+            "evm.bytecode.object",
+            "metadata"
+          ]
+        }
+      }
+    }
+  }
+}

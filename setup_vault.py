@@ -25,6 +25,8 @@ def main():
     if wl.vault is None:
         sys.exit("contracts/deployment.json not found.")
     me = wl.address()
+    if wl.FAMILY_MODE:
+        sys.exit("VAULT_OWNER is set: your family manages the vault in the Family Console. Remove VAULT_OWNER from .env for solo mode.")
     print(f"Wallet:      {me}\nGuardVault:  {wl.VAULT_ADDRESS}\nWallet bal:  {wl.balance():.4f} MON")
     if wl.balance() < Decimal("0.05"):
         sys.exit("Fund this wallet first: https://faucet.monad.xyz")

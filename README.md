@@ -10,9 +10,9 @@ Built at **Monad Blitz Pune V3**.
 |---|---|
 | **Live site** | https://callmeharshh.github.io/halo/ (live on-chain feed of real payments) |
 | **GitHub repo** | https://github.com/callmeharshh/halo |
-| **Contract (Monad Testnet)** | [`0xD8337b5C8F0a18ad72C183C6292BA260ad2c57d6`](https://testnet.monadscan.com/address/0xD8337b5C8F0a18ad72C183C6292BA260ad2c57d6) |
-| **Verified source** | [MonadVision (Sourcify)](https://testnet.monadvision.com/address/0xD8337b5C8F0a18ad72C183C6292BA260ad2c57d6) · [Monadscan](https://testnet.monadscan.com/address/0xD8337b5C8F0a18ad72C183C6292BA260ad2c57d6) |
-| **Deploy tx** | [`0x2c17553a…cf3b4`](https://testnet.monadscan.com/tx/0x2c17553ab9a7874a58b38674d3a40a4a699de4fac070f4cb3f2addf36f0cf3b4) |
+| **Contract (Monad Testnet)** | [`0x3e89164abbc8852955F179D964B696a4b713418A`](https://testnet.monadscan.com/address/0x3e89164abbc8852955F179D964B696a4b713418A) |
+| **Verified source** | [MonadVision (Sourcify)](https://testnet.monadvision.com/address/0x3e89164abbc8852955F179D964B696a4b713418A) · [Monadscan](https://testnet.monadscan.com/address/0x3e89164abbc8852955F179D964B696a4b713418A) |
+| **Deploy tx** | [`0x43356d3c…1921b`](https://testnet.monadscan.com/tx/0x43356d3c4b6240ea3fada7a69ff3e6d68e455ed6a557fd40effa65bfd941921b) |
 | **Network** | Monad Testnet, chain ID `10143` |
 | **Demo video** | _added before submission_ |
 

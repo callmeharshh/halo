@@ -1,11 +1,11 @@
 {
   "contract": "GuardVault",
-  "address": "0xD8337b5C8F0a18ad72C183C6292BA260ad2c57d6",
+  "address": "0x3e89164abbc8852955F179D964B696a4b713418A",
   "chainId": 10143,
   "network": "Monad Testnet",
-  "deployTx": "0x2c17553ab9a7874a58b38674d3a40a4a699de4fac070f4cb3f2addf36f0cf3b4",
+  "deployTx": "0x43356d3c4b6240ea3fada7a69ff3e6d68e455ed6a557fd40effa65bfd941921b",
   "deployer": "0xF54224dcD8eCD1D38c59a9e38Da333f3939402Ed",
-  "block": 69756876,
+  "block": 69763475,
   "solc": "0.8.26",
   "abi": [
     {
@@ -25,6 +25,25 @@
         }
       ],
       "name": "AgentSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "name": "ContactRemoved",
       "type": "event"
     },
     {
@@ -125,6 +144,25 @@
         },
         {
           "indexed": false,
+          "internalType": "bool",
+          "name": "paused",
+          "type": "bool"
+        }
+      ],
+      "name": "PausedSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
           "internalType": "uint128",
           "name": "maxPerTx",
           "type": "uint128"
@@ -165,6 +203,19 @@
       "type": "event"
     },
     {
+      "inputs": [],
+      "name": "MAX_CONTACTS",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -202,6 +253,30 @@
           "internalType": "address",
           "name": "",
           "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "contactsOf",
+      "outputs": [
+        {
+          "internalType": "string[]",
+          "name": "names",
+          "type": "string[]"
+        },
+        {
+          "internalType": "address[]",
+          "name": "addrs",
+          "type": "address[]"
         }
       ],
       "stateMutability": "view",
@@ -287,6 +362,11 @@
           "type": "bool"
         },
         {
+          "internalType": "bool",
+          "name": "paused",
+          "type": "bool"
+        },
+        {
           "internalType": "uint128",
           "name": "maxPerTx",
           "type": "uint128"
@@ -303,6 +383,19 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "name": "removeContact",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -332,6 +425,19 @@
         }
       ],
       "name": "setContact",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "paused",
+          "type": "bool"
+        }
+      ],
+      "name": "setPaused",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -426,7 +532,7 @@
     "language": "Solidity",
     "sources": {
       "contracts/GuardVault.sol": {
-        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.26;\n\n/// @title GuardVault\n/// @notice On-chain guardrails for AI agents that move money on behalf of people who cannot use a\n///         keyboard or mouse (voice / eye-gaze controlled). Every user has their own vault, spending\n///         policy, trusted contact book and approved agent key. The policy is enforced by the contract,\n///         so even a hijacked or hallucinating AI agent cannot exceed what the user allowed.\n///         Every transfer records HOW it was approved (voice, double-blink, button, ...).\ncontract GuardVault {\n    struct Policy {\n        bool configured;\n        bool trustedOnly;   // only pay addresses saved in the user's contact book\n        uint128 maxPerTx;   // wei; 0 = nothing may be sent\n        uint128 dailyLimit; // wei per UTC day\n        address agent;      // hot key (the voice agent) allowed to call guardedSend for the user\n    }\n\n    mapping(address => uint256) public balanceOf;\n    mapping(address => Policy) public policyOf;\n    mapping(address => mapping(bytes32 => address)) private _contacts;\n    mapping(address => uint256) public spentInDay;\n    mapping(address => uint256) public currentDay;\n\n    uint256 public totalTransfers;\n    uint256 public totalVolume;\n\n    event Deposited(address indexed owner, uint256 amount);\n    event Withdrawn(address indexed owner, uint256 amount);\n    event PolicySet(address indexed owner, uint128 maxPerTx, uint128 dailyLimit, bool trustedOnly);\n    event AgentSet(address indexed owner, address indexed agent);\n    event ContactSet(address indexed owner, string name, address indexed who);\n    event GuardedTransfer(\n        address indexed owner,\n        address indexed to,\n        string contactName,\n        uint256 amount,\n        string approvedBy,\n        uint256 timestamp\n    );\n\n    uint256 private _lock = 1;\n\n    modifier nonReentrant() {\n        require(_lock == 1, \"reentrancy\");\n        _lock = 2;\n        _;\n        _lock = 1;\n    }\n\n    // \u2500\u2500 funds \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    function deposit() external payable {\n        require(msg.value > 0, \"no value\");\n        balanceOf[msg.sender] += msg.value;\n        emit Deposited(msg.sender, msg.value);\n    }\n\n    receive() external payable {\n        balanceOf[msg.sender] += msg.value;\n        emit Deposited(msg.sender, msg.value);\n    }\n\n    function withdraw(uint256 amount) external nonReentrant {\n        require(balanceOf[msg.sender] >= amount, \"insufficient balance\");\n        balanceOf[msg.sender] -= amount;\n        (bool ok,) = msg.sender.call{value: amount}(\"\");\n        require(ok, \"withdraw failed\");\n        emit Withdrawn(msg.sender, amount);\n    }\n\n    // \u2500\u2500 configuration (owner only) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    function setPolicy(uint128 maxPerTx, uint128 dailyLimit, bool trustedOnly) external {\n        Policy storage p = policyOf[msg.sender];\n        p.configured = true;\n        p.maxPerTx = maxPerTx;\n        p.dailyLimit = dailyLimit;\n        p.trustedOnly = trustedOnly;\n        emit PolicySet(msg.sender, maxPerTx, dailyLimit, trustedOnly);\n    }\n\n    function setAgent(address agent) external {\n        policyOf[msg.sender].agent = agent;\n        emit AgentSet(msg.sender, agent);\n    }\n\n    /// @param name lowercase contact name, e.g. \"alice\" (clients normalise before calling)\n    function setContact(string calldata name, address who) external {\n        require(who != address(0), \"zero address\");\n        require(bytes(name).length > 0 && bytes(name).length <= 32, \"bad name\");\n        _contacts[msg.sender][keccak256(bytes(name))] = who;\n        emit ContactSet(msg.sender, name, who);\n    }\n\n    function contactOf(address owner, string calldata name) external view returns (address) {\n        return _contacts[owner][keccak256(bytes(name))];\n    }\n\n    // \u2500\u2500 the guarded transfer \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    /// @notice Send MON from `owner`'s vault. Callable by the owner or their approved agent key.\n    /// @param contactName if non-empty, the recipient is resolved from the owner's on-chain contacts\n    /// @param to          raw recipient, only used when contactName is empty (and trustedOnly is off)\n    /// @param approvedBy  how the human approved it: \"voice\", \"double-blink\", \"button\", ...\n    function guardedSend(\n        address owner,\n        string calldata contactName,\n        address to,\n        uint256 amount,\n        string calldata approvedBy\n    ) external nonReentrant {\n        Policy memory p = policyOf[owner];\n        require(p.configured, \"policy not set\");\n        require(msg.sender == owner || msg.sender == p.agent, \"not owner or agent\");\n\n        address dest = to;\n        if (bytes(contactName).length > 0) {\n            dest = _contacts[owner][keccak256(bytes(contactName))];\n            require(dest != address(0), \"unknown contact\");\n        } else {\n            require(!p.trustedOnly, \"recipient not a saved contact\");\n        }\n        require(dest != address(0), \"zero recipient\");\n        require(amount > 0, \"zero amount\");\n        require(amount <= p.maxPerTx, \"exceeds per-transaction limit\");\n\n        uint256 today = block.timestamp / 1 days;\n        if (currentDay[owner] != today) {\n            currentDay[owner] = today;\n            spentInDay[owner] = 0;\n        }\n        require(spentInDay[owner] + amount <= p.dailyLimit, \"exceeds daily limit\");\n        require(balanceOf[owner] >= amount, \"insufficient vault balance\");\n\n        spentInDay[owner] += amount;\n        balanceOf[owner] -= amount;\n        totalTransfers += 1;\n        totalVolume += amount;\n\n        (bool ok,) = dest.call{value: amount}(\"\");\n        require(ok, \"transfer failed\");\n        emit GuardedTransfer(owner, dest, contactName, amount, approvedBy, block.timestamp);\n    }\n}\n"
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.26;\n\n/// @title GuardVault\n/// @notice On-chain guardrails for AI agents that move money on behalf of people who cannot use a\n///         keyboard or mouse (voice / eye-gaze controlled). The vault OWNER (e.g. a family member) funds the\n///         vault and sets the spending policy, the trusted contact book and which AGENT key (the elderly or\n///         disabled user's device) may spend. The agent can spend only inside that policy and cannot change it,\n///         so even a hijacked, hallucinating or scammed AI agent cannot exceed what the owner allowed.\n///         The owner can pause or revoke the agent at any time.\n///         Every transfer records HOW it was approved (voice, double-blink, button, ...).\ncontract GuardVault {\n    struct Policy {\n        bool configured;\n        bool trustedOnly;   // only pay addresses saved in the owner's contact book\n        bool paused;        // owner's emergency stop: no agent spending while true\n        uint128 maxPerTx;   // wei; 0 = nothing may be sent\n        uint128 dailyLimit; // wei per UTC day\n        address agent;      // hot key (the voice agent) allowed to call guardedSend for the owner\n    }\n\n    uint256 public constant MAX_CONTACTS = 50;\n\n    mapping(address => uint256) public balanceOf;\n    mapping(address => Policy) public policyOf;\n    mapping(address => mapping(bytes32 => address)) private _contacts;\n    mapping(address => string[]) private _contactNames;                  // enumerable so devices can list them\n    mapping(address => mapping(bytes32 => uint256)) private _contactIdx; // index + 1 (0 = absent)\n    mapping(address => uint256) public spentInDay;\n    mapping(address => uint256) public currentDay;\n\n    uint256 public totalTransfers;\n    uint256 public totalVolume;\n\n    event Deposited(address indexed owner, uint256 amount);\n    event Withdrawn(address indexed owner, uint256 amount);\n    event PolicySet(address indexed owner, uint128 maxPerTx, uint128 dailyLimit, bool trustedOnly);\n    event AgentSet(address indexed owner, address indexed agent);\n    event PausedSet(address indexed owner, bool paused);\n    event ContactSet(address indexed owner, string name, address indexed who);\n    event ContactRemoved(address indexed owner, string name);\n    event GuardedTransfer(\n        address indexed owner,\n        address indexed to,\n        string contactName,\n        uint256 amount,\n        string approvedBy,\n        uint256 timestamp\n    );\n\n    uint256 private _lock = 1;\n\n    modifier nonReentrant() {\n        require(_lock == 1, \"reentrancy\");\n        _lock = 2;\n        _;\n        _lock = 1;\n    }\n\n    // \u2500\u2500 funds \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    function deposit() external payable {\n        require(msg.value > 0, \"no value\");\n        balanceOf[msg.sender] += msg.value;\n        emit Deposited(msg.sender, msg.value);\n    }\n\n    receive() external payable {\n        balanceOf[msg.sender] += msg.value;\n        emit Deposited(msg.sender, msg.value);\n    }\n\n    function withdraw(uint256 amount) external nonReentrant {\n        require(balanceOf[msg.sender] >= amount, \"insufficient balance\");\n        balanceOf[msg.sender] -= amount;\n        (bool ok,) = msg.sender.call{value: amount}(\"\");\n        require(ok, \"withdraw failed\");\n        emit Withdrawn(msg.sender, amount);\n    }\n\n    // \u2500\u2500 configuration (owner only) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    function setPolicy(uint128 maxPerTx, uint128 dailyLimit, bool trustedOnly) external {\n        Policy storage p = policyOf[msg.sender];\n        p.configured = true;\n        p.maxPerTx = maxPerTx;\n        p.dailyLimit = dailyLimit;\n        p.trustedOnly = trustedOnly;\n        emit PolicySet(msg.sender, maxPerTx, dailyLimit, trustedOnly);\n    }\n\n    function setAgent(address agent) external {\n        policyOf[msg.sender].agent = agent;\n        emit AgentSet(msg.sender, agent);\n    }\n\n    function setPaused(bool paused) external {\n        policyOf[msg.sender].paused = paused;\n        emit PausedSet(msg.sender, paused);\n    }\n\n    /// @param name lowercase contact name, e.g. \"alice\" (clients normalise before calling)\n    function setContact(string calldata name, address who) external {\n        require(who != address(0), \"zero address\");\n        require(bytes(name).length > 0 && bytes(name).length <= 32, \"bad name\");\n        bytes32 key = keccak256(bytes(name));\n        if (_contactIdx[msg.sender][key] == 0) {\n            require(_contactNames[msg.sender].length < MAX_CONTACTS, \"too many contacts\");\n            _contactNames[msg.sender].push(name);\n            _contactIdx[msg.sender][key] = _contactNames[msg.sender].length;\n        }\n        _contacts[msg.sender][key] = who;\n        emit ContactSet(msg.sender, name, who);\n    }\n\n    function removeContact(string calldata name) external {\n        bytes32 key = keccak256(bytes(name));\n        uint256 idx = _contactIdx[msg.sender][key];\n        require(idx != 0, \"unknown contact\");\n        string[] storage names = _contactNames[msg.sender];\n        uint256 last = names.length;\n        if (idx != last) {  // move the last name into the freed slot\n            string memory moved = names[last - 1];\n            names[idx - 1] = moved;\n            _contactIdx[msg.sender][keccak256(bytes(moved))] = idx;\n        }\n        names.pop();\n        delete _contactIdx[msg.sender][key];\n        delete _contacts[msg.sender][key];\n        emit ContactRemoved(msg.sender, name);\n    }\n\n    function contactOf(address owner, string calldata name) external view returns (address) {\n        return _contacts[owner][keccak256(bytes(name))];\n    }\n\n    /// @notice All saved contacts of an owner (names and addresses, same order).\n    function contactsOf(address owner) external view returns (string[] memory names, address[] memory addrs) {\n        names = _contactNames[owner];\n        addrs = new address[](names.length);\n        for (uint256 i = 0; i < names.length; i++) {\n            addrs[i] = _contacts[owner][keccak256(bytes(names[i]))];\n        }\n    }\n\n    // \u2500\u2500 the guarded transfer \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    /// @notice Send MON from `owner`'s vault. Callable by the owner or their approved agent key.\n    /// @param contactName if non-empty, the recipient is resolved from the owner's on-chain contacts\n    /// @param to          raw recipient, only used when contactName is empty (and trustedOnly is off)\n    /// @param approvedBy  how the human approved it: \"voice\", \"double-blink\", \"button\", ...\n    function guardedSend(\n        address owner,\n        string calldata contactName,\n        address to,\n        uint256 amount,\n        string calldata approvedBy\n    ) external nonReentrant {\n        Policy memory p = policyOf[owner];\n        require(p.configured, \"policy not set\");\n        require(msg.sender == owner || msg.sender == p.agent, \"not owner or agent\");\n        require(!p.paused || msg.sender == owner, \"paused by owner\");\n\n        address dest = to;\n        if (bytes(contactName).length > 0) {\n            dest = _contacts[owner][keccak256(bytes(contactName))];\n            require(dest != address(0), \"unknown contact\");\n        } else {\n            require(!p.trustedOnly, \"recipient not a saved contact\");\n        }\n        require(dest != address(0), \"zero recipient\");\n        require(amount > 0, \"zero amount\");\n        require(amount <= p.maxPerTx, \"exceeds per-transaction limit\");\n\n        uint256 today = block.timestamp / 1 days;\n        if (currentDay[owner] != today) {\n            currentDay[owner] = today;\n            spentInDay[owner] = 0;\n        }\n        require(spentInDay[owner] + amount <= p.dailyLimit, \"exceeds daily limit\");\n        require(balanceOf[owner] >= amount, \"insufficient vault balance\");\n\n        spentInDay[owner] += amount;\n        balanceOf[owner] -= amount;\n        totalTransfers += 1;\n        totalVolume += amount;\n\n        (bool ok,) = dest.call{value: amount}(\"\");\n        require(ok, \"transfer failed\");\n        emit GuardedTransfer(owner, dest, contactName, amount, approvedBy, block.timestamp);\n    }\n}\n"
       }
     },
     "settings": {
