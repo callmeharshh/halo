@@ -876,6 +876,22 @@
     closeOverlay("dlg");
   }
   function dlgSay(text, ok) { $("att-status").replaceChildren(h("span", { class: ok ? "ok" : "" }, text)); }
+  function initWalletBtn() {
+    const b = $("wallet-btn"); if (!b) return;
+    const label = b.querySelector(".lbl");
+    b.addEventListener("click", async () => {
+      b.disabled = true; label.textContent = "Connecting…";
+      try {
+        const a = await ensureWallet();
+        label.textContent = "Monad · " + short(a); b.classList.add("on");
+        toast("Wallet connected on Monad testnet: " + short(a), "ok");
+      } catch (e) {
+        label.textContent = "Connect wallet";
+        const rejected = e && (e.code === 4001 || e.code === "ACTION_REJECTED");
+        toast(rejected ? "The wallet request was closed. Press Connect wallet to try again." : ((e && e.message) || "Could not connect the wallet."), "err");
+      } finally { b.disabled = false; }
+    });
+  }
   async function ensureWallet() {
     const eth = window.ethereum;
     if (!eth) throw new Error("No wallet found. Install MetaMask in this browser, then try again.");
@@ -1013,7 +1029,7 @@
     return null;
   }
   async function boot() {
-    paintIcons(); initPrefs(); initTabs(); initComposer(); initProfile(); initMic(); initDialog(); overlayKeys(); watchWallet();
+    paintIcons(); initPrefs(); initTabs(); initComposer(); initProfile(); initMic(); initDialog(); overlayKeys(); watchWallet(); initWalletBtn();
     state.session = store.get("halo.c.session") || newId(); store.set("halo.c.session", state.session); paintSession(); renderAgents(); setPane("trip");
     $("new-btn").addEventListener("click", newSession);
     $("replay-btn").addEventListener("click", () => { if (state.sample) replay(); });
