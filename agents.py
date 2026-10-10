@@ -94,6 +94,7 @@ class ConfirmationGate:
     def __init__(self):
         self._event = threading.Event()
         self._decision = None
+        self.last_source = "voice"  # how the most recent approval happened, recorded on-chain
         self.pending = None  # description of what is awaiting approval
 
     @property
@@ -116,6 +117,7 @@ class ConfirmationGate:
         if self.pending is None:
             return
         self._decision = decision
+        self.last_source = source
         bus.on_event("Guardian", "approved" if decision else "denied", f"via {source}")
         self._event.set()
 
@@ -137,8 +139,8 @@ gate = ConfirmationGate()
 
 def guardian_review(prep: dict) -> tuple[str, str]:
     """Deterministic risk review of a prepared transfer. Returns (level, note)."""
-    bal = wl.balance()
-    known = prep["label"].lower() in wl.load_contacts()
+    bal = wl.vault_balance()
+    known = bool(prep.get("contact"))
     pct = (prep["amount"] / bal * 100) if bal else Decimal(100)
     flags = []
     if not known:
@@ -152,7 +154,14 @@ def guardian_review(prep: dict) -> tuple[str, str]:
 
 # ── Wallet agent tools ───────────────────────────────────────────────────────
 def t_balance():
-    return f"{wl.balance():.4f} MON"
+    return f"Vault (spendable by the agent): {wl.vault_balance():.4f} MON. Wallet: {wl.balance():.4f} MON."
+
+
+def t_policy():
+    p = wl.policy()
+    return (f"On-chain safety policy: max {p['max_per_tx'].normalize():f} MON per transfer, "
+            f"{p['daily_limit'].normalize():f} MON per day, "
+            f"{'only saved contacts' if p['trusted_only'] else 'any recipient'}.")
 
 
 def t_my_address():
@@ -182,10 +191,12 @@ def t_send_mon(recipient, amount):
             f"address ending {prep['to'][-4:]}.")
     if not gate.ask(desc):
         return "Transfer cancelled by the user. Nothing was sent."
-    bus.on_event("Wallet", "send", f"broadcasting {prep['amount']} MON to {prep['to']}")
+    method = gate.last_source
+    bus.on_event("Wallet", "send", f"GuardVault.guardedSend({prep['amount']} MON → {prep['label']}, approvedBy={method})")
     try:
-        h = wl.send_mon(prep["to"], prep["amount"])
+        h = wl.send_mon(prep, method)
     except Exception as e:
+        bus.on_event("Guardian", "denied", str(e))
         return f"Transfer failed: {e}"
     url = wl.explorer_url(h)
     bus.on_event("Wallet", "tx", url)
@@ -199,7 +210,8 @@ WALLET = Agent(
     "to confirm by voice itself, so never ask for confirmation yourself and never claim a transfer happened unless "
     "send_mon says Sent. Reply in one or two short spoken-style sentences. Do not read out long hashes or addresses.",
     [
-        fn("get_balance", "Get the user's MON balance."),
+        fn("get_balance", "Get the user's MON balances (vault and wallet)."),
+        fn("get_policy", "Explain the on-chain safety limits that protect the user's funds."),
         fn("get_my_address", "Get the user's wallet address."),
         fn("list_contacts", "List saved contacts."),
         fn("add_contact", "Save a contact.", {"name": {"type": "string"}, "address": {"type": "string"}}, ["name", "address"]),
@@ -207,7 +219,7 @@ WALLET = Agent(
            {"recipient": {"type": "string"}, "amount": {"type": "number"}}, ["recipient", "amount"]),
         fn("tx_status", "Check the status of a transaction hash.", {"tx_hash": {"type": "string"}}, ["tx_hash"]),
     ],
-    {"get_balance": t_balance, "get_my_address": t_my_address, "list_contacts": t_list_contacts,
+    {"get_balance": t_balance, "get_policy": t_policy, "get_my_address": t_my_address, "list_contacts": t_list_contacts,
      "add_contact": t_add_contact, "send_mon": t_send_mon, "tx_status": t_tx_status},
 )
 
