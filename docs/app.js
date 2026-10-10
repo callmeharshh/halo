@@ -1,6 +1,6 @@
 /* Halo landing page. Plain JS, no build step. Placeholders are the constants below. */
 const PROJECT_NAME = "Halo";                                   // <- rename here
-const REPO_URL = "https://github.com/callmeharshh/REPLACE_ME"; // <- your repo
+const REPO_URL = "https://github.com/callmeharshh/halo"; // <- your repo
 const DEMO_URL = "#";                                          // <- demo video link
 
 const CHAIN = {

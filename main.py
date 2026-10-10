@@ -14,7 +14,7 @@ from gaze import GazeController
 from server import server as llama
 from voice import Voice
 
-APP_NAME = os.getenv("APP_NAME", "Monad Voice Agents")
+APP_NAME = os.getenv("APP_NAME", "Halo")
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
