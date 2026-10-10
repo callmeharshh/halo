@@ -106,7 +106,7 @@ const $ = (id) => document.getElementById(id);
 function setStatus(kind, msg) {
   const el = $("feed-status");
   el.dataset.kind = kind;
-  el.textContent = msg;
+  $("feed-msg").textContent = msg;  // separate span so the Retry button is not wiped out
   $("retry").hidden = kind !== "error";
 }
 function renderRows() {
