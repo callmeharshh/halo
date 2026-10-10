@@ -9,3 +9,4 @@ llama-server.log
 .DS_Store
 ui/devtools/shots/
 tests/shots/
+video/out/

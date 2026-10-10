@@ -16,3 +16,4 @@ Pillow
 opencv-python
 eyetrax
 py-solc-x
+imageio-ffmpeg

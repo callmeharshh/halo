@@ -74,3 +74,18 @@ pre{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radiu
 footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-size:.92rem}
 
 [hidden] { display: none !important; }
+
+/* polish v1: aurora background, hero glow ring, staggered entrance, hover lift (CSS only) */
+body{background:radial-gradient(900px 520px at 12% -5%,rgba(131,110,249,.28),transparent 60%),radial-gradient(800px 500px at 95% 8%,rgba(22,224,181,.14),transparent 60%),var(--bg);background-attachment:fixed}
+.hero{position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-120px;top:-60px;width:520px;height:520px;border-radius:50%;border:2px solid rgba(179,166,255,.35);box-shadow:0 0 90px 10px rgba(131,110,249,.35),inset 0 0 70px rgba(131,110,249,.25);animation:halo 7s ease-in-out infinite;pointer-events:none}
+@keyframes halo{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.07);opacity:1}}
+.hero h1{font-size:clamp(2.3rem,6vw,4.4rem);line-height:1.05;letter-spacing:-.03em;background:linear-gradient(180deg,#fff,#c9c1ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.hero .wrap>*{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+.hero .wrap>*:nth-child(2){animation-delay:.08s}.hero .wrap>*:nth-child(3){animation-delay:.16s}.hero .wrap>*:nth-child(4){animation-delay:.24s}.hero .wrap>*:nth-child(5){animation-delay:.32s}
+.card{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;backdrop-filter:blur(8px)}
+.card:hover{transform:translateY(-4px);border-color:rgba(131,110,249,.55);box-shadow:0 14px 40px rgba(131,110,249,.18)}
+.btn{transition:transform .15s ease,box-shadow .2s ease}.btn:hover{transform:translateY(-2px)}.btn.primary{box-shadow:0 8px 28px rgba(131,110,249,.4)}
+@media (prefers-reduced-motion:reduce){.hero::after,.hero .wrap>*{animation:none}.card:hover,.btn:hover{transform:none}}
+@media (max-width:700px){.hero::after{width:300px;height:300px;right:-110px;top:-40px;opacity:.6}}

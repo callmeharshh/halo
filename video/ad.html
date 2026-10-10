@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Halo ad</title>
+<style>
+:root{--ink:#07070d;--v:#836EF9;--v2:#b3a6ff;--t:#16e0b5;--r:#ff6b6b;--g:#4ade80;--txt:#f1f0fb;--mut:#9d9bb5}
+*{box-sizing:border-box;margin:0}
+html,body{width:1280px;height:720px;overflow:hidden;background:var(--ink);font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--txt)}
+#stage{position:relative;width:1280px;height:720px;overflow:hidden;background:radial-gradient(1200px 700px at 20% 0%,#1b1440 0%,#0a0a14 55%,#06060b 100%)}
+.aurora{position:absolute;inset:-20%;filter:blur(90px);opacity:.55;pointer-events:none}
+.aurora i{position:absolute;border-radius:50%}
+.scene{position:absolute;inset:0;opacity:0;will-change:opacity,transform}
+.cap{position:absolute;left:0;right:0;text-align:center;font-weight:700;letter-spacing:-.01em}
+.sub{position:absolute;left:0;right:0;text-align:center;color:var(--mut);font-size:30px}
+.tag{position:absolute;left:28px;bottom:22px;font-size:15px;color:var(--mut);letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.12);border-radius:28px;backdrop-filter:blur(12px);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.phone{position:absolute;width:330px;height:620px;border-radius:44px;background:#0d0d17;border:2px solid #2a2a40;box-shadow:0 40px 100px rgba(0,0,0,.6)}
+.bubble{position:absolute;left:24px;right:24px;padding:18px 20px;border-radius:22px 22px 22px 6px;background:#1f2a2f;font-size:22px;line-height:1.35}
+.grain{position:absolute;inset:0;opacity:.06;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");pointer-events:none}
+</style></head>
+<body><div id="stage">
+<div class="aurora"><i id="a1" style="left:5%;top:5%;width:600px;height:600px;background:#836EF9"></i><i id="a2" style="right:0;top:30%;width:520px;height:520px;background:#16e0b5;opacity:.45"></i><i id="a3" style="left:35%;bottom:-10%;width:640px;height:420px;background:#4b2bd6"></i></div>
+
+<!-- S1: the watchman -->
+<div class="scene" id="s1">
+  <svg viewBox="0 0 400 300" style="position:absolute;left:440px;top:90px;width:400px;height:300px">
+    <rect x="30" y="215" width="340" height="6" rx="3" fill="#2b2b45"/>
+    <rect x="46" y="70" width="14" height="150" rx="4" fill="#3a3a5c"/><rect x="340" y="70" width="14" height="150" rx="4" fill="#3a3a5c"/>
+    <path d="M60 80 Q200 20 340 80" stroke="#836EF9" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <circle cx="200" cy="130" r="30" fill="#e8d5c4"/><path d="M168 118 Q200 78 232 118 L232 112 Q200 70 168 112Z" fill="#2a3a66"/><rect x="160" y="106" width="80" height="14" rx="7" fill="#2a3a66"/>
+    <path d="M150 215 Q150 170 200 165 Q250 170 250 215Z" fill="#3b5bdb"/><rect x="190" y="160" width="20" height="14" fill="#e8d5c4"/>
+    <circle cx="200" cy="60" r="10" fill="#fbbf24" opacity=".9"/>
+  </svg>
+  <div class="cap" id="s1a" style="top:430px;font-size:50px">Ramesh has guarded this gate for twenty years.</div>
+  <div class="sub" id="s1b" style="top:510px">He uses WhatsApp and UPI every day. A computer? Never.</div>
+</div>
+
+<!-- S2: the scam call -->
+<div class="scene" id="s2">
+  <div class="phone" id="ph2" style="left:475px;top:50px">
+    <div style="position:absolute;top:22px;left:0;right:0;text-align:center;color:var(--mut);font-size:16px">Unknown number</div>
+    <div class="bubble" id="b2a" style="top:90px">Ramesh bhaiya, urgent! Your son had an accident.</div>
+    <div class="bubble" id="b2b" style="top:210px">Send 5 MON to this wallet NOW. Hospital needs it. Do not call anyone.</div>
+    <div style="position:absolute;left:24px;right:24px;bottom:34px;text-align:center;color:var(--r);font-size:19px;letter-spacing:.06em" id="b2c">URGENT · ACT NOW</div>
+  </div>
+  <div class="cap" id="s2a" style="top:20px;left:40px;right:auto;width:420px;text-align:left;font-size:44px">The call comes.</div>
+  <div class="sub" id="s2b" style="top:96px;left:40px;right:auto;width:420px;text-align:left;font-size:28px">Pressure. Panic. Pay now.</div>
+</div>
+
+<!-- S3: Halo -->
+<div class="scene" id="s3">
+  <div class="card" style="position:absolute;left:190px;top:50px;width:900px;height:560px">
+    <div style="position:absolute;left:34px;top:26px;font-weight:700;font-size:24px"><span style="display:inline-block;width:16px;height:16px;border:4px solid var(--v);border-radius:50%;margin-right:10px;vertical-align:-2px"></span>Halo</div>
+    <div style="position:absolute;right:34px;top:28px;font-size:16px;color:var(--g)">● Protected by GuardVault</div>
+    <svg id="orb" viewBox="-100 -100 200 200" style="position:absolute;left:350px;top:90px;width:200px;height:200px">
+      <defs><radialGradient id="og"><stop offset="0" stop-color="#e5dcff"/><stop offset="1" stop-color="#836EF9"/></radialGradient></defs>
+      <circle id="ring3" r="60" fill="none" stroke="#836EF9" stroke-width="2" opacity=".3"/><circle id="ring2" r="60" fill="none" stroke="#836EF9" stroke-width="2" opacity=".3"/>
+      <circle id="orbc" r="46" fill="url(#og)"/><circle id="orbh" r="60" fill="none" stroke="#b3a6ff" stroke-width="4" opacity=".9"/>
+    </svg>
+    <div id="state3" style="position:absolute;left:0;right:0;top:300px;text-align:center;color:var(--mut);font-size:20px;letter-spacing:.1em;text-transform:uppercase">Listening</div>
+    <div id="said3" style="position:absolute;left:0;right:0;top:340px;text-align:center;font-size:38px;font-weight:700">“Halo, bhej do.”</div>
+    <div id="conf3" class="card" style="position:absolute;left:250px;top:200px;width:400px;padding:26px;text-align:center;border-color:rgba(131,110,249,.7)">
+      <div style="font-size:19px;color:var(--mut)">Please confirm this payment</div>
+      <div style="font-size:60px;font-weight:800;margin:6px 0">5 MON</div>
+      <div style="font-size:22px">to <b>unknown wallet</b> 0x9f3a…c21e</div>
+      <div style="display:flex;gap:12px;margin-top:20px"><div style="flex:1;padding:16px;border-radius:16px;background:var(--g);color:#06210f;font-weight:800;font-size:24px" id="yes3">Confirm</div><div style="flex:1;padding:16px;border-radius:16px;background:var(--r);color:#2b0a0a;font-weight:800;font-size:24px">Cancel</div></div>
+    </div>
+  </div>
+  <div class="cap" id="s3a" style="bottom:12px;font-size:30px;color:var(--v2)">Halo reads it back. Ramesh says “haan”.</div>
+</div>
+
+<!-- S4: GuardVault -->
+<div class="scene" id="s4">
+  <div class="card" style="position:absolute;left:140px;top:60px;width:1000px;height:560px;padding:40px 48px">
+    <div style="font-size:20px;color:var(--mut);letter-spacing:.12em;text-transform:uppercase">GuardVault · Monad testnet</div>
+    <div style="font-size:42px;font-weight:800;margin:10px 0 24px">The rules his son set, enforced on-chain</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <div class="card" style="padding:18px"><div style="color:var(--mut);font-size:16px">Per payment</div><div style="font-size:34px;font-weight:800">0.1 MON</div></div>
+      <div class="card" style="padding:18px"><div style="color:var(--mut);font-size:16px">Per day</div><div style="font-size:34px;font-weight:800">0.3 MON</div></div>
+      <div class="card" style="padding:18px"><div style="color:var(--mut);font-size:16px">Recipients</div><div style="font-size:34px;font-weight:800">Contacts only</div></div>
+    </div>
+    <div id="rej4" style="margin-top:26px;padding:22px 26px;border-radius:20px;background:rgba(255,107,107,.12);border:2px solid var(--r)">
+      <div style="font-size:32px;font-weight:800;color:var(--r)">✕ REJECTED by the contract</div>
+      <div style="font-size:22px;color:#ffd0d0;margin-top:6px;font-family:ui-monospace,Menlo,monospace">revert: exceeds per-transaction limit · recipient not a saved contact</div>
+    </div>
+    <div id="halo4" style="margin-top:22px;font-size:26px"><b style="color:var(--v2)">Halo:</b> “This is above your family’s limit. Nothing was sent.”</div>
+  </div>
+</div>
+
+<!-- S5: relief -->
+<div class="scene" id="s5">
+  <div class="phone" style="left:475px;top:50px;border-color:#1f6f47">
+    <div style="position:absolute;top:120px;left:0;right:0;text-align:center"><div style="width:120px;height:120px;border-radius:50%;margin:0 auto;background:linear-gradient(135deg,#836EF9,#16e0b5);display:flex;align-items:center;justify-content:center;font-size:52px;font-weight:800">B</div></div>
+    <div style="position:absolute;top:268px;left:0;right:0;text-align:center;font-size:34px;font-weight:700">Bittu (son)</div>
+    <div id="call5" style="position:absolute;top:320px;left:0;right:0;text-align:center;font-size:22px;color:var(--g)">calling…</div>
+    <div style="position:absolute;bottom:40px;left:0;right:0;text-align:center"><div style="width:84px;height:84px;border-radius:50%;margin:0 auto;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:36px;color:#06210f">✆</div></div>
+  </div>
+  <div class="cap" id="s5a" style="top:210px;left:30px;right:auto;width:430px;text-align:left;font-size:46px">Halo calls his son instead.</div>
+  <div class="sub" id="s5b" style="top:360px;left:30px;right:auto;width:430px;text-align:left;font-size:30px;color:var(--g)">The scammer got nothing.</div>
+</div>
+
+<!-- S6: end card -->
+<div class="scene" id="s6">
+  <svg viewBox="-100 -100 200 200" style="position:absolute;left:530px;top:70px;width:220px;height:220px"><defs><radialGradient id="eg"><stop offset="0" stop-color="#e5dcff"/><stop offset="1" stop-color="#836EF9"/></radialGradient></defs>
+    <circle id="e1" r="64" fill="none" stroke="#b3a6ff" stroke-width="5"/><circle id="e2" r="44" fill="url(#eg)"/></svg>
+  <div class="cap" style="top:305px;font-size:92px;letter-spacing:-.03em">Halo</div>
+  <div class="sub" style="top:420px;font-size:34px;color:var(--txt)">Personal AI agents for everyone the AI age forgot.</div>
+  <div class="sub" style="top:480px;font-size:22px;letter-spacing:.04em">Voice · Eye-gaze · Scam Shield · Family-owned vault on Monad</div>
+  <div class="card" style="position:absolute;left:300px;right:300px;top:545px;padding:18px 24px;text-align:center;font-size:21px"><b style="color:var(--v2)">callmeharshh.github.io/halo</b><br><span style="font-size:16px;color:var(--mut);font-family:ui-monospace,Menlo,monospace">GuardVault 0x3e89164a…b418A · Monad testnet</span></div>
+  <div class="sub" style="top:668px;font-size:15px">Built at Monad Blitz Pune V3 · based on GemGuide by Sourajit</div>
+</div>
+
+<div class="tag" id="dram">Dramatization</div>
+<div class="grain"></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const ease=x=>{x=clamp(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const ramp=(t,a,b)=>ease((t-a)/(b-a));
+const win=(t,a,b,fi=.5,fo=.5)=>Math.min(ramp(t,a,a+fi),1-ramp(t,b-fo,b));   // fade in/out window
+const type=(el,txt,p)=>{el.textContent=txt.slice(0,Math.floor(txt.length*clamp(p)))};
+const T={s1:[0,6.5],s2:[6,13.5],s3:[13,21],s4:[20.5,28.5],s5:[28,33.5],s6:[33,40]};
+function scene(id,t){const [a,b]=T[id];const o=win(t,a,b,.6,.6);const el=$(id);el.style.opacity=o;el.style.transform=`translateY(${(1-ramp(t,a,a+.8))*14}px) scale(${1+(1-o)*.015})`;return o}
+window.__setTime=function(t){
+  // aurora drift
+  $('a1').style.transform=`translate(${Math.sin(t*.35)*60}px,${Math.cos(t*.27)*40}px)`;
+  $('a2').style.transform=`translate(${Math.cos(t*.3)*70}px,${Math.sin(t*.4)*50}px)`;
+  $('a3').style.transform=`translate(${Math.sin(t*.22)*80}px,${Math.cos(t*.31)*30}px)`;
+  const warm=ramp(t,27.5,31); // palette resolves from tense to calm
+  $('a2').style.opacity=.3+.35*warm; $('a1').style.background=warm>.5?'#836EF9':'#7a45e6';
+  // S1
+  scene('s1',t); type($('s1a'),'Ramesh has guarded this gate for twenty years.',(t-0.6)/2.4); $('s1b').style.opacity=ramp(t,3.4,4.4);
+  // S2
+  const o2=scene('s2',t);
+  $('ph2').style.transform=`translate(${Math.sin(t*38)*(t>6.4&&t<9?5:0)}px,0) rotate(${Math.sin(t*38)*(t>6.4&&t<9?1.2:0)}deg)`;
+  $('b2a').style.opacity=ramp(t,7.0,7.5); $('b2b').style.opacity=ramp(t,8.6,9.1); $('b2c').style.opacity=(.5+.5*Math.sin(t*9))*ramp(t,9.4,9.8);
+  $('s2a').style.opacity=ramp(t,6.6,7.2); $('s2b').style.opacity=ramp(t,10.2,11);
+  // S3
+  const o3=scene('s3',t);
+  const st = t<15.2?'Listening': t<16.4?'Thinking':'Waiting for you';
+  $('state3').textContent=st; $('said3').style.opacity=ramp(t,14.0,14.6)*(1-ramp(t,16.2,16.7));
+  const conf=ramp(t,16.6,17.3); $('conf3').style.opacity=conf; $('conf3').style.transform=`translateY(${(1-conf)*40}px) scale(${.96+.04*conf})`;
+  $('yes3').style.transform=`scale(${1+.06*ramp(t,18.8,19.1)*(1-ramp(t,19.1,19.6))})`;
+  $('conf3').style.opacity=conf*(1-ramp(t,19.6,20.4)); $('state3').style.opacity=1-conf; $('orb').style.opacity=1-conf*.95; $('orb').style.transform=`translateY(${-conf*30}px) scale(${1-conf*.25})`;
+  $('s3a').style.opacity=ramp(t,17.4,18.0);
+  // orb
+  const level=t<15.2?(.5+.5*Math.sin(t*11))*ramp(t,13.8,14.2):0.15;
+  const r=46+6*Math.sin(t*2)+level*14;
+  $('orbc').setAttribute('r',r); $('orbh').setAttribute('r',58+level*18+Math.sin(t*3)*2);
+  $('ring2').setAttribute('r',60+((t*20)%40)); $('ring2').style.opacity=.35*(1-((t*20)%40)/40);
+  $('ring3').setAttribute('r',60+(((t*20)+20)%40)); $('ring3').style.opacity=.35*(1-(((t*20)+20)%40)/40);
+  // S4
+  scene('s4',t); const rej=ramp(t,22.6,23.2); $('rej4').style.opacity=rej; $('rej4').style.transform=`scale(${1.06-.06*rej}) translateX(${Math.sin(t*50)*(t>22.6&&t<23.3?6:0)}px)`;
+  $('halo4').style.opacity=ramp(t,24.6,25.4);
+  // S5
+  scene('s5',t); type($('call5'),'calling…',1); $('call5').style.opacity=.6+.4*Math.sin(t*6); $('s5a').style.opacity=ramp(t,28.6,29.2); $('s5b').style.opacity=ramp(t,30.4,31.2);
+  // S6
+  const o6=scene('s6',t); $('e1').setAttribute('r',64+Math.sin(t*2)*3); $('e2').setAttribute('r',44+Math.sin(t*2+1)*3);
+  $('dram').style.opacity=(t>6&&t<33)?.7:0;
+  return true;
+};
+window.__setTime(0);
+</script></body></html>

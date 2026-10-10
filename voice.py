@@ -5,6 +5,7 @@ import time
 
 import io
 import os
+import queue
 import re
 import wave
 
@@ -37,6 +38,8 @@ class Voice:
             from openai import OpenAI
             self._oa = OpenAI(timeout=20.0, max_retries=2)
         self._stop = threading.Event()
+        self._queue: queue.Queue = queue.Queue()
+        threading.Thread(target=self._worker, daemon=True).start()
         self._thread = None
         self._tts_token = None
         self._speaking_until = 0.0
@@ -59,14 +62,14 @@ class Voice:
                 self.system_tts.speak(text, done)
 
         p = self.primary_tts
-        if p.name == "elevenlabs" and p.available:
+        if p.name != "system" and p.available:
             p.speak(text, done, via_system)
         else:
             via_system()
 
     def tts_name(self) -> str:
         p = self.primary_tts
-        return p.name if (p.name != "elevenlabs" or p.available) else "system"
+        return p.name if (p.name == "system" or p.available) else "system"
 
     def tts_note(self) -> str | None:
         return getattr(self.primary_tts, "disabled_reason", None)
@@ -83,28 +86,41 @@ class Voice:
         return time.time() < self._speaking_until
 
     # ── STT ──────────────────────────────────────────────────────────────
+    # Phrases speech models invent from silence/noise. Dropped when the clip is short.
+    _HALLUCINATIONS = {"you", "thank you", "thanks", "thank you.", "thanks for watching", "bye", "okay", "ok", "hmm", "uh", "um", "yeah"}
+
     def transcribe(self, pcm: np.ndarray) -> str:
+        rms = float(np.sqrt(np.mean(pcm.astype(np.float32) ** 2)))
+        if rms < float(os.getenv("MIC_MIN_RMS", "180")):  # too quiet: room noise, not speech
+            return ""
+        # normalise: laptop mics are quiet, and recognition is noticeably better with a healthy level
+        peak = float(np.max(np.abs(pcm))) or 1.0
+        gain = min(8.0, 0.85 * 32767 / peak)
+        pcm = np.clip(pcm.astype(np.float32) * gain, -32767, 32767).astype(np.int16)
         if self.backend == "openai":
             try:
                 bio = io.BytesIO()
                 with wave.open(bio, "wb") as w:
                     w.setnchannels(1); w.setsampwidth(2); w.setframerate(SAMPLE_RATE)
-                    w.writeframes(pcm.astype(np.int16).tobytes())
+                    w.writeframes(pcm.tobytes())
                 bio.name = "speech.wav"; bio.seek(0)
-                r = self._oa.audio.transcriptions.create(
-                    model=os.getenv("STT_MODEL", "gpt-4o-transcribe"), file=bio,  # language auto-detected: English, Hindi, Hinglish, Marathi
-                    prompt="Voice commands for a computer assistant in India: open Safari, send zero point one MON to Alice, "
-                           "confirm, cancel, haan, nahi, bhej do, kya hai screen par.")
-                return r.text.strip()
+                # NO prompt (it leaks into noisy transcripts) and a FIXED language (auto-detect garbles short accented clips).
+                lang = os.getenv("STT_LANGUAGE", "en")
+                kwargs = {"language": lang} if lang and lang != "auto" else {}
+                r = self._oa.audio.transcriptions.create(model=os.getenv("STT_MODEL", "gpt-4o-transcribe"), file=bio, **kwargs)
+                text = r.text.strip()
             except Exception as e:
                 print(f"STT error: {e}")
                 return ""
-        audio = pcm.astype(np.float32) / 32768.0
-        try:
-            return str(self.stt.recognize(audio)).strip()
-        except Exception as e:
-            print(f"STT error: {e}")
+        else:
+            try:
+                text = str(self.stt.recognize(pcm.astype(np.float32) / 32768.0)).strip()
+            except Exception as e:
+                print(f"STT error: {e}")
+                return ""
+        if len(pcm) < SAMPLE_RATE * 1.5 and text.lower().strip(" .!?,") in self._HALLUCINATIONS:
             return ""
+        return text
 
     # ── listen loop ──────────────────────────────────────────────────────
     def start(self):
@@ -143,19 +159,26 @@ class Voice:
                 else:
                     buf.append(chunk)
                     silent = 0 if is_speech else silent + 1
-                    if silent > 20:  # ~600 ms of silence ends the utterance
+                    if silent > 28:  # ~850 ms of silence ends the utterance (people pause mid-sentence)
                         pcm = np.concatenate(buf)
                         buf, speaking, silent, voiced, PRE = [], False, 0, 0, []
                         if len(pcm) > SAMPLE_RATE * 0.4:
                             self.on_state("thinking")
-                            threading.Thread(target=self._handle, args=(pcm,), daemon=True).start()
+                            self._queue.put(pcm)  # one worker transcribes clips strictly in order
                         else:
                             self.on_state("listening")
                     elif len(buf) > SAMPLE_RATE * 15 / FRAME:  # hard cap 15 s
                         silent = 999
 
-    def _handle(self, pcm):
-        text = self.transcribe(pcm)
-        if text:
-            self.on_utterance(text)
-        self.on_state("listening")
+    def _worker(self):
+        while True:
+            pcm = self._queue.get()
+            if pcm is None:
+                return
+            try:
+                text = self.transcribe(pcm)
+                if text:
+                    self.on_utterance(text)
+            except Exception as e:
+                print(f"voice worker error: {e}")
+            self.on_state("listening")

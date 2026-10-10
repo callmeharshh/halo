@@ -111,13 +111,44 @@ def speak(text):
         voice.speak(text)
 
 
+_parts: list[str] = []
+_parts_lock = threading.Lock()
+_merge_timer: threading.Timer | None = None
+_busy = threading.Event()
+MERGE_SECONDS = 1.1  # a sentence split by a natural pause is merged into ONE request
+
+
 def handle_utterance(text: str):
-    """From the mic or the text box. Confirmations are consumed by the Guardian first."""
+    """From the microphone. Confirmations go straight to the Guardian; everything else is merged and run one at a time."""
+    global _merge_timer
     if agents.gate.handle_utterance(text):
         on_event("User", "say", text)
         return
     if agents.gate.active:
         return  # a payment is waiting: ignore unrelated speech
+    with _parts_lock:
+        _parts.append(text)
+        if _merge_timer:
+            _merge_timer.cancel()
+        _merge_timer = threading.Timer(MERGE_SECONDS, _flush_parts)
+        _merge_timer.daemon = True
+        _merge_timer.start()
+
+
+def _flush_parts():
+    with _parts_lock:
+        text = " ".join(_parts).strip()
+        _parts.clear()
+    if text:
+        submit(text)
+
+
+def submit(text: str):
+    """Run ONE request at a time. A new request while Halo is still working is ignored (never two replies talking over each other)."""
+    if _busy.is_set():
+        push({"type": "toast", "level": "info", "text": "One moment, I am still working on your last request."})
+        return
+    _busy.set()
     threading.Thread(target=run_agents, args=(text,), daemon=True).start()
 
 
@@ -125,6 +156,7 @@ def run_agents(text):
     try:
         agents.handle(text)
     finally:
+        _busy.clear()
         push_status()
 
 
@@ -215,7 +247,10 @@ def dispatch(msg: dict):
     if t == "say":
         text = str(msg.get("text", "")).strip()[:500]
         if text:
-            handle_utterance(text)
+            if agents.gate.handle_utterance(text):
+                on_event("User", "say", text)
+            elif not agents.gate.active:
+                submit(text)  # typed commands run immediately (no merge delay)
     elif t == "mic":
         if msg.get("on") and not state["listening"]:
             voice.start()

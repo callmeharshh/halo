@@ -213,3 +213,6 @@ table.ct{width:100%;border-collapse:collapse;font-size:.92rem}table.ct td,table.
 @media (max-width:600px){.copyrow{flex-wrap:wrap}.copyrow code{flex-basis:100%}.fgrid>.card{padding:16px}.frow{grid-template-columns:1fr}.confirm{padding:18px}.chips .chip{max-width:100%}}
 .chips.wrap{padding-left:0;padding-right:0}
 #devOwner{word-break:break-all;margin:0}
+
+/* simplified demo: dictation mode is hidden to keep the product simple (code stays in the repo) */
+.seg[aria-label="Mode"]{display:none!important}
