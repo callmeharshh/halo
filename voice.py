@@ -31,7 +31,7 @@ class Voice:
             )
         else:
             from openai import OpenAI
-            self._oa = OpenAI()
+            self._oa = OpenAI(timeout=20.0, max_retries=2)
         self._stop = threading.Event()
         self._thread = None
         self._say_proc = None

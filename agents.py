@@ -14,7 +14,7 @@ load_dotenv()
 import os
 
 MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1")
-client = OpenAI()
+client = OpenAI(timeout=20.0, max_retries=3)  # fail fast, retry transient network errors
 
 
 # ── plumbing ─────────────────────────────────────────────────────────────────
